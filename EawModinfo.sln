@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FBDA9CBA-AEE
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{7998C683-3F8A-4095-92A7-CFBA6285E560}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EawModinfo.Tests", "src\EawModinfo.Tests\EawModinfo.Tests.csproj", "{52CB3040-444C-4AA6-9E4E-89755F8A03BF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,12 +21,17 @@ Global
 		{733214FA-5043-46DB-B529-AC83159FA358}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{733214FA-5043-46DB-B529-AC83159FA358}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{733214FA-5043-46DB-B529-AC83159FA358}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52CB3040-444C-4AA6-9E4E-89755F8A03BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52CB3040-444C-4AA6-9E4E-89755F8A03BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52CB3040-444C-4AA6-9E4E-89755F8A03BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52CB3040-444C-4AA6-9E4E-89755F8A03BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{733214FA-5043-46DB-B529-AC83159FA358} = {FBDA9CBA-AEE7-4170-A392-6E2E424817B4}
+		{52CB3040-444C-4AA6-9E4E-89755F8A03BF} = {7998C683-3F8A-4095-92A7-CFBA6285E560}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {91AC9A85-3941-4D0A-8654-F078CED3321C}
