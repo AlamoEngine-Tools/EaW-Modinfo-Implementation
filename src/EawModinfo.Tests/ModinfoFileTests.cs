@@ -42,8 +42,8 @@ namespace EawModinfo.Tests
             Assert.Equal(ModinfoFileKind.MainFile,modinfoFile.FileKind);
 
             Assert.Null(Record.Exception(modinfoFile.ValidateFile));
-            Assert.Null(Record.Exception(modinfoFile.GetModInfo));
-            Assert.Null(Record.ExceptionAsync(modinfoFile.GetModInfoAsync).Result);
+            Assert.Null(Record.Exception(modinfoFile.GetModinfo));
+            Assert.Null(Record.ExceptionAsync(modinfoFile.GetModinfoAsync).Result);
         }
 
         [Fact]
@@ -56,8 +56,8 @@ namespace EawModinfo.Tests
             Assert.Equal(ModinfoFileKind.VariantFile, modinfoFile.FileKind);
 
             Assert.Null(Record.Exception(modinfoFile.ValidateFile));
-            Assert.Null(Record.Exception(modinfoFile.GetModInfo));
-            Assert.Null(Record.ExceptionAsync(modinfoFile.GetModInfoAsync).Result);
+            Assert.Null(Record.Exception(modinfoFile.GetModinfo));
+            Assert.Null(Record.ExceptionAsync(modinfoFile.GetModinfoAsync).Result);
         }
 
         [Fact]
@@ -73,10 +73,10 @@ namespace EawModinfo.Tests
             Assert.Equal(ModinfoFileKind.VariantFile, modinfoFile.FileKind);
 
             Assert.Null(Record.Exception(modinfoFile.ValidateFile));
-            Assert.Null(Record.Exception(modinfoFile.GetModInfo));
-            Assert.Null(Record.ExceptionAsync(modinfoFile.GetModInfoAsync).Result);
+            Assert.Null(Record.Exception(modinfoFile.GetModinfo));
+            Assert.Null(Record.ExceptionAsync(modinfoFile.GetModinfoAsync).Result);
 
-            var data = modinfoFile.GetModInfo();
+            var data = modinfoFile.GetModinfo();
 
             Assert.Equal(new SemanticVersion(1,1,1, "BETA"), data.Version);
             Assert.Single(data.Custom);
@@ -96,10 +96,10 @@ namespace EawModinfo.Tests
             Assert.Equal(ModinfoFileKind.VariantFile, modinfoFile.FileKind);
 
             Assert.Null(Record.Exception(modinfoFile.ValidateFile));
-            Assert.Null(Record.Exception(modinfoFile.GetModInfo));
-            Assert.Null(Record.ExceptionAsync(modinfoFile.GetModInfoAsync).Result);
+            Assert.Null(Record.Exception(modinfoFile.GetModinfo));
+            Assert.Null(Record.ExceptionAsync(modinfoFile.GetModinfoAsync).Result);
 
-            var data = modinfoFile.GetModInfo();
+            var data = modinfoFile.GetModinfo();
 
             Assert.Equal(new SemanticVersion(1, 1, 1), data.Version);
             Assert.Single(data.Dependencies);

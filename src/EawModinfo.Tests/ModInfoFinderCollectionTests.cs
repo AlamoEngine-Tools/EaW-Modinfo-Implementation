@@ -13,7 +13,7 @@ namespace EawModinfo.Tests
             var mainFile = ModinfoFileTests.GetMain();
             var collection = new ModinfoFinderCollection(new DirectoryInfo(Directory.GetCurrentDirectory()), mainFile);
             Assert.Single(collection);
-            Assert.NotNull(collection.MainModInfo);
+            Assert.NotNull(collection.MainModinfo);
             Assert.Empty(collection.Variants);
         }
 
@@ -24,7 +24,7 @@ namespace EawModinfo.Tests
             var collection = new ModinfoFinderCollection(new DirectoryInfo(Directory.GetCurrentDirectory()), new []{variant});
             Assert.Single(collection);
             Assert.Single(collection.Variants);
-            Assert.Null(collection.MainModInfo);
+            Assert.Null(collection.MainModinfo);
         }
 
         [Fact]
@@ -35,7 +35,7 @@ namespace EawModinfo.Tests
             var collection = new ModinfoFinderCollection(new DirectoryInfo(Directory.GetCurrentDirectory()), main, new[] { variant });
             Assert.Equal(2, collection.Count());
             Assert.Single(collection.Variants);
-            Assert.NotNull(collection.MainModInfo);
+            Assert.NotNull(collection.MainModinfo);
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace EawModinfo.Tests
             var collection = new ModinfoFinderCollection(new DirectoryInfo(Directory.GetCurrentDirectory()), main, new[] { variant, variantM });
             Assert.Equal(3, collection.Count());
             Assert.Equal(2, collection.Variants.Count);
-            Assert.NotNull(collection.MainModInfo);
+            Assert.NotNull(collection.MainModinfo);
         }
 
         [Fact]

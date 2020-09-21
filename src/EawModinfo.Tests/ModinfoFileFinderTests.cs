@@ -65,8 +65,8 @@ namespace EawModinfo.Tests
             var vars = finder.Find(FindOptions.FindVariants);
             var alls = finder.Find(FindOptions.FindAny);
 
-            Assert.NotNull(alls.Variants.ElementAt(0).GetModInfo().Version);
-            Assert.NotNull(vars.Variants.ElementAt(0).GetModInfo().Version);
+            Assert.NotNull(alls.Variants.ElementAt(0).GetModinfo().Version);
+            Assert.NotNull(vars.Variants.ElementAt(0).GetModinfo().Version);
         }
 
         [Fact]

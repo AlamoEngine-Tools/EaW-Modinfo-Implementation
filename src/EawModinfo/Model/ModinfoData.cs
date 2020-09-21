@@ -94,10 +94,10 @@ namespace EawModinfo.Model
             _languages = new HashSet<ILanguageInfo>();
         }
 
-        internal ModinfoData(IModinfo baseModInfoData) : this()
+        internal ModinfoData(IModinfo baseModinfoData) : this()
         {
-            Requires.NotNull(baseModInfoData, nameof(baseModInfoData));
-            MergeFrom(baseModInfoData, true);
+            Requires.NotNull(baseModinfoData, nameof(baseModinfoData));
+            MergeFrom(baseModinfoData, true);
         }
 
         /// <summary>

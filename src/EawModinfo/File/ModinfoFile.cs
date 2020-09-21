@@ -36,39 +36,39 @@ namespace EawModinfo.File
         public void ValidateFile()
         {
             if (!File.Exists)
-                throw new ModinfoException($"ModInfo variant file does not exists at '{File.FullName}'.");
+                throw new ModinfoException($"Modinfo variant file does not exists at '{File.FullName}'.");
             if (!FileNameValidator.Validate(File.Name, out var error))
                 throw new ModinfoException(error);
         }
 
         /// <inheritdoc/>
-        public async Task<IModinfo> GetModInfoAsync()
+        public async Task<IModinfo> GetModinfoAsync()
         {
             ValidateFile();
             if (_data != null)
                 return _data;
-            _data = await GetModInfoCoreAsync().ConfigureAwait(false);
+            _data = await GetModinfoCoreAsync().ConfigureAwait(false);
             _data.Validate();
             return _data;
         }
 
         /// <inheritdoc/>
-        public IModinfo GetModInfo()
+        public IModinfo GetModinfo()
         {
             ValidateFile();
             if (_data != null)
                 return _data;
-            _data = GetModInfoCore();
+            _data = GetModinfoCore();
             _data.Validate();
             return _data;
         }
 
         /// <inheritdoc/>
-        public IModinfo? TryGetModInfo()
+        public IModinfo? TryGetModinfo()
         {
             try
             {
-                return GetModInfo();
+                return GetModinfo();
             }
             catch
             {
@@ -80,7 +80,7 @@ namespace EawModinfo.File
         /// Deserializes the file's content async.
         /// </summary>
         /// <returns>The deserialization task.</returns>
-        protected virtual async Task<IModinfo> GetModInfoCoreAsync()
+        protected virtual async Task<IModinfo> GetModinfoCoreAsync()
         {
             return await ParseAsync().ConfigureAwait(false);
         }
@@ -89,7 +89,7 @@ namespace EawModinfo.File
         /// Deserializes the file's content.
         /// </summary>
         /// <returns>The deserialized <see cref="IModinfo"/>.</returns>
-        protected virtual IModinfo GetModInfoCore()
+        protected virtual IModinfo GetModinfoCore()
         {
             return Parse();
         }

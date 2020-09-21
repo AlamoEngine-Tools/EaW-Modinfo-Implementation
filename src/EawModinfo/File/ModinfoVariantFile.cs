@@ -10,10 +10,10 @@ namespace EawModinfo.File
     /// <inheritdoc/>
     public sealed class ModinfoVariantFile : ModinfoFile
     {
-        public const string VariantModInfoFileEnding = "-modinfo.json";
+        public const string VariantModinfoFileEnding = "-modinfo.json";
 
-        private readonly IModinfoFile? _mainModInfoFile;
-        private IModinfo? _mainModInfoData;
+        private readonly IModinfoFile? _mainModinfoFile;
+        private IModinfo? _mainModinfoData;
 
         public override ModinfoFileKind FileKind => ModinfoFileKind.VariantFile;
 
@@ -23,39 +23,39 @@ namespace EawModinfo.File
         {
         }
 
-        public ModinfoVariantFile(FileInfo variant, IModinfoFile? mainModInfoFile) : base(variant)
+        public ModinfoVariantFile(FileInfo variant, IModinfoFile? mainModinfoFile) : base(variant)
         {
-            if (mainModInfoFile?.FileKind == ModinfoFileKind.VariantFile)
-                throw new ModinfoException("A ModInfoFile's base cannot be a variant file too.");
-            _mainModInfoFile = mainModInfoFile;
+            if (mainModinfoFile?.FileKind == ModinfoFileKind.VariantFile)
+                throw new ModinfoException("A ModinfoFile's base cannot be a variant file too.");
+            _mainModinfoFile = mainModinfoFile;
         }
 
-        public ModinfoVariantFile(FileInfo variant, IModinfo? mainModInfoData) : base(variant)
+        public ModinfoVariantFile(FileInfo variant, IModinfo? mainModinfoData) : base(variant)
         {
-            _mainModInfoData = mainModInfoData;
+            _mainModinfoData = mainModinfoData;
         }
         
-        protected override async Task<IModinfo> GetModInfoCoreAsync()
+        protected override async Task<IModinfo> GetModinfoCoreAsync()
         {
-            var data = await base.GetModInfoCoreAsync();
-            if (_mainModInfoData is null && _mainModInfoFile != null)
+            var data = await base.GetModinfoCoreAsync();
+            if (_mainModinfoData is null && _mainModinfoFile != null)
             {
-                if (!(await _mainModInfoFile.GetModInfoAsync().ConfigureAwait(false) is ModinfoData mainData))
-                    throw new ModinfoException($"Invalid Main Modinfo data: '{_mainModInfoFile.File.FullName}'");
-                _mainModInfoData = mainData;
+                if (!(await _mainModinfoFile.GetModinfoAsync().ConfigureAwait(false) is ModinfoData mainData))
+                    throw new ModinfoException($"Invalid Main Modinfo data: '{_mainModinfoFile.File.FullName}'");
+                _mainModinfoData = mainData;
             }
-            return data.MergeInto(_mainModInfoData);
+            return data.MergeInto(_mainModinfoData);
         }
 
-        protected override IModinfo GetModInfoCore()
+        protected override IModinfo GetModinfoCore()
         {
-            var data = base.GetModInfoCore();
-            if (_mainModInfoData is null && _mainModInfoFile != null)
+            var data = base.GetModinfoCore();
+            if (_mainModinfoData is null && _mainModinfoFile != null)
             {
-                var mainData = _mainModInfoFile.GetModInfo() as ModinfoData;
-                _mainModInfoData = mainData ?? throw new ModinfoException($"Invalid Main Modinfo data: '{_mainModInfoFile.File.FullName}'");
+                var mainData = _mainModinfoFile.GetModinfo() as ModinfoData;
+                _mainModinfoData = mainData ?? throw new ModinfoException($"Invalid Main Modinfo data: '{_mainModinfoFile.File.FullName}'");
             }
-            return data.MergeInto(_mainModInfoData);
+            return data.MergeInto(_mainModinfoData);
         }
 
         private class Validator : IModFileNameValidator
@@ -63,7 +63,7 @@ namespace EawModinfo.File
             public bool Validate(string fileName, out string error)
             {
                 error = string.Empty;
-                if (!fileName.ToUpperInvariant().EndsWith(VariantModInfoFileEnding.ToUpperInvariant(),
+                if (!fileName.ToUpperInvariant().EndsWith(VariantModinfoFileEnding.ToUpperInvariant(),
                     StringComparison.InvariantCultureIgnoreCase))
                 {
                     error = "The file's name must end with '-modinfo.json'.";

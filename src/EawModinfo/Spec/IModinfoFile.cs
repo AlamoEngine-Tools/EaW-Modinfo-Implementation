@@ -27,24 +27,24 @@ namespace EawModinfo.Spec
         void ValidateFile();
 
         /// <summary>
-        /// Gets the content of the <see cref="File"/> and deserializes it into an <see cref="IModInfo"/>.
+        /// Gets the content of the <see cref="File"/> and deserializes it into an <see cref="IModinfo"/>.
         /// </summary>
-        /// <returns>The <see cref="IModInfo"/></returns>
-        /// <exception cref="ModinfoException">Throws if it was not possible to get the<see cref="IModInfo"/> or the result was not valid.</exception>
-        IModinfo GetModInfo();
+        /// <returns>The <see cref="IModinfo"/></returns>
+        /// <exception cref="ModinfoException">Throws if it was not possible to get the<see cref="IModinfo"/> or the result was not valid.</exception>
+        IModinfo GetModinfo();
 
         /// <summary>
-        /// Asynchronously gets the content of the <see cref="File"/> and deserializes it into an <see cref="IModInfo"/>.
+        /// Asynchronously gets the content of the <see cref="File"/> and deserializes it into an <see cref="IModinfo"/>.
         /// </summary>
-        /// <returns>The <see cref="IModInfo"/></returns>
-        /// <exception cref="ModinfoException">Throws if it was not possible to get the<see cref="IModInfo"/> or the result was not valid.</exception>
-        Task<IModinfo> GetModInfoAsync();
+        /// <returns>The <see cref="IModinfo"/></returns>
+        /// <exception cref="ModinfoException">Throws if it was not possible to get the<see cref="IModinfo"/> or the result was not valid.</exception>
+        Task<IModinfo> GetModinfoAsync();
 
         /// <summary>
-        /// Tries to get the content of the <see cref="File"/> and deserializes it into an <see cref="IModInfo"/>.
+        /// Tries to get the content of the <see cref="File"/> and deserializes it into an <see cref="IModinfo"/>.
         /// </summary>
-        /// <returns>An <see cref="IModInfo"/> if operation was successful; <see langword="null"/> otherwise.</returns>
-        /// <exception cref="ModinfoException">Throws if it was not possible to get the<see cref="IModInfo"/> or the result was not valid.</exception>
-        IModinfo? TryGetModInfo();
+        /// <returns>An <see cref="IModinfo"/> if operation was successful; <see langword="null"/> otherwise.</returns>
+        /// <exception cref="ModinfoException">Throws if it was not possible to get the<see cref="IModinfo"/> or the result was not valid.</exception>
+        IModinfo? TryGetModinfo();
     }
 }

@@ -26,17 +26,17 @@ namespace EawModinfo.File
         }
 
         /// <summary>
-        /// Searches for a main modinfo file (modinfo.json) at the given directory and creates a new <see cref="IModInfoFile"/> instance.
+        /// Searches for a main modinfo file (modinfo.json) at the given directory and creates a new <see cref="IModinfoFile"/> instance.
         /// </summary>
         /// <param name="directory">The directory where to search.</param>
-        /// <returns>A new instance of a <see cref="IModInfoFile"/></returns>
+        /// <returns>A new instance of a <see cref="IModinfoFile"/></returns>
         /// <exception cref="ArgumentNullException">When <paramref name="directory"/> is null.</exception>
         /// <exception cref="DirectoryNotFoundException">When <paramref name="directory"/>does not exists.</exception>
         public static IModinfoFile? FindMain(DirectoryInfo directory)
         {
             Requires.NotNull(directory, nameof(directory));
             var result = CreateInstanceAndFind(directory, FindOptions.FindMain);
-            return result.MainModInfo;
+            return result.MainModinfo;
         }
 
         /// <summary>
@@ -55,17 +55,17 @@ namespace EawModinfo.File
 
         /// <summary>
         /// Searches for all variant modinfo files at the given directory and returns a new collection.
-        /// Each variant modinfo will get merged with passed <paramref name="baseModInfo"/>.
+        /// Each variant modinfo will get merged with passed <paramref name="baseModinfo"/>.
         /// </summary>
         /// <param name="directory">The directory where to search.</param>
-        /// <param name="baseModInfo">The base <see cref="IModInfo"/> that shall get merged from.</param>
+        /// <param name="baseModinfo">The base <see cref="IModinfo"/> that shall get merged from.</param>
         /// <returns>An collection with all found variant files.</returns>
         /// <exception cref="ArgumentNullException">When <paramref name="directory"/> is null.</exception>
         /// <exception cref="DirectoryNotFoundException">When <paramref name="directory"/>does not exists.</exception>
-        public static IEnumerable<IModinfoFile> FindVariants(DirectoryInfo directory, IModinfo? baseModInfo)
+        public static IEnumerable<IModinfoFile> FindVariants(DirectoryInfo directory, IModinfo? baseModinfo)
         {
             Requires.NotNull(directory, nameof(directory));
-            var result = CreateInstanceAndFind(directory, FindOptions.FindVariants, baseModInfo);
+            var result = CreateInstanceAndFind(directory, FindOptions.FindVariants, baseModinfo);
             return new List<IModinfoFile>(result.Variants);
         }
 
@@ -111,27 +111,27 @@ namespace EawModinfo.File
                 throw new DirectoryNotFoundException("Directory information must not be null.");
             if (!Directory.Exists)
                 throw new DirectoryNotFoundException($"Directory could not be found at '{Directory.FullName}'");
-            ModinfoFile? mainModInfoFile = FindMainModInfoFileCore();
+            ModinfoFile? mainModinfoFile = FindMainModinfoFileCore();
             List<ModinfoVariantFile> variantFiles = new List<ModinfoVariantFile>();
             if (options.HasFlag(FindOptions.FindVariants))
-                variantFiles.AddRange(FindModInfoVariantFilesCore(mainModInfoFile?.GetModInfo() ?? BaseModinfo));
+                variantFiles.AddRange(FindModinfoVariantFilesCore(mainModinfoFile?.GetModinfo() ?? BaseModinfo));
 
 
             if (!options.HasFlag(FindOptions.FindMain))
                 return new ModinfoFinderCollection(Directory, null, variantFiles);
-            return new ModinfoFinderCollection(Directory, mainModInfoFile, variantFiles);
+            return new ModinfoFinderCollection(Directory, mainModinfoFile, variantFiles);
         }
 
-        private MainModinfoFile? FindMainModInfoFileCore()
+        private MainModinfoFile? FindMainModinfoFileCore()
         {
-            var file = Directory.EnumerateFiles(MainModinfoFile.ModInfoFileName, SearchOption.TopDirectoryOnly).FirstOrDefault();
+            var file = Directory.EnumerateFiles(MainModinfoFile.ModinfoFileName, SearchOption.TopDirectoryOnly).FirstOrDefault();
             return file is null ? null : new MainModinfoFile(file);
         }
          
-        private IEnumerable<ModinfoVariantFile> FindModInfoVariantFilesCore(IModinfo? mainModInfoData)
+        private IEnumerable<ModinfoVariantFile> FindModinfoVariantFilesCore(IModinfo? mainModinfoData)
         {
-            var possibleVariants = Directory.EnumerateFiles($"*{ModinfoVariantFile.VariantModInfoFileEnding}", SearchOption.TopDirectoryOnly).ToList();
-            return from possibleVariant in possibleVariants select new ModinfoVariantFile(possibleVariant, mainModInfoData);
+            var possibleVariants = Directory.EnumerateFiles($"*{ModinfoVariantFile.VariantModinfoFileEnding}", SearchOption.TopDirectoryOnly).ToList();
+            return from possibleVariant in possibleVariants select new ModinfoVariantFile(possibleVariant, mainModinfoData);
         }
     }
 }

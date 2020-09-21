@@ -15,16 +15,16 @@ namespace EawModinfo.Utilities
         /// Validates an <see cref="IModinfo"/> data. Throws an <see cref="ModinfoException"/> when validation failed.
         /// Also throws is subsequent data such as <see cref="ISteamData"/> are invalid if present.
         /// </summary>
-        /// <param name="modInfo">The data to check</param>
+        /// <param name="modinfo">The data to check</param>
         /// <exception cref="ModinfoException">When validation failed.</exception>
-        public static void Validate(this IModinfo modInfo)
+        public static void Validate(this IModinfo modinfo)
         {
-            if (string.IsNullOrEmpty(modInfo.Name))
+            if (string.IsNullOrEmpty(modinfo.Name))
                 throw new ModinfoException("Name must not be null or empty.");
-            modInfo.SteamData?.Validate();
-            foreach (var languageInfo in modInfo.Languages) 
+            modinfo.SteamData?.Validate();
+            foreach (var languageInfo in modinfo.Languages) 
                 languageInfo.Validate();
-            foreach (var dependency in modInfo.Dependencies)
+            foreach (var dependency in modinfo.Dependencies)
                 dependency.Validate();
         }
 
