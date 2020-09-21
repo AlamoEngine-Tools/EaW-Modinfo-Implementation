@@ -10,7 +10,7 @@ namespace EawModinfo.Spec
     /// Collection class which holds multiple <see cref="IModinfoFile"/>s, which implements <see cref="IEnumerable{T}"/>.
     /// When enumerating an instance of this class all stored modinfo files will get yielded.
     /// </summary>
-    public sealed class ModInfoFinderCollection : IEnumerable<IModinfoFile>
+    public sealed class ModinfoFinderCollection : IEnumerable<IModinfoFile>
     {
         /// <summary>
         /// Returns <see langword="true"/> if this collection does contain a main modinfo file; <see langword="false"/> otherwise.
@@ -47,7 +47,7 @@ namespace EawModinfo.Spec
         /// <param name="mainModInfo">A potential main modinfo file.</param>
         /// <param name="variants">An enumeration of variant modinfo files.</param>
         /// <exception cref="ModinfoException">When illegal data was passed.</exception>
-        internal ModInfoFinderCollection(DirectoryInfo directory, IModinfoFile? mainModInfo, IEnumerable<IModinfoFile> variants)
+        internal ModinfoFinderCollection(DirectoryInfo directory, IModinfoFile? mainModInfo, IEnumerable<IModinfoFile> variants)
         {
             Requires.NotNull(directory, nameof(directory));
             Requires.NotNull(variants, nameof(variants));
@@ -60,12 +60,12 @@ namespace EawModinfo.Spec
             Variants = variants.ToList();
         }
 
-        internal ModInfoFinderCollection(DirectoryInfo directory, IModinfoFile mainModInfo) : 
+        internal ModinfoFinderCollection(DirectoryInfo directory, IModinfoFile mainModInfo) : 
             this(directory, mainModInfo, Enumerable.Empty<IModinfoFile>())
         {
         }
 
-        internal ModInfoFinderCollection(DirectoryInfo directory, IEnumerable<IModinfoFile> variants) :
+        internal ModinfoFinderCollection(DirectoryInfo directory, IEnumerable<IModinfoFile> variants) :
             this(directory, null, variants)
         {
         }
