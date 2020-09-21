@@ -69,20 +69,20 @@ namespace EawModinfo.File
             return new List<IModinfoFile>(result.Variants);
         }
 
-        internal static ModInfoFinderCollection CreateInstanceAndFind(DirectoryInfo directory, FindOptions options, IModinfo? baseData = null)
+        internal static ModinfoFinderCollection CreateInstanceAndFind(DirectoryInfo directory, FindOptions options, IModinfo? baseData = null)
         {
             var finder = new ModinfoFileFinder(directory, baseData);
             return finder.Find(options);
         }
 
         /// <inheritdoc/>
-        public ModInfoFinderCollection Find(FindOptions findOptions)
+        public ModinfoFinderCollection Find(FindOptions findOptions)
         {
             return FindCore(findOptions);
         }
 
         /// <inheritdoc/>
-        public ModInfoFinderCollection FindThrow(FindOptions findOptions)
+        public ModinfoFinderCollection FindThrow(FindOptions findOptions)
         {
             var result = Find(findOptions);
             switch (findOptions)
@@ -105,7 +105,7 @@ namespace EawModinfo.File
             return result;
         }
         
-        private ModInfoFinderCollection FindCore(FindOptions options)
+        private ModinfoFinderCollection FindCore(FindOptions options)
         {
             if (Directory is null)
                 throw new DirectoryNotFoundException("Directory information must not be null.");
@@ -118,8 +118,8 @@ namespace EawModinfo.File
 
 
             if (!options.HasFlag(FindOptions.FindMain))
-                return new ModInfoFinderCollection(Directory, null, variantFiles);
-            return new ModInfoFinderCollection(Directory, mainModInfoFile, variantFiles);
+                return new ModinfoFinderCollection(Directory, null, variantFiles);
+            return new ModinfoFinderCollection(Directory, mainModInfoFile, variantFiles);
         }
 
         private MainModinfoFile? FindMainModInfoFileCore()

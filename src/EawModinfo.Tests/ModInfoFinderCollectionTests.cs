@@ -5,13 +5,13 @@ using Xunit;
 
 namespace EawModinfo.Tests
 {
-    public class ModInfoFinderCollectionTests
+    public class ModinfoFinderCollectionTests
     {
         [Fact]
         public void Test1()
         {
             var mainFile = ModinfoFileTests.GetMain();
-            var collection = new ModInfoFinderCollection(new DirectoryInfo(Directory.GetCurrentDirectory()), mainFile);
+            var collection = new ModinfoFinderCollection(new DirectoryInfo(Directory.GetCurrentDirectory()), mainFile);
             Assert.Single(collection);
             Assert.NotNull(collection.MainModInfo);
             Assert.Empty(collection.Variants);
@@ -21,7 +21,7 @@ namespace EawModinfo.Tests
         public void Test2()
         {
             var variant = ModinfoFileTests.GetVariantStandalone();
-            var collection = new ModInfoFinderCollection(new DirectoryInfo(Directory.GetCurrentDirectory()), new []{variant});
+            var collection = new ModinfoFinderCollection(new DirectoryInfo(Directory.GetCurrentDirectory()), new []{variant});
             Assert.Single(collection);
             Assert.Single(collection.Variants);
             Assert.Null(collection.MainModInfo);
@@ -32,7 +32,7 @@ namespace EawModinfo.Tests
         {
             var variant = ModinfoFileTests.GetVariantStandalone();
             var main = ModinfoFileTests.GetMain();
-            var collection = new ModInfoFinderCollection(new DirectoryInfo(Directory.GetCurrentDirectory()), main, new[] { variant });
+            var collection = new ModinfoFinderCollection(new DirectoryInfo(Directory.GetCurrentDirectory()), main, new[] { variant });
             Assert.Equal(2, collection.Count());
             Assert.Single(collection.Variants);
             Assert.NotNull(collection.MainModInfo);
@@ -44,7 +44,7 @@ namespace EawModinfo.Tests
             var variant = ModinfoFileTests.GetVariantStandalone();
             var variantM = ModinfoFileTests.GetVariantMerged();
             var main = ModinfoFileTests.GetMain();
-            var collection = new ModInfoFinderCollection(new DirectoryInfo(Directory.GetCurrentDirectory()), main, new[] { variant, variantM });
+            var collection = new ModinfoFinderCollection(new DirectoryInfo(Directory.GetCurrentDirectory()), main, new[] { variant, variantM });
             Assert.Equal(3, collection.Count());
             Assert.Equal(2, collection.Variants.Count);
             Assert.NotNull(collection.MainModInfo);
@@ -57,7 +57,7 @@ namespace EawModinfo.Tests
             var variantM = ModinfoFileTests.GetVariantMerged();
             var main = ModinfoFileTests.GetMain();
             Assert.Throws<ModinfoException>(() =>
-                new ModInfoFinderCollection(new DirectoryInfo(Directory.GetCurrentDirectory()), variant));
+                new ModinfoFinderCollection(new DirectoryInfo(Directory.GetCurrentDirectory()), variant));
         }
 
         [Fact]
@@ -65,7 +65,7 @@ namespace EawModinfo.Tests
         {
             var main = ModinfoFileTests.GetMain();
             Assert.Throws<ModinfoException>(() =>
-                new ModInfoFinderCollection(new DirectoryInfo(Directory.GetCurrentDirectory()), new []{main}));
+                new ModinfoFinderCollection(new DirectoryInfo(Directory.GetCurrentDirectory()), new []{main}));
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace EawModinfo.Tests
             var variant = ModinfoFileTests.GetVariantStandalone();
             var main = ModinfoFileTests.GetMain();
             Assert.Throws<ModinfoException>(() =>
-                new ModInfoFinderCollection(new DirectoryInfo(Directory.GetCurrentDirectory()), new[] { variant, main }));
+                new ModinfoFinderCollection(new DirectoryInfo(Directory.GetCurrentDirectory()), new[] { variant, main }));
         }
     }
 }
