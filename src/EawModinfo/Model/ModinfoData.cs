@@ -11,10 +11,11 @@ using NuGet.Versioning;
 
 namespace EawModinfo.Model
 {
+    /// <inheritdoc/>
     [JsonObject(MemberSerialization.OptIn)]
     public class ModinfoData : IModinfo
     {
-        [JsonIgnore] private HashSet<ILanguageInfo> _languages;
+        [JsonIgnore] private readonly HashSet<LanguageInfo> _languages = new HashSet<LanguageInfo>();
         [JsonIgnore] private SemanticVersion? _modVersion;
         [JsonIgnore] private bool _versionDetermined;
         [JsonIgnore] private bool _languagesDetermined;
@@ -25,18 +26,21 @@ namespace EawModinfo.Model
 
         [JsonIgnore] public bool HasDependencies => Dependencies.Count > 0;
 
+        /// <inheritdoc/>
         [JsonProperty("name", Required = Required.Always)]
         public string Name { get; internal set; }
 
+        /// <inheritdoc/>
         [JsonProperty("summary")] 
-        public string Summary { get; internal set; }
+        public string? Summary { get; internal set; }
 
         [JsonProperty("icon")] 
-        public string Icon { get; internal set; }
+        public string? Icon { get; internal set; }
 
         [JsonProperty("version")] 
-        private string StringVersion { get; set; }
+        private string? StringVersion { get; set; }
 
+        /// <inheritdoc/>
         public SemanticVersion? Version
         {
             get
@@ -49,20 +53,36 @@ namespace EawModinfo.Model
 
                 return _modVersion;
             }
-            internal set => _modVersion = value;
+            internal set
+            {
+                _modVersion = value;
+                StringVersion = value?.ToFullString();
+            }
         }
 
+        /// <inheritdoc/>
         [JsonProperty("custom")] 
         public IDictionary<string, object> Custom { get; internal set; }
 
+        /// <inheritdoc/>
         [JsonProperty("steamdata")]
         [JsonConverter(typeof(SteamDataTypeConverter))]
         public ISteamData? SteamData { get; internal set; }
 
-        [JsonProperty("languages")] 
-        public IEnumerable<LanguageInfo> InternalLanguages { get; internal set; }
 
+        [JsonProperty("languages")]
+        internal IEnumerable<LanguageInfo> InternalLanguages
+        {
+            get => _languages;
+            set
+            {
+                _languages.Clear();
+                foreach (var languageInfo in value) 
+                    _languages.Add(languageInfo);
+            }
+        }
 
+        /// <inheritdoc/>
         public IEnumerable<ILanguageInfo> Languages
         {
             get
@@ -70,19 +90,25 @@ namespace EawModinfo.Model
                 if (!_languagesDetermined)
                 {
                     if (!InternalLanguages.Any())
-                        _languages.Add(LanguageInfo.Default);
+                        _languages.Add(new LanguageInfo(LanguageInfo.Default));
                     else
                         foreach (var languageInfo in InternalLanguages)
                             _languages.Add(languageInfo);
+
                     _languagesDetermined = true;
                 }
 
                 return _languages;
             }
-            internal set => _languages = new HashSet<ILanguageInfo>(value);
+            internal set
+            {
+                _languages.Clear();
+                foreach (var languageInfo in value) 
+                    _languages.Add(new LanguageInfo(languageInfo));
+            }
         }
 
-
+        /// <inheritdoc/>
         [JsonProperty("dependencies", ItemConverterType = typeof(ModReferenceTypeConverter))]
         public IList<IModReference> Dependencies { get; internal set; }
 
@@ -91,13 +117,29 @@ namespace EawModinfo.Model
             Dependencies = new List<IModReference>();
             Custom = new Dictionary<string, object>();
             InternalLanguages = new HashSet<LanguageInfo>();
-            _languages = new HashSet<ILanguageInfo>();
         }
 
         internal ModinfoData(IModinfo baseModinfoData) : this()
         {
             Requires.NotNull(baseModinfoData, nameof(baseModinfoData));
             MergeFrom(baseModinfoData, true);
+        }
+
+
+        /// <summary>
+        /// Converts this instance to a json string.
+        /// </summary>
+        /// <param name="validate">If set to <see langword="true"/> this object get's validated first.</param>
+        /// <returns>The converted json string data</returns>
+        public string ToJson(bool validate = true)
+        {
+            if (validate)
+                this.Validate();
+            return JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                ContractResolver = ModInfoContractResolver.Instance
+            });
         }
 
         /// <summary>

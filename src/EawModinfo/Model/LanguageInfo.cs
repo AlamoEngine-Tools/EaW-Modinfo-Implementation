@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 
 namespace EawModinfo.Model
 {
+    /// <inheritdoc/>
     public class LanguageInfo : ILanguageInfo
     {
         /// <summary>

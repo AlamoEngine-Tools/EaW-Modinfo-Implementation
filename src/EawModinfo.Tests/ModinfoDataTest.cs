@@ -54,6 +54,7 @@ namespace EawModinfo.Tests
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
             Assert.Single(modinfo.Languages);
+            Assert.Single(modinfo.InternalLanguages);
         }
 
         [Fact]
@@ -74,6 +75,7 @@ namespace EawModinfo.Tests
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
             Assert.Equal(2, modinfo.Languages.Count());
+            Assert.Equal(2, modinfo.InternalLanguages.Count());
         }
 
         [Fact]
@@ -94,6 +96,7 @@ namespace EawModinfo.Tests
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
             Assert.Single(modinfo.Languages);
+            Assert.Single(modinfo.InternalLanguages);
         }
 
         [Fact]
@@ -115,6 +118,7 @@ namespace EawModinfo.Tests
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
             Assert.Single(modinfo.Languages);
+            Assert.Single(modinfo.InternalLanguages);
         }
 
         [Fact]
@@ -127,8 +131,11 @@ namespace EawModinfo.Tests
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
             Assert.Single(modinfo.Languages);
+            Assert.Single(modinfo.InternalLanguages);
             Assert.Equal("en",modinfo.Languages.ElementAt(0).Code);
+            Assert.Equal("en",modinfo.InternalLanguages.ElementAt(0).Code);
             Assert.Equal(LanguageSupportLevel.FullLocalized,modinfo.Languages.ElementAt(0).Support);
+            Assert.Equal(LanguageSupportLevel.FullLocalized,modinfo.InternalLanguages.ElementAt(0).Support);
         }
 
         [Fact]
@@ -283,6 +290,19 @@ namespace EawModinfo.Tests
             Assert.NotEqual(i6, i8);
             Assert.NotEqual(i6, i9);
             Assert.Equal(i8, i10);
+        }
+
+
+        [Fact]
+        public void WriterTest()
+        {
+            var modinfo = new ModinfoData();
+            modinfo.Name = "Test";
+            modinfo.Version = new SemanticVersion(1,1,1, "BETA");
+            var data = modinfo.ToJson(false);
+            Assert.Contains(@"""version"": ""1.1.1-BETA""", data);
+            Assert.Contains(@"""code"": ""en"",", data);
+            Assert.DoesNotContain(@"""custom"":", data);
         }
     }
 }
