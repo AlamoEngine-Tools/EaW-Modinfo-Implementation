@@ -15,7 +15,7 @@ namespace EawModinfo.Model
         /// </summary>
         public static readonly ILanguageInfo Default = new LanguageInfo {Code = "en", Support = LanguageSupportLevel.FullLocalized};
 
-        private CultureInfo? _culture;
+        [JsonIgnore] private CultureInfo? _culture;
 
         [JsonProperty("code")]
         public string Code { get; internal set; }
@@ -23,6 +23,7 @@ namespace EawModinfo.Model
         [JsonProperty("support", DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public LanguageSupportLevel Support { get; internal set; }
 
+        [JsonIgnore]
         public CultureInfo Culture => _culture ??= Code == null ? null : new CultureInfo(Code);
 
         internal LanguageInfo()
