@@ -31,5 +31,15 @@ namespace EawModinfo.Spec.Steam
         /// Steam Tags as specified by the Steam Uploader.
         /// </summary>
         public IEnumerable<string> Tags { get; }
+
+        /// <summary>
+        /// Description of the mod in Steam flavoured BB-Code.
+        /// </summary>
+        public string? Description { get; }
+
+        /// <summary>
+        /// Relative path to an image file which holds the preview image
+        /// </summary>
+        public string? PreviewFile { get; }
     }
 }

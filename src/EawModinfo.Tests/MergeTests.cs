@@ -30,7 +30,7 @@ namespace EawModinfo.Tests
             {
                 Name = "Variant of Mod",
                 Languages = new[] {new LanguageInfo {Code = "en"}, new LanguageInfo {Code = "de"}},
-                SteamData = new SteamData {Id = "123", Tags = new[] {"foc"}, ContentFolder = "bla"},
+                SteamData = new SteamData {Id = "123", Tags = new[] {"FOC"}, ContentFolder = "bla"},
                 Custom =
                     new Dictionary<string, object>(new[] {new KeyValuePair<string, object>("testKey2", "value")}),
                 Dependencies = new List<IModReference>(new[]

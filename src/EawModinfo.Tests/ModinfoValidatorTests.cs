@@ -102,39 +102,48 @@ namespace EawModinfo.Tests
             {
                 new SteamData
                 {
-                    Id = "1234312", Tags = new[] {"eaw"}, Metadata = "bla", ContentFolder = "testFolder",
+                    Id = "1234312", Tags = new[] {"EAW"}, Metadata = "bla", ContentFolder = "testFolder",
                     Visibility = SteamWorkshopVisibility.FriendsOnly
                 },
                 false
             };
             yield return new object[]
             {
-                new SteamData {Id = "1234312", Tags = new[] {"eaw"}, Metadata = "bla", ContentFolder = "testFolder"},
+                new SteamData {Id = "1234312", Tags = new[] {"EAW"}, Metadata = "bla", ContentFolder = "testFolder"},
                 false
             };
             yield return new object[]
-                {new SteamData {Id = "1234312", Tags = new[] {"eaw"}, ContentFolder = "testFolder"}, false};
+                {new SteamData {Id = "1234312", Tags = new[] {"EAW"}, ContentFolder = "testFolder"}, false};
+            yield return new object[]
+            {
+                new SteamData
+                {
+                    Id = "1234312", Tags = new[] {"EAW"}, ContentFolder = "testFolder", Description = "Some description"
+                },
+                false
+            };
         }
 
         public static IEnumerable<object[]> GetInvalidSteamData()
         {
             yield return new object[] {new SteamData(), true};
             yield return new object[]
-                {new SteamData {Id = "asd", Tags = new[] {"eaw"}, ContentFolder = "testFolder"}, true};
+                {new SteamData {Id = "asd", Tags = new[] {"EAW"}, ContentFolder = "testFolder"}, true};
             yield return new object[]
-                {new SteamData {Id = "0", Tags = new[] {"eaw"}, ContentFolder = "testFolder"}, true};
+                {new SteamData {Id = "0", Tags = new[] {"EAW"}, ContentFolder = "testFolder"}, true};
             yield return new object[]
-                {new SteamData {Id = "-123", Tags = new[] {"eaw"}, ContentFolder = "testFolder"}, true};
+                {new SteamData {Id = "-123", Tags = new[] {"EAW"}, ContentFolder = "testFolder"}, true};
             yield return new object[]
             {
-                new SteamData {Id = "129381209812430981329048", Tags = new[] {"eaw"}, ContentFolder = "testFolder"},
+                new SteamData {Id = "129381209812430981329048", Tags = new[] {"EAW"}, ContentFolder = "testFolder"},
                 true
             };
             yield return new object[]
                 {new SteamData {Id = "1234", Tags = new string[0], ContentFolder = "testFolder"}, true};
             yield return new object[] {new SteamData {Id = "1234", Tags = null, ContentFolder = "testFolder"}, true};
-            yield return new object[] {new SteamData {Id = "1234", Tags = new[] {"eaw"}, ContentFolder = ""}, true};
-            yield return new object[] {new SteamData {Id = "1234", Tags = new[] {"eaw"}, ContentFolder = null}, true};
+            yield return new object[] {new SteamData {Id = "1234", Tags = new[] { "EAW" }, ContentFolder = ""}, true};
+            yield return new object[] {new SteamData {Id = "1234", Tags = new[] { "EAW" }, ContentFolder = null}, true};
+            yield return new object[] {new SteamData {Id = "1234312", Tags = new[] {"test"}, Metadata = "bla", ContentFolder = "testFolder"}, true};
         }
 
         [Theory]

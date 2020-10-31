@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using EawModinfo.Model.Steam;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 
@@ -43,6 +44,8 @@ namespace EawModinfo.Utilities
                 throw new ModinfoException("Steam data is invalid: ContentFolder is missing.");
             if (steamData.Tags == null || !steamData.Tags.Any())
                 throw new ModinfoException("Steam data is invalid: No tags specified.");
+            if (!steamData.Tags.Intersect(SteamData.GameTags, StringComparer.InvariantCulture).Any())
+                throw new ModinfoException("Steam data is missing game tag FOC or EAW");
         }
 
         /// <summary>

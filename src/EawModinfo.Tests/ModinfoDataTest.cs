@@ -301,7 +301,7 @@ namespace EawModinfo.Tests
             modinfo.Version = new SemanticVersion(1,1,1, "BETA");
             var data = modinfo.ToJson(false);
             Assert.Contains(@"""version"": ""1.1.1-BETA""", data);
-            Assert.Contains(@"""code"": ""en"",", data);
+            Assert.Contains(@"""code"": ""en""", data);
             Assert.DoesNotContain(@"""custom"":", data);
         }
     }
