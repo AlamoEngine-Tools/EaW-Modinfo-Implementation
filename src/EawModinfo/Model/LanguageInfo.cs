@@ -26,6 +26,7 @@ namespace EawModinfo.Model
         [JsonIgnore]
         public CultureInfo Culture => _culture ??= Code == null ? null : new CultureInfo(Code);
 
+        [JsonConstructor]
         internal LanguageInfo()
         {
         }

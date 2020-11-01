@@ -39,6 +39,7 @@ namespace EawModinfo.Model.Steam
         [JsonProperty("previewfile")] 
         public string? PreviewFile { get; internal set; }
 
+        [JsonConstructor]
         internal SteamData()
         {
             Tags = new List<string>();

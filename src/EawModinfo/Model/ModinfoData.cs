@@ -112,6 +112,7 @@ namespace EawModinfo.Model
         [JsonProperty("dependencies", ItemConverterType = typeof(ModReferenceTypeConverter))]
         public IList<IModReference> Dependencies { get; internal set; }
 
+        [JsonConstructor]
         internal ModinfoData()
         {
             Dependencies = new List<IModReference>();

@@ -14,6 +14,7 @@ namespace EawModinfo.Model
         [JsonProperty("modtype", Required = Required.Always)]
         public ModType Type { get; internal set; }
 
+        [JsonConstructor]
         internal ModReference()
         {
         }
