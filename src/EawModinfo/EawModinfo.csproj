@@ -5,7 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
-    <Version>2.2.0.0</Version>
+    <Version>2.2.0.1</Version>
     <PackageId>eaw.modinfo</PackageId>
     <Authors>AnakinSklavenwalker</Authors>
     <Company>Republic at War Modding Team</Company>
@@ -13,7 +13,7 @@
     <Description>Reference implementation of the eaw.modinfo specification which is located at https://github.com/AlamoEngine-Tools/eaw.modinfo</Description>
     <Copyright>2020 - Anakin Sklavenwalker</Copyright>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>petroglyph, alamo, plyphx, foc, eaw</PackageTags>
+    <PackageTags>petroglyph, alamo, glyphx, foc, eaw</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <AssemblyName>Eaw.Modinfo</AssemblyName>
     <AssemblyVersion>2.1.0.0</AssemblyVersion>
