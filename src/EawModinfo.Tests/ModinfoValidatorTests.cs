@@ -103,22 +103,30 @@ namespace EawModinfo.Tests
                 new SteamData
                 {
                     Id = "1234312", Tags = new[] {"EAW"}, Metadata = "bla", ContentFolder = "testFolder",
-                    Visibility = SteamWorkshopVisibility.FriendsOnly
+                    Visibility = SteamWorkshopVisibility.FriendsOnly, Title = "MyTitle"
                 },
                 false
             };
             yield return new object[]
             {
-                new SteamData {Id = "1234312", Tags = new[] {"EAW"}, Metadata = "bla", ContentFolder = "testFolder"},
+                new SteamData
+                {
+                    Id = "1234312", Tags = new[] {"EAW"}, Metadata = "bla", ContentFolder = "testFolder",
+                    Title = "MyTitle"
+                },
                 false
             };
             yield return new object[]
-                {new SteamData {Id = "1234312", Tags = new[] {"EAW"}, ContentFolder = "testFolder"}, false};
+            {
+                new SteamData {Id = "1234312", Tags = new[] {"EAW"}, ContentFolder = "testFolder", Title = "MyTitle"},
+                false
+            };
             yield return new object[]
             {
                 new SteamData
                 {
-                    Id = "1234312", Tags = new[] {"EAW"}, ContentFolder = "testFolder", Description = "Some description"
+                    Id = "1234312", Tags = new[] {"EAW"}, ContentFolder = "testFolder",
+                    Description = "Some description", Title = "MyTitle"
                 },
                 false
             };

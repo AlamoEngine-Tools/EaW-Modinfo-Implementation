@@ -30,7 +30,7 @@ namespace EawModinfo.Tests
             {
                 Name = "Variant of Mod",
                 Languages = new[] {new LanguageInfo {Code = "en"}, new LanguageInfo {Code = "de"}},
-                SteamData = new SteamData {Id = "123", Tags = new[] {"FOC"}, ContentFolder = "bla"},
+                SteamData = new SteamData {Id = "123", Tags = new[] {"FOC"}, ContentFolder = "bla", Title = "Title"},
                 Custom =
                     new Dictionary<string, object>(new[] {new KeyValuePair<string, object>("testKey2", "value")}),
                 Dependencies = new List<IModReference>(new[]
@@ -50,6 +50,7 @@ namespace EawModinfo.Tests
             Assert.NotSame(mainData.Dependencies[0], newData.Dependencies[0]);
             Assert.NotNull(newData.SteamData);
             Assert.Equal(variantData.SteamData!.Id, newData.SteamData.Id);
+            Assert.Equal(variantData.SteamData!.Title, newData.SteamData.Title);
             Assert.Equal(2, newData.Custom.Count);
             Assert.Equal(new SemanticVersion(1,2,2), newData.Version);
             Assert.NotSame(variantData.Version, newData.Version);

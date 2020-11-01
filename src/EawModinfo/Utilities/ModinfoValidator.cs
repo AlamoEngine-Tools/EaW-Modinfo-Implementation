@@ -42,6 +42,8 @@ namespace EawModinfo.Utilities
 
             if (string.IsNullOrEmpty(steamData.ContentFolder))
                 throw new ModinfoException("Steam data is invalid: ContentFolder is missing.");
+            if (string.IsNullOrEmpty(steamData.Title))
+                throw new ModinfoException("Steam data is invalid: Title is missing.");
             if (steamData.Tags == null || !steamData.Tags.Any())
                 throw new ModinfoException("Steam data is invalid: No tags specified.");
             if (!steamData.Tags.Intersect(SteamData.GameTags, StringComparer.InvariantCulture).Any())

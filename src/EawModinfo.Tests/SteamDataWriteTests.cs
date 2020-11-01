@@ -14,6 +14,7 @@ namespace EawModinfo.Tests
                 ContentFolder = "Test",
                 Id = "123",
                 Tags = new[] {"FOC"},
+                Title = "Title",
                 Visibility = SteamWorkshopVisibility.Private,
             };
 
@@ -22,7 +23,7 @@ namespace EawModinfo.Tests
             Assert.Contains(@"""contentfolder"": ""Test""", data);
             Assert.Contains(@"""publishedfileid"": ""123""", data);
             Assert.Contains(@"""visibility"": 2", data);
-            Assert.DoesNotContain(@"""metadata"":", data);
+            Assert.Contains(@"""metadata"": """"", data);
 
 
             var steamDat2 = new SteamData
@@ -31,6 +32,7 @@ namespace EawModinfo.Tests
                 Id = "123",
                 Tags = new[] {"FOC"},
                 Visibility = SteamWorkshopVisibility.Private,
+                Title = "Title",
                 Metadata = "test"
             };
             var data2 = steamDat2.ToJson(false);

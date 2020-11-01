@@ -41,5 +41,10 @@ namespace EawModinfo.Spec.Steam
         /// Relative path to an image file which holds the preview image
         /// </summary>
         public string? PreviewFile { get; }
+
+        /// <summary>
+        /// The display name of the mod in Steam Workshops.
+        /// </summary>
+        public string Title { get; }
     }
 }

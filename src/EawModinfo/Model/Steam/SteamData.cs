@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
 using Microsoft;
@@ -39,6 +41,10 @@ namespace EawModinfo.Model.Steam
         [JsonProperty("previewfile")] 
         public string? PreviewFile { get; internal set; }
 
+        /// <inheritdoc/>
+        [JsonProperty("title", Required = Required.Always)]
+        public string Title { get; internal set; }
+
         [JsonConstructor]
         internal SteamData()
         {
@@ -59,6 +65,7 @@ namespace EawModinfo.Model.Steam
             Tags = steamData.Tags;
             Description = steamData.Description;
             PreviewFile = steamData.PreviewFile;
+            Title = steamData.Title;
         }
 
         /// <summary>
@@ -83,7 +90,8 @@ namespace EawModinfo.Model.Steam
                 this.Validate();
             return JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
             {
-                NullValueHandling = NullValueHandling.Ignore
+                NullValueHandling = NullValueHandling.Include,
+                ContractResolver = SteamDataResolver.Instance
             });
         }
     }

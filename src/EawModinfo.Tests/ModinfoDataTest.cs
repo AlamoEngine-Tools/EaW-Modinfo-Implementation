@@ -220,6 +220,7 @@ namespace EawModinfo.Tests
         'publishedfileid':'123',
         'contentfolder':'path',
         'visibility':0,
+        'title':'test',
         'tags':[
             'foc', 'eaw'
         ]
@@ -228,6 +229,7 @@ namespace EawModinfo.Tests
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
             Assert.Equal("123", modinfo.SteamData.Id);
+            Assert.Equal("test", modinfo.SteamData.Title);
             Assert.Equal("path", modinfo.SteamData.ContentFolder);
             Assert.Equal(SteamWorkshopVisibility.Public, modinfo.SteamData.Visibility);
             Assert.Null(modinfo.SteamData.Metadata);
