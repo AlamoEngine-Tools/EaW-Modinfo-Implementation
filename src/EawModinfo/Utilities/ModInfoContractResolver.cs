@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Linq;
 using System.Reflection;
+using EawModinfo.Model;
 using EawModinfo.Spec;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace EawModinfo.Model
+namespace EawModinfo.Utilities
 {
     internal class ModInfoContractResolver : DefaultContractResolver
     {

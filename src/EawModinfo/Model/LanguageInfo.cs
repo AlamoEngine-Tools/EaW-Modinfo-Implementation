@@ -30,13 +30,17 @@ namespace EawModinfo.Model
         {
         }
 
-        internal LanguageInfo(ILanguageInfo languageInfo)
+        /// <summary>
+        /// Creates a new instance from a given <see cref="ILanguageInfo"/> instance.
+        /// </summary>
+        /// <param name="languageInfo">The instance that will copied.</param>
+        public LanguageInfo(ILanguageInfo languageInfo)
         {
             Requires.NotNull(languageInfo, nameof(languageInfo));
             Code = languageInfo.Code;
             Support = languageInfo.Support;
         }
-
+        
         /// <summary>
         /// Parses and deserializes a json data into a <see cref="LanguageInfo"/>
         /// </summary>

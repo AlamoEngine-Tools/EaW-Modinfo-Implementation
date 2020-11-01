@@ -18,7 +18,11 @@ namespace EawModinfo.Model
         {
         }
 
-        internal ModReference(IModReference modReference)
+        /// <summary>
+        /// Creates a new instance from a given <see cref="IModReference"/> instance.
+        /// </summary>
+        /// <param name="modReference">The instance that will copied.</param>
+        public ModReference(IModReference modReference)
         {
             Requires.NotNull(modReference, nameof(modReference));
             Identifier = modReference.Identifier;

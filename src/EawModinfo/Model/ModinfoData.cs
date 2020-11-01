@@ -119,10 +119,14 @@ namespace EawModinfo.Model
             InternalLanguages = new HashSet<LanguageInfo>();
         }
 
-        internal ModinfoData(IModinfo baseModinfoData) : this()
+        /// <summary>
+        /// Creates a new instance from a given <see cref="IModinfo"/> instance.
+        /// </summary>
+        /// <param name="modinfo">The instance that will copied.</param>
+        public ModinfoData(IModinfo modinfo) : this()
         {
-            Requires.NotNull(baseModinfoData, nameof(baseModinfoData));
-            MergeFrom(baseModinfoData, true);
+            Requires.NotNull(modinfo, nameof(modinfo));
+            MergeFrom(modinfo, true);
         }
 
 
