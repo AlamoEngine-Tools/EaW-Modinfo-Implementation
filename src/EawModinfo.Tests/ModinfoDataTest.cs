@@ -306,5 +306,18 @@ namespace EawModinfo.Tests
             Assert.Contains(@"""code"": ""en""", data);
             Assert.DoesNotContain(@"""custom"":", data);
         }
+
+        [Fact]
+        public void TolerantVersionParseTest()
+        {
+            var data = @"
+{
+    'name':'My Mod Name',
+    'version': '1.0'
+}";
+            var modinfo = ModinfoData.Parse(data);
+            Assert.Equal("My Mod Name", modinfo.Name);
+            Assert.Equal(new SemanticVersion(1, 0, 0) , modinfo.Version);
+        }
     }
 }

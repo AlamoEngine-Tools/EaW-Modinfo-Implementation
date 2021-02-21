@@ -47,7 +47,7 @@ namespace EawModinfo.Model
             {
                 if (_modVersion is null && !_versionDetermined)
                 {
-                    _modVersion = string.IsNullOrEmpty(StringVersion) ? null : SemanticVersion.Parse(StringVersion);
+                    _modVersion =  SemVerHelper.CreateSanitizedVersion(StringVersion);
                     _versionDetermined = true;
                 }
 

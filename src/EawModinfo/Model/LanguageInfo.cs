@@ -4,6 +4,10 @@ using EawModinfo.Utilities;
 using Newtonsoft.Json;
 using Validation;
 
+#if NETSTANDARD2_1 || NET
+using System;
+#endif
+
 namespace EawModinfo.Model
 {
     /// <inheritdoc/>
@@ -70,7 +74,7 @@ namespace EawModinfo.Model
 
         public override int GetHashCode()
         {
-#if NETSTANDARD2_1
+#if NETSTANDARD2_1 || NET
             return HashCode.Combine(Culture);
 #else
             return Culture == null ? 0 : Culture.GetHashCode();
