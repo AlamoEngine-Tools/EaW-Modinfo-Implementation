@@ -5,7 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
-    <Version>2.2.0.3</Version>
+    <Version>3.0.0+2.2.0</Version>
     <PackageId>eaw.modinfo</PackageId>
     <Authors>AnakinSklavenwalker</Authors>
     <Company>Republic at War Modding Team</Company>
@@ -16,8 +16,8 @@
     <PackageTags>petroglyph, alamo, glyphx, foc, eaw</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <AssemblyName>Eaw.Modinfo</AssemblyName>
-    <AssemblyVersion>2.2.0.0</AssemblyVersion>
-    <FileVersion>2.2.0.0</FileVersion>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
     <PackageProjectUrl>https://github.com/AlamoEngine-Tools/EaW-Modinfo-Implementation</PackageProjectUrl>
     <RepositoryUrl>https://github.com/AlamoEngine-Tools/EaW-Modinfo-Implementation</RepositoryUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
