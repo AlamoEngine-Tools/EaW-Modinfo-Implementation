@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
     <Version>2.2.0.3</Version>
     <PackageId>eaw.modinfo</PackageId>
