@@ -1,9 +1,8 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using EawModinfo.Spec;
 using EawModinfo.Utilities;
-using Microsoft;
 using Newtonsoft.Json;
+using Validation;
 
 namespace EawModinfo.Model
 {

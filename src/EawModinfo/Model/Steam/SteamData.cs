@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
-using Microsoft;
 using Newtonsoft.Json;
+using Validation;
 
 namespace EawModinfo.Model.Steam
 {

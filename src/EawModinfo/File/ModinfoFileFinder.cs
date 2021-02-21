@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using EawModinfo.Spec;
-using Microsoft;
+using Validation;
 
 namespace EawModinfo.File
 {

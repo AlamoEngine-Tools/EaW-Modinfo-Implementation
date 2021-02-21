@@ -5,9 +5,9 @@ using EawModinfo.Model.Steam;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
-using Microsoft;
 using Newtonsoft.Json;
 using NuGet.Versioning;
+using Validation;
 
 namespace EawModinfo.Model
 {

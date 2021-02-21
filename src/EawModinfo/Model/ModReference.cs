@@ -1,8 +1,8 @@
 ﻿using System;
 using EawModinfo.Spec;
 using EawModinfo.Utilities;
-using Microsoft;
 using Newtonsoft.Json;
+using Validation;
 
 namespace EawModinfo.Model
 {
@@ -58,7 +58,7 @@ namespace EawModinfo.Model
         
         public override int GetHashCode()
         {
-#if NETSTANDARD2_1
+#if NETSTANDARD2_1 || NET
             return HashCode.Combine(Identifier, (int) Type);
 #else
             unchecked
