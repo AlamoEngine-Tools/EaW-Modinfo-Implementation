@@ -170,22 +170,7 @@ namespace EawModinfo.Model
 
         bool IEquatable<IModIdentity>.Equals(IModIdentity? other)
         {
-            if (ReferenceEquals(this, other))
-                return true;
-            if (other is null)
-                return false;
-            if (!Name.Equals(other.Name))
-                return false;
-            if (!Equals(Version, other.Version))
-                return false;
-
-            if (Dependencies.Count != other.Dependencies.Count)
-                return false;
-
-            if (!Dependencies.SequenceEqual(other.Dependencies))
-                return false;
-
-            return true;
+            return ModIdentityEqualityComparer.Default.Equals(this, other);
         }
 
         internal void MergeFrom(IModinfo target)
