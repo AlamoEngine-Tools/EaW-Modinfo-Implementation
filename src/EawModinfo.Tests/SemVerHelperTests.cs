@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
+﻿using System.Collections.Generic;
 using EawModinfo.Utilities;
 using NuGet.Versioning;
 using Xunit;
@@ -17,9 +15,9 @@ namespace EawModinfo.Tests
             _output = output;
         }
 
-        public static IEnumerable<object[]> GetTestData()
+        public static IEnumerable<object?[]> GetTestData()
         {
-            yield return new object[] {null,null};
+            yield return new object?[] { null, null };
             yield return new object[] {"1", new SemanticVersion(1, 0, 0)};
             yield return new object[] {"1.0", new SemanticVersion(1, 0, 0)};
             yield return new object[] {"1.0.0", new SemanticVersion(1, 0, 0)};

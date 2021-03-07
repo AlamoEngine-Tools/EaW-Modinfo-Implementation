@@ -20,10 +20,7 @@ namespace EawModinfo.Tests
                 Icon = "icon.ico",
                 Languages = new[] {new LanguageInfo {Code = "en"}},
                 Dependencies = new List<IModReference>(new[] {new ModReference {Identifier = "bla"}}),
-                Custom = new Dictionary<string, object>(new[]
-                {
-                    new KeyValuePair<string, object>("testKey1", "value"),
-                })
+                Custom = new Dictionary<string, object> { { "testKey1", "value" } }
             };
 
             var variantData = new ModinfoData
@@ -31,8 +28,7 @@ namespace EawModinfo.Tests
                 Name = "Variant of Mod",
                 Languages = new[] {new LanguageInfo {Code = "en"}, new LanguageInfo {Code = "de"}},
                 SteamData = new SteamData {Id = "123", Tags = new[] {"FOC"}, ContentFolder = "bla", Title = "Title"},
-                Custom =
-                    new Dictionary<string, object>(new[] {new KeyValuePair<string, object>("testKey2", "value")}),
+                Custom = new Dictionary<string, object> { { "testKey2", "value" } },
                 Dependencies = new List<IModReference>(new[]
                 {
                     new ModReference {Identifier = "bla"}, new ModReference {Identifier = "blub"}
@@ -49,8 +45,8 @@ namespace EawModinfo.Tests
             Assert.Equal("bla", newData.Dependencies[0].Identifier);
             Assert.NotSame(mainData.Dependencies[0], newData.Dependencies[0]);
             Assert.NotNull(newData.SteamData);
-            Assert.Equal(variantData.SteamData!.Id, newData.SteamData.Id);
-            Assert.Equal(variantData.SteamData!.Title, newData.SteamData.Title);
+            Assert.Equal(variantData.SteamData!.Id, newData.SteamData?.Id);
+            Assert.Equal(variantData.SteamData!.Title, newData.SteamData?.Title);
             Assert.Equal(2, newData.Custom.Count);
             Assert.Equal(new SemanticVersion(1,2,2), newData.Version);
             Assert.NotSame(variantData.Version, newData.Version);

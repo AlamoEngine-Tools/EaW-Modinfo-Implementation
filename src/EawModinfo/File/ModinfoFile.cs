@@ -26,6 +26,10 @@ namespace EawModinfo.File
         /// </summary>
         internal abstract IModFileNameValidator FileNameValidator { get; }
 
+        /// <summary>
+        /// Creates a new <see cref="ModinfoFile"/> instance
+        /// </summary>
+        /// <param name="file">The file representation</param>
         protected ModinfoFile(FileInfo file)
         {
             Requires.NotNull(file, nameof(file));
@@ -121,11 +125,13 @@ namespace EawModinfo.File
             return sb.ToString();
         }
 
-        public bool Equals(IModinfoFile other)
+        /// <inheritdoc/>
+        public bool Equals(IModinfoFile? other)
         {
-            return File.Equals(other.File);
+            return File.Equals(other?.File);
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -134,6 +140,7 @@ namespace EawModinfo.File
             return Equals((ModinfoFile) obj);
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             return File.GetHashCode();

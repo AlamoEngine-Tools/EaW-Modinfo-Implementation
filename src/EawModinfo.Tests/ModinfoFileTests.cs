@@ -118,8 +118,8 @@ namespace EawModinfo.Tests
         [Fact]
         public void TestCtorNull()
         {
-            Assert.Throws<ArgumentNullException>(() => new MainModinfoFile(null));
-            Assert.Throws<ArgumentNullException>(() => new ModinfoVariantFile(null));
+            Assert.Throws<ArgumentNullException>(() => new MainModinfoFile(null!));
+            Assert.Throws<ArgumentNullException>(() => new ModinfoVariantFile(null!));
         }
 
 

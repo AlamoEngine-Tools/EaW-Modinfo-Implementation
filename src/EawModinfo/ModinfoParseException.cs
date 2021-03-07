@@ -7,10 +7,12 @@ namespace EawModinfo
     /// </summary>
     public sealed class ModinfoParseException : ModinfoException
     {
+        /// <inheritdoc/>
         public ModinfoParseException(string message) : base(message)
         {
         }
 
+        /// <inheritdoc/>
         public ModinfoParseException(string message, Exception inner) : base(message, inner)
         {
         }

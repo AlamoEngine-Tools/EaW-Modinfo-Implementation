@@ -13,11 +13,11 @@ namespace EawModinfo.Model.Steam
 
         /// <inheritdoc/>
         [JsonProperty("publishedfileid", Required = Required.Always)]
-        public string Id { get; internal set; }
+        public string Id { get; internal set; } = string.Empty;
 
         /// <inheritdoc/>
         [JsonProperty("contentfolder", Required = Required.Always)]
-        public string ContentFolder { get; internal set; }
+        public string ContentFolder { get; internal set; } = string.Empty;
 
         /// <inheritdoc/>
         [JsonProperty("visibility", Required = Required.Always)]
@@ -41,7 +41,7 @@ namespace EawModinfo.Model.Steam
 
         /// <inheritdoc/>
         [JsonProperty("title", Required = Required.Always)]
-        public string Title { get; internal set; }
+        public string Title { get; internal set; } = string.Empty;
 
         [JsonConstructor]
         internal SteamData()

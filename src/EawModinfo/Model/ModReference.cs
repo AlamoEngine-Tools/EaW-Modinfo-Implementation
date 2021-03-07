@@ -6,13 +6,16 @@ using Validation;
 
 namespace EawModinfo.Model
 {
+    /// <inheritdoc/>
     public class ModReference : IModReference
     {
+        /// <inheritdoc/>
         [JsonProperty("identifier", Required = Required.Always)]
-        public string Identifier { get; internal set; }
+        public string Identifier { get; internal init; } = string.Empty;
 
+        /// <inheritdoc/>
         [JsonProperty("modtype", Required = Required.Always)]
-        public ModType Type { get; internal set; }
+        public ModType Type { get; internal init; }
 
         [JsonConstructor]
         internal ModReference()
@@ -41,11 +44,12 @@ namespace EawModinfo.Model
             return ParseUtility.Parse<ModReference>(data);
         }
 
-        bool IEquatable<IModReference>.Equals(IModReference other)
+        bool IEquatable<IModReference>.Equals(IModReference? other)
         {
-            return Identifier == other.Identifier && Type == other.Type;
+            return Identifier == other?.Identifier && Type == other.Type;
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -55,7 +59,8 @@ namespace EawModinfo.Model
             return false;
 
         }
-        
+
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
 #if NETSTANDARD2_1 || NET

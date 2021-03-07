@@ -15,25 +15,35 @@ namespace EawModinfo.Model
     [JsonObject(MemberSerialization.OptIn)]
     public class ModinfoData : IModinfo
     {
-        [JsonIgnore] private readonly HashSet<LanguageInfo> _languages = new HashSet<LanguageInfo>();
+        [JsonIgnore] private readonly HashSet<LanguageInfo> _languages = new();
         [JsonIgnore] private SemanticVersion? _modVersion;
         [JsonIgnore] private bool _versionDetermined;
         [JsonIgnore] private bool _languagesDetermined;
 
+        /// <summary>
+        /// Returns <see langword="true"/> whether <see cref="Custom"/> has any contents; <see langword="false"/> otherwise.
+        /// </summary>
         [JsonIgnore] public bool HasCustomObjects => Custom.Count > 0;
 
+        /// <summary>
+        /// Returns <see langword="true"/> whether <see cref="SteamData"/> is present; <see langword="false"/> otherwise.
+        /// </summary>
         [JsonIgnore] public bool HasSteamData => SteamData != null;
 
+        /// <summary>
+        /// Returns <see langword="true"/> whether this instance has any dependencies; <see langword="false"/> otherwise.
+        /// </summary>
         [JsonIgnore] public bool HasDependencies => Dependencies.Count > 0;
 
         /// <inheritdoc/>
         [JsonProperty("name", Required = Required.Always)]
-        public string Name { get; internal set; }
+        public string Name { get; internal set; } = string.Empty;
 
         /// <inheritdoc/>
         [JsonProperty("summary")] 
         public string? Summary { get; internal set; }
 
+        /// <inheritdoc/>
         [JsonProperty("icon")] 
         public string? Icon { get; internal set; }
 

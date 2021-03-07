@@ -7,6 +7,7 @@ using Validation;
 
 namespace EawModinfo.File
 {
+    /// <inheritdoc/>
     public sealed class ModinfoFileFinder : IModinfoFileFinder
     {
         /// <inheritdoc/>
@@ -15,12 +16,21 @@ namespace EawModinfo.File
         /// <inheritdoc/>
         public IModinfo? BaseModinfo { get; set; }
 
+        /// <summary>
+        /// Creates a new <see cref="ModinfoFileFinder"/> instance
+        /// </summary>
+        /// <param name="directoryInfo">The directory where to search.</param>
+        /// <param name="baseModinfo">The base <see cref="IModinfo"/> that shall get merged from, if present.</param>
         public ModinfoFileFinder(DirectoryInfo directoryInfo, IModinfo? baseModinfo)
         {
             Directory = directoryInfo;
             BaseModinfo = baseModinfo;
         }
 
+        /// <summary>
+        /// Creates a new <see cref="ModinfoFileFinder"/> instance.
+        /// </summary>
+        /// <param name="directoryInfo">The directory where to search.</param>
         public ModinfoFileFinder(DirectoryInfo directoryInfo) : this(directoryInfo, null)
         {
         }
