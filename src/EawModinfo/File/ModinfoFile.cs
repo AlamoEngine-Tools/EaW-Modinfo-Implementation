@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.IO.Abstractions;
 using System.Text;
 using System.Threading.Tasks;
 using EawModinfo.Model;
@@ -19,7 +20,7 @@ namespace EawModinfo.File
         public abstract ModinfoFileKind FileKind { get; }
 
         /// <inheritdoc/>
-        public FileInfo File { get; }
+        public IFileInfo File { get; }
 
         /// <summary>
         /// Validator for file names.
@@ -30,7 +31,7 @@ namespace EawModinfo.File
         /// Creates a new <see cref="ModinfoFile"/> instance
         /// </summary>
         /// <param name="file">The file representation</param>
-        protected ModinfoFile(FileInfo file)
+        protected ModinfoFile(IFileInfo file)
         {
             Requires.NotNull(file, nameof(file));
             File = file;
@@ -110,7 +111,7 @@ namespace EawModinfo.File
             return ModinfoData.Parse(text);
         }
 
-        private static async Task<string> ReadTextAsync(FileSystemInfo fileInfo)
+        private static async Task<string> ReadTextAsync(IFileSystemInfo fileInfo)
         {
             using var sourceStream = new FileStream(fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, true);
             var sb = new StringBuilder();

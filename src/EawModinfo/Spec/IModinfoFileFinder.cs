@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.IO.Abstractions;
 
 namespace EawModinfo.Spec
 {
@@ -10,7 +11,7 @@ namespace EawModinfo.Spec
         /// <summary>
         /// The directory where the instance will search. 
         /// </summary>
-        DirectoryInfo Directory { get; set; }
+        IDirectoryInfo Directory { get; set; }
 
         /// <summary>
         /// When set, variant files will get merged with this data; 

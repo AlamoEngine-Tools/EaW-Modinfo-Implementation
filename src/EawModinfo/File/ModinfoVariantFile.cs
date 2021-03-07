@@ -1,5 +1,5 @@
 ﻿using System;
-using System.IO;
+using System.IO.Abstractions;
 using System.Threading.Tasks;
 using EawModinfo.Model;
 using EawModinfo.Spec;
@@ -29,7 +29,7 @@ namespace EawModinfo.File
         /// Creates a variant modinfo file from on a handle.
         /// </summary>
         /// <param name="variant">The file handle.</param>
-        public ModinfoVariantFile(FileInfo variant) : this(variant, (IModinfo?) null)
+        public ModinfoVariantFile(IFileInfo variant) : this(variant, (IModinfo?) null)
         {
         }
 
@@ -38,7 +38,7 @@ namespace EawModinfo.File
         /// </summary>
         /// <param name="variant">The file handle.</param>
         /// <param name="mainModinfoFile">The main modinfo file</param>
-        public ModinfoVariantFile(FileInfo variant, IModinfoFile? mainModinfoFile) : base(variant)
+        public ModinfoVariantFile(IFileInfo variant, IModinfoFile? mainModinfoFile) : base(variant)
         {
             if (mainModinfoFile?.FileKind == ModinfoFileKind.VariantFile)
                 throw new ModinfoException("A ModinfoFile's base cannot be a variant file too.");
@@ -50,7 +50,7 @@ namespace EawModinfo.File
         /// </summary>
         /// <param name="variant">The file handle.</param>
         /// <param name="mainModinfoData">The main modinfo data</param>
-        public ModinfoVariantFile(FileInfo variant, IModinfo? mainModinfoData) : base(variant)
+        public ModinfoVariantFile(IFileInfo variant, IModinfo? mainModinfoData) : base(variant)
         {
             _mainModinfoData = mainModinfoData;
         }

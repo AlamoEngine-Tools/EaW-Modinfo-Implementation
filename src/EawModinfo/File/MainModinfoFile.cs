@@ -1,4 +1,4 @@
-﻿using System.IO;
+﻿using System.IO.Abstractions;
 using EawModinfo.Spec;
 
 namespace EawModinfo.File
@@ -17,7 +17,7 @@ namespace EawModinfo.File
         internal override IModFileNameValidator FileNameValidator => new Validator();
 
         /// <inheritdoc/>
-        public MainModinfoFile(FileInfo modinfoFile) : base(modinfoFile)
+        public MainModinfoFile(IFileInfo modinfoFile) : base(modinfoFile)
         {
         }
         
