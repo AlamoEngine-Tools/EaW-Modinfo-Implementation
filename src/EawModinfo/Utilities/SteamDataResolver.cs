@@ -7,7 +7,7 @@ namespace EawModinfo.Utilities
 {
     internal class SteamDataResolver : DefaultContractResolver
     {
-        public static SteamDataResolver Instance = new SteamDataResolver();
+        public static SteamDataResolver Instance = new();
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             var property = base.CreateProperty(member, memberSerialization);

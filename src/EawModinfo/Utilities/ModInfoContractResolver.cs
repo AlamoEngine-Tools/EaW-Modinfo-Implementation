@@ -10,7 +10,7 @@ namespace EawModinfo.Utilities
 {
     internal class ModInfoContractResolver : DefaultContractResolver
     {
-        public static readonly ModInfoContractResolver Instance = new ModInfoContractResolver();
+        public static readonly ModInfoContractResolver Instance = new();
 
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
