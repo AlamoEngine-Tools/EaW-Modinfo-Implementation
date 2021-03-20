@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.IO.Abstractions;
-using System.Text;
+﻿using System.IO.Abstractions;
 using System.Threading.Tasks;
 using EawModinfo.Model;
 using EawModinfo.Spec;
@@ -85,9 +83,9 @@ namespace EawModinfo.File
         /// Deserializes the file's content async.
         /// </summary>
         /// <returns>The deserialization task.</returns>
-        protected virtual async Task<IModinfo> GetModinfoCoreAsync()
+        protected virtual Task<IModinfo> GetModinfoCoreAsync()
         {
-            return await ParseAsync().ConfigureAwait(false);
+            return ParseAsync();
         }
 
         /// <summary>
@@ -101,7 +99,7 @@ namespace EawModinfo.File
 
         private async Task<IModinfo> ParseAsync()
         {
-            var text = await ReadTextAsync(File).ConfigureAwait(false);
+            var text = await ReadTextAsync().ConfigureAwait(false);
             return await Task.Run(() => ModinfoData.Parse(text)).ConfigureAwait(false);
         }
 
@@ -112,19 +110,16 @@ namespace EawModinfo.File
             return ModinfoData.Parse(text);
         }
 
-        private static async Task<string> ReadTextAsync(IFileSystemInfo fileInfo)
+        private Task<string> ReadTextAsync()
         {
-            using var sourceStream = new FileStream(fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, true);
-            var sb = new StringBuilder();
+            var fs = File.FileSystem;
 
-            var buffer = new byte[0x1000];
-            int numRead;
-            while ((numRead = await sourceStream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false)) != 0)
-            {
-                var text = Encoding.Unicode.GetString(buffer, 0, numRead);
-                sb.Append(text);
-            }
-            return sb.ToString();
+#if NET || NETSTANDARD2_1
+            return fs.File.ReadAllTextAsync(File.FullName);
+#else
+            using var reader = fs.File.OpenText(File.FullName);
+            return reader.ReadToEndAsync();
+#endif
         }
 
         /// <inheritdoc/>
@@ -136,10 +131,11 @@ namespace EawModinfo.File
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != GetType()) return false;
-            return Equals((ModinfoFile) obj);
+            if (obj is null) 
+                return false;
+            if (ReferenceEquals(this, obj)) 
+                return true;
+            return obj.GetType() == GetType() && Equals((ModinfoFile) obj);
         }
 
         /// <inheritdoc/>
