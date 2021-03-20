@@ -52,8 +52,10 @@ namespace EawModinfo.Model
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
+            if (obj is null) 
+                return false;
+            if (ReferenceEquals(this, obj)) 
+                return true;
             if (obj is IModReference reference) 
                 return ((IEquatable<IModReference>)this).Equals(reference);
             return false;

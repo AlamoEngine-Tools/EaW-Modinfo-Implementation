@@ -32,17 +32,13 @@ namespace EawModinfo.Utilities
                     {
                         var modinfo = (IModinfo) instance;
                         var name = property.PropertyName;
-                        switch (name)
+                        return name switch
                         {
-                            case "custom":
-                                return modinfo.Custom.Any();
-                            case "languages":
-                                return modinfo.Languages.Any();
-                            case "dependencies":
-                                return modinfo.Dependencies.Any();
-                            default:
-                                return true;
-                        }
+                            "custom" => modinfo.Custom.Any(),
+                            "languages" => modinfo.Languages.Any(),
+                            "dependencies" => modinfo.Dependencies.Any(),
+                            _ => true
+                        };
                     };
             }
         }

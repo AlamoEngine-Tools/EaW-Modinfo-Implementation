@@ -123,14 +123,14 @@ namespace EawModinfo.File
             if (!Directory.Exists)
                 throw new DirectoryNotFoundException($"Directory could not be found at '{Directory.FullName}'");
             ModinfoFile? mainModinfoFile = FindMainModinfoFileCore();
-            List<ModinfoVariantFile> variantFiles = new List<ModinfoVariantFile>();
+            List<ModinfoVariantFile> variantFiles = new();
             if (options.HasFlag(FindOptions.FindVariants))
                 variantFiles.AddRange(FindModinfoVariantFilesCore(mainModinfoFile?.GetModinfo() ?? BaseModinfo));
 
 
-            if (!options.HasFlag(FindOptions.FindMain))
-                return new ModinfoFinderCollection(Directory, null, variantFiles);
-            return new ModinfoFinderCollection(Directory, mainModinfoFile, variantFiles);
+            return !options.HasFlag(FindOptions.FindMain)
+                ? new ModinfoFinderCollection(Directory, null, variantFiles)
+                : new ModinfoFinderCollection(Directory, mainModinfoFile, variantFiles);
         }
 
         private MainModinfoFile? FindMainModinfoFileCore()

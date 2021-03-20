@@ -58,7 +58,7 @@ namespace EawModinfo.File
         /// <inheritdoc/>
         protected override async Task<IModinfo> GetModinfoCoreAsync()
         {
-            var data = await base.GetModinfoCoreAsync();
+            var data = await base.GetModinfoCoreAsync().ConfigureAwait(false);
             if (_mainModinfoData is null && _mainModinfoFile != null)
             {
                 if (await _mainModinfoFile.GetModinfoAsync().ConfigureAwait(false) is not ModinfoData mainData)
