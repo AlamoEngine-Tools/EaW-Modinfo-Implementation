@@ -21,6 +21,7 @@
     <PackageProjectUrl>https://github.com/AlamoEngine-Tools/EaW-Modinfo-Implementation</PackageProjectUrl>
     <RepositoryUrl>https://github.com/AlamoEngine-Tools/EaW-Modinfo-Implementation</RepositoryUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
   </PropertyGroup>
 
   <ItemGroup>
