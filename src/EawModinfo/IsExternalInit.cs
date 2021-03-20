@@ -8,6 +8,7 @@
 namespace System.Runtime.CompilerServices
 {
 #pragma warning disable CS1591
+    // ReSharper disable once UnusedMember.Global
     public class IsExternalInit { }
 #pragma warning restore CS1591
 }
