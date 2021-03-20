@@ -5,6 +5,8 @@
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../../AlamoEngineTools.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>

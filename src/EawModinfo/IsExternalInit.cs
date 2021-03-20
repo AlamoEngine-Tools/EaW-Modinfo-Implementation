@@ -1,9 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-[assembly: InternalsVisibleTo("EawModinfo.Tests")]
-
-
-#if !NET
+﻿#if !NET
 // ReSharper disable once CheckNamespace
 namespace System.Runtime.CompilerServices
 {

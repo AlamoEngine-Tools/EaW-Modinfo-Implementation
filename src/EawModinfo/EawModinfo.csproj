@@ -11,7 +11,7 @@
     <Company>Republic at War Modding Team</Company>
     <Product>EaW Modinfo</Product>
     <Description>Reference implementation of the eaw.modinfo specification which is located at https://github.com/AlamoEngine-Tools/eaw.modinfo</Description>
-    <Copyright>2020 - Anakin Sklavenwalker</Copyright>
+    <Copyright>2021 - Anakin Sklavenwalker</Copyright>
     <RepositoryType>git</RepositoryType>
     <PackageTags>petroglyph, alamo, glyphx, foc, eaw</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -22,6 +22,9 @@
     <RepositoryUrl>https://github.com/AlamoEngine-Tools/EaW-Modinfo-Implementation</RepositoryUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile>../../AlamoEngineTools.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>
