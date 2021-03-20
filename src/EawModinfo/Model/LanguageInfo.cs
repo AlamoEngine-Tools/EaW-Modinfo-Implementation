@@ -20,18 +20,14 @@ namespace EawModinfo.Model
 
         [JsonIgnore] private CultureInfo? _culture;
 
-        /// <inheritdoc/>
-        [JsonProperty("code")] public string Code { get; internal set; } = string.Empty;
+        [JsonProperty("code")]
+        public string Code { get; internal set; }
 
-        /// <inheritdoc/>
         [JsonProperty("support", DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public LanguageSupportLevel Support { get; internal set; }
 
-        /// <summary>
-        /// Gets a culture representation of the <see cref="Code"/> property.
-        /// </summary>
         [JsonIgnore]
-        public CultureInfo Culture => _culture ??= new CultureInfo(Code);
+        public CultureInfo Culture => _culture ??= Code == null ? null : new CultureInfo(Code);
 
         [JsonConstructor]
         internal LanguageInfo()
@@ -60,7 +56,6 @@ namespace EawModinfo.Model
             return ParseUtility.Parse<LanguageInfo>(data);
         }
 
-        /// <inheritdoc/>
         public bool Equals(ILanguageInfo? other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -68,7 +63,6 @@ namespace EawModinfo.Model
             return Code == other.Code;
         }
 
-        /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -78,10 +72,13 @@ namespace EawModinfo.Model
 
         }
 
-        /// <inheritdoc/>
         public override int GetHashCode()
         {
-            return Culture.GetHashCode();
+#if NETSTANDARD2_1 || NET
+            return HashCode.Combine(Culture);
+#else
+            return Culture == null ? 0 : Culture.GetHashCode();
+#endif
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.IO.Abstractions;
 using System.Text;
 using System.Threading.Tasks;
 using EawModinfo.Model;
@@ -20,18 +19,14 @@ namespace EawModinfo.File
         public abstract ModinfoFileKind FileKind { get; }
 
         /// <inheritdoc/>
-        public IFileInfo File { get; }
+        public FileInfo File { get; }
 
         /// <summary>
         /// Validator for file names.
         /// </summary>
         internal abstract IModFileNameValidator FileNameValidator { get; }
 
-        /// <summary>
-        /// Creates a new <see cref="ModinfoFile"/> instance
-        /// </summary>
-        /// <param name="file">The file representation</param>
-        protected ModinfoFile(IFileInfo file)
+        protected ModinfoFile(FileInfo file)
         {
             Requires.NotNull(file, nameof(file));
             File = file;
@@ -111,7 +106,7 @@ namespace EawModinfo.File
             return ModinfoData.Parse(text);
         }
 
-        private static async Task<string> ReadTextAsync(IFileSystemInfo fileInfo)
+        private static async Task<string> ReadTextAsync(FileSystemInfo fileInfo)
         {
             using var sourceStream = new FileStream(fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, true);
             var sb = new StringBuilder();
@@ -126,13 +121,11 @@ namespace EawModinfo.File
             return sb.ToString();
         }
 
-        /// <inheritdoc/>
-        public bool Equals(IModinfoFile? other)
+        public bool Equals(IModinfoFile other)
         {
-            return File.Equals(other?.File);
+            return File.Equals(other.File);
         }
 
-        /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -141,7 +134,6 @@ namespace EawModinfo.File
             return Equals((ModinfoFile) obj);
         }
 
-        /// <inheritdoc/>
         public override int GetHashCode()
         {
             return File.GetHashCode();

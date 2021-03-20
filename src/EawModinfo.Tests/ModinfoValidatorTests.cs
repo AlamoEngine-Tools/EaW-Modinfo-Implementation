@@ -148,9 +148,9 @@ namespace EawModinfo.Tests
             };
             yield return new object[]
                 {new SteamData {Id = "1234", Tags = new string[0], ContentFolder = "testFolder"}, true};
-            yield return new object[] {new SteamData {Id = "1234", Tags = null!, ContentFolder = "testFolder"}, true};
+            yield return new object[] {new SteamData {Id = "1234", Tags = null, ContentFolder = "testFolder"}, true};
             yield return new object[] {new SteamData {Id = "1234", Tags = new[] { "EAW" }, ContentFolder = ""}, true};
-            yield return new object[] {new SteamData {Id = "1234", Tags = new[] { "EAW" }, ContentFolder = null!}, true};
+            yield return new object[] {new SteamData {Id = "1234", Tags = new[] { "EAW" }, ContentFolder = null}, true};
             yield return new object[] {new SteamData {Id = "1234312", Tags = new[] {"test"}, Metadata = "bla", ContentFolder = "testFolder"}, true};
         }
 
@@ -184,12 +184,12 @@ namespace EawModinfo.Tests
             {
                 new ModReference
                 {
-                    Identifier = null!, Type = ModType.Default
+                    Identifier = null, Type = ModType.Default
                 },
                 true
             };
-            yield return new object[] {new ModReference {Identifier = null!, Type = ModType.Workshops}, true};
-            yield return new object[] {new ModReference {Identifier = null!, Type = ModType.Virtual}, true};
+            yield return new object[] {new ModReference {Identifier = null, Type = ModType.Workshops}, true};
+            yield return new object[] {new ModReference {Identifier = null, Type = ModType.Virtual}, true};
             yield return new object[] {new ModReference {Identifier = string.Empty, Type = ModType.Default}, true};
             yield return new object[] {new ModReference {Identifier = string.Empty, Type = ModType.Workshops}, true};
             yield return new object[] {new ModReference {Identifier = string.Empty, Type = ModType.Virtual}, true};

@@ -1,5 +1,5 @@
 ﻿using System;
-using System.IO.Abstractions;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace EawModinfo.Spec
@@ -17,7 +17,7 @@ namespace EawModinfo.Spec
         /// <summary>
         /// The file handle.
         /// </summary>
-        IFileInfo File { get; }
+        FileInfo File { get; }
 
         /// <summary>
         /// Validates whether the file exists and has a valid name. Throws <see cref="ModinfoException"/> on fail.

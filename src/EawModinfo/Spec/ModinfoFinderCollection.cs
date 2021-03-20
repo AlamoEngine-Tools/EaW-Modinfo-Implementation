@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.IO.Abstractions;
+using System.IO;
 using System.Linq;
 using Validation;
 
@@ -35,7 +35,7 @@ namespace EawModinfo.Spec
         /// <summary>
         /// The directory where the files are from.
         /// </summary>
-        public IDirectoryInfo Directory { get; }
+        public DirectoryInfo Directory { get; }
 
         /// <summary>
         /// Creates a new instance of this collection.
@@ -47,7 +47,7 @@ namespace EawModinfo.Spec
         /// <param name="mainModinfo">A potential main modinfo file.</param>
         /// <param name="variants">An enumeration of variant modinfo files.</param>
         /// <exception cref="ModinfoException">When illegal data was passed.</exception>
-        internal ModinfoFinderCollection(IDirectoryInfo directory, IModinfoFile? mainModinfo, IEnumerable<IModinfoFile> variants)
+        internal ModinfoFinderCollection(DirectoryInfo directory, IModinfoFile? mainModinfo, IEnumerable<IModinfoFile> variants)
         {
             Requires.NotNull(directory, nameof(directory));
             Requires.NotNull(variants, nameof(variants));
@@ -60,12 +60,12 @@ namespace EawModinfo.Spec
             Variants = variants.ToList();
         }
 
-        internal ModinfoFinderCollection(IDirectoryInfo directory, IModinfoFile mainModinfo) : 
+        internal ModinfoFinderCollection(DirectoryInfo directory, IModinfoFile mainModinfo) : 
             this(directory, mainModinfo, Enumerable.Empty<IModinfoFile>())
         {
         }
 
-        internal ModinfoFinderCollection(IDirectoryInfo directory, IEnumerable<IModinfoFile> variants) :
+        internal ModinfoFinderCollection(DirectoryInfo directory, IEnumerable<IModinfoFile> variants) :
             this(directory, null, variants)
         {
         }
