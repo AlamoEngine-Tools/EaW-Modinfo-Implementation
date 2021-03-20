@@ -107,7 +107,8 @@ namespace EawModinfo.File
 
         private IModinfo Parse()
         {
-            var text = System.IO.File.ReadAllText(File.FullName);
+            var fs = File.FileSystem;
+            var text = fs.File.ReadAllText(File.FullName);
             return ModinfoData.Parse(text);
         }
 

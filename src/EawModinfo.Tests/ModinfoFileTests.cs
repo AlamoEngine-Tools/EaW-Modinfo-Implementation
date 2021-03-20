@@ -1,5 +1,5 @@
 using System;
-using System.IO;
+using System.IO.Abstractions.TestingHelpers;
 using EawModinfo.File;
 using EawModinfo.Model;
 using EawModinfo.Spec;
@@ -10,34 +10,11 @@ namespace EawModinfo.Tests
 {
     public class ModinfoFileTests
     {
-        internal static IModinfoFile GetMain()
-        {
-            var solutionPath = GetSolutionPath();
-            var file = new FileInfo(Path.Combine(solutionPath, "test/Files/modinfo.json"));
-            return new MainModinfoFile(file);
-        }
-
-        internal static IModinfoFile GetVariantStandalone()
-        {
-            var solutionPath = GetSolutionPath();
-            var file = new FileInfo(Path.Combine(solutionPath, "test/Files/variantMain-modinfo.json"));
-            return new ModinfoVariantFile(file);
-        }
-
-        internal static IModinfoFile GetVariantMerged()
-        {
-            var main = GetMain();
-            var solutionPath = GetSolutionPath();
-            var file = new FileInfo(Path.Combine(solutionPath, "test/Files/variant-modinfo.json"));
-            return new ModinfoVariantFile(file, main);
-        }
-
         [Fact]
         public void TestMainFile()
-        { 
-            var solutionPath = GetSolutionPath();
-            var file = new FileInfo(Path.Combine(solutionPath, "test/Files/modinfo.json"));
-            IModinfoFile modinfoFile = new MainModinfoFile(file);
+        {
+            var fileInfo = ModinfoDataUtils.CreateModifnoFile(new MockFileSystem(), "mods/A");
+            IModinfoFile modinfoFile = new MainModinfoFile(fileInfo);
 
             Assert.Equal(ModinfoFileKind.MainFile,modinfoFile.FileKind);
 
@@ -49,9 +26,8 @@ namespace EawModinfo.Tests
         [Fact]
         public void TestVariantFile1()
         {
-            var solutionPath = GetSolutionPath();
-            var file = new FileInfo(Path.Combine(solutionPath, "test/Files/variantMain-modinfo.json"));
-            IModinfoFile modinfoFile = new ModinfoVariantFile(file);
+            var fileInfo = ModinfoDataUtils.CreateVariantMainFile(new MockFileSystem(), "mods/A");
+            IModinfoFile modinfoFile = new ModinfoVariantFile(fileInfo);
 
             Assert.Equal(ModinfoFileKind.VariantFile, modinfoFile.FileKind);
 
@@ -63,22 +39,23 @@ namespace EawModinfo.Tests
         [Fact]
         public void TestVariantFile2()
         {
-            var solutionPath = GetSolutionPath();
+            var fs = new MockFileSystem();
 
-            var main = GetMain();
+            var mainFileInfo = ModinfoDataUtils.CreateModifnoFile(fs, "mods/A");
+            IModinfoFile mainFile = new MainModinfoFile(mainFileInfo);
 
-            var file = new FileInfo(Path.Combine(solutionPath, "test/Files/variant-modinfo.json"));
-            IModinfoFile modinfoFile = new ModinfoVariantFile(file, main);
+            var variantFileInfo = ModinfoDataUtils.CreateVariantFile(fs, "mods/A");
+            IModinfoFile variantFile = new ModinfoVariantFile(variantFileInfo, mainFile);
+            
+            Assert.Equal(ModinfoFileKind.VariantFile, variantFile.FileKind);
 
-            Assert.Equal(ModinfoFileKind.VariantFile, modinfoFile.FileKind);
+            Assert.Null(Record.Exception(variantFile.ValidateFile));
+            Assert.Null(Record.Exception(variantFile.GetModinfo));
+            Assert.Null(Record.ExceptionAsync(variantFile.GetModinfoAsync).Result);
 
-            Assert.Null(Record.Exception(modinfoFile.ValidateFile));
-            Assert.Null(Record.Exception(modinfoFile.GetModinfo));
-            Assert.Null(Record.ExceptionAsync(modinfoFile.GetModinfoAsync).Result);
+            var data = variantFile.GetModinfo();
 
-            var data = modinfoFile.GetModinfo();
-
-            Assert.Equal(new SemanticVersion(1,1,1, "BETA"), data.Version);
+            Assert.Equal(new SemanticVersion(1, 1, 1, "BETA"), data.Version);
             Assert.Single(data.Custom);
             Assert.Single(data.Languages);
         }
@@ -89,8 +66,8 @@ namespace EawModinfo.Tests
             var main = new ModinfoData { Name = "Main", Version = new SemanticVersion(1, 1, 1) };
             main.Dependencies.Add(new ModReference { Identifier = "123", Type = ModType.Workshops });
 
-            var solutionPath = GetSolutionPath();
-            var file = new FileInfo(Path.Combine(solutionPath, "test/Files/variant-modinfo.json"));
+            var file = ModinfoDataUtils.CreateVariantFile(new MockFileSystem(), "mods/A");
+
             IModinfoFile modinfoFile = new ModinfoVariantFile(file, main);
 
             Assert.Equal(ModinfoFileKind.VariantFile, modinfoFile.FileKind);
@@ -108,11 +85,10 @@ namespace EawModinfo.Tests
         [Fact]
         public void TestVariantFile4()
         {
-            var variant = GetVariantStandalone();
-
-            var solutionPath = GetSolutionPath();
-            var file = new FileInfo(Path.Combine(solutionPath, "test/Files/variant-modinfo.json"));
-            Assert.Throws<ModinfoException>(() => new ModinfoVariantFile(file, variant));
+            var fs = new MockFileSystem();
+            var variantMain = new ModinfoVariantFile(ModinfoDataUtils.CreateVariantMainFile(fs, "mods/A"));
+            var variant = ModinfoDataUtils.CreateVariantFile(fs, "mods/A");
+            Assert.Throws<ModinfoException>(() => new ModinfoVariantFile(variant, variantMain));
         }
 
         [Fact]
@@ -120,15 +96,6 @@ namespace EawModinfo.Tests
         {
             Assert.Throws<ArgumentNullException>(() => new MainModinfoFile(null!));
             Assert.Throws<ArgumentNullException>(() => new ModinfoVariantFile(null!));
-        }
-
-
-        private static string GetSolutionPath()
-        {
-            var current = Directory.GetCurrentDirectory();
-            var i = current.IndexOf("src\\", StringComparison.InvariantCulture);
-            var p = current.Substring(0, i);
-            return p;
         }
     }
 }

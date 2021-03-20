@@ -41,7 +41,7 @@ namespace EawModinfo.File
         public ModinfoVariantFile(IFileInfo variant, IModinfoFile? mainModinfoFile) : base(variant)
         {
             if (mainModinfoFile?.FileKind == ModinfoFileKind.VariantFile)
-                throw new ModinfoException("A ModinfoFile's base cannot be a variant file too.");
+                throw new ModinfoException("A ModinfoFile's base cannot also be a variant file.");
             _mainModinfoFile = mainModinfoFile;
         }
 
