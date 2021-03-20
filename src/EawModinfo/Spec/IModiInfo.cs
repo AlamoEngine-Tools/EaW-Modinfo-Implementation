@@ -12,12 +12,12 @@ namespace EawModinfo.Spec
         /// <summary>
         /// Short summary about the mod.
         /// </summary>
-        string? Summary { get; }
+        string Summary { get; }
 
         /// <summary>
         /// The path to the mod's icon file relative to the mod's root directory or an absolute path.
         /// </summary>
-        string? Icon { get; }
+        string Icon { get; }
 
         /// <summary>
         /// Container which allows to define arbitrary extensions for tool support.

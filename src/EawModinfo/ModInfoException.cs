@@ -7,17 +7,14 @@ namespace EawModinfo
     /// </summary>
     public class ModinfoException : Exception
     {
-        /// <inheritdoc/>
         public ModinfoException()
         {
         }
 
-        /// <inheritdoc/>
         public ModinfoException(string message) : base(message)
         {
         }
 
-        /// <inheritdoc/>
         internal ModinfoException(string message, Exception inner) : base(message, inner)
         {
         }

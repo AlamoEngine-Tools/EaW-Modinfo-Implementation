@@ -228,8 +228,7 @@ namespace EawModinfo.Tests
 }";
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
-            Assert.NotNull(modinfo.SteamData);
-            Assert.Equal("123", modinfo.SteamData!.Id);
+            Assert.Equal("123", modinfo.SteamData.Id);
             Assert.Equal("test", modinfo.SteamData.Title);
             Assert.Equal("path", modinfo.SteamData.ContentFolder);
             Assert.Equal(SteamWorkshopVisibility.Public, modinfo.SteamData.Visibility);
@@ -240,11 +239,11 @@ namespace EawModinfo.Tests
 
         public static IEnumerable<object[]> GetInvalidData()
         {
-            yield return new object[]
+            yield return new[]
             {
                 string.Empty
             };
-            yield return new object[]
+            yield return new[]
             {
                 @"
 {
@@ -299,7 +298,9 @@ namespace EawModinfo.Tests
         [Fact]
         public void WriterTest()
         {
-            var modinfo = new ModinfoData {Name = "Test", Version = new SemanticVersion(1, 1, 1, "BETA")};
+            var modinfo = new ModinfoData();
+            modinfo.Name = "Test";
+            modinfo.Version = new SemanticVersion(1,1,1, "BETA");
             var data = modinfo.ToJson(false);
             Assert.Contains(@"""version"": ""1.1.1-BETA""", data);
             Assert.Contains(@"""code"": ""en""", data);

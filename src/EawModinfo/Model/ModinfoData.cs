@@ -15,35 +15,25 @@ namespace EawModinfo.Model
     [JsonObject(MemberSerialization.OptIn)]
     public class ModinfoData : IModinfo
     {
-        [JsonIgnore] private readonly HashSet<LanguageInfo> _languages = new();
+        [JsonIgnore] private readonly HashSet<LanguageInfo> _languages = new HashSet<LanguageInfo>();
         [JsonIgnore] private SemanticVersion? _modVersion;
         [JsonIgnore] private bool _versionDetermined;
         [JsonIgnore] private bool _languagesDetermined;
 
-        /// <summary>
-        /// Returns <see langword="true"/> whether <see cref="Custom"/> has any contents; <see langword="false"/> otherwise.
-        /// </summary>
         [JsonIgnore] public bool HasCustomObjects => Custom.Count > 0;
 
-        /// <summary>
-        /// Returns <see langword="true"/> whether <see cref="SteamData"/> is present; <see langword="false"/> otherwise.
-        /// </summary>
         [JsonIgnore] public bool HasSteamData => SteamData != null;
 
-        /// <summary>
-        /// Returns <see langword="true"/> whether this instance has any dependencies; <see langword="false"/> otherwise.
-        /// </summary>
         [JsonIgnore] public bool HasDependencies => Dependencies.Count > 0;
 
         /// <inheritdoc/>
         [JsonProperty("name", Required = Required.Always)]
-        public string Name { get; internal set; } = string.Empty;
+        public string Name { get; internal set; }
 
         /// <inheritdoc/>
         [JsonProperty("summary")] 
         public string? Summary { get; internal set; }
 
-        /// <inheritdoc/>
         [JsonProperty("icon")] 
         public string? Icon { get; internal set; }
 
@@ -170,7 +160,22 @@ namespace EawModinfo.Model
 
         bool IEquatable<IModIdentity>.Equals(IModIdentity? other)
         {
-            return ModIdentityEqualityComparer.Default.Equals(this, other);
+            if (ReferenceEquals(this, other))
+                return true;
+            if (other is null)
+                return false;
+            if (!Name.Equals(other.Name))
+                return false;
+            if (!Equals(Version, other.Version))
+                return false;
+
+            if (Dependencies.Count != other.Dependencies.Count)
+                return false;
+
+            if (!Dependencies.SequenceEqual(other.Dependencies))
+                return false;
+
+            return true;
         }
 
         internal void MergeFrom(IModinfo target)

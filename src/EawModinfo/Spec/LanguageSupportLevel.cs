@@ -8,6 +8,10 @@ namespace EawModinfo.Spec
     [Flags]
     public enum LanguageSupportLevel
     {
+        ///// <summary>
+        ///// Same as <see cref="FullLocalized"/>
+        ///// </summary>
+        //Default = FullLocalized,
         /// <summary>
         /// There exists an dedicated "MasterTextFile" for this language
         /// </summary>
@@ -23,10 +27,6 @@ namespace EawModinfo.Spec
         /// <summary>
         /// Combines <see cref="Text"/>, <see cref="Speech"/> <see cref="SFX"/>
         /// </summary>
-        FullLocalized = Text | Speech | SFX,
-        /// <summary>
-        /// Equals to <see cref="FullLocalized"/>
-        /// </summary>
-        Default = FullLocalized
+        FullLocalized = Text | Speech | SFX
     }
 }
