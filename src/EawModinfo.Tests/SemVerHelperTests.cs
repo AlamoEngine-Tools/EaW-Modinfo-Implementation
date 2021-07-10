@@ -42,7 +42,6 @@ namespace EawModinfo.Tests
             if (semanticVersion is not null)
                 _output.WriteLine(semanticVersion.ToFullString());
             Assert.Equal(semanticVersion, newVersion, VersionComparer.VersionReleaseMetadata);
-            
         }
     }
 }
