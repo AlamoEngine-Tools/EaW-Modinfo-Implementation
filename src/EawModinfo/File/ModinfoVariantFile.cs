@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
-using EawModinfo.Model;
 using EawModinfo.Spec;
 using EawModinfo.Utilities;
 
@@ -61,9 +60,8 @@ namespace EawModinfo.File
             var data = await base.GetModinfoCoreAsync().ConfigureAwait(false);
             if (_mainModinfoData is null && _mainModinfoFile != null)
             {
-                if (await _mainModinfoFile.GetModinfoAsync().ConfigureAwait(false) is not ModinfoData mainData)
-                    throw new ModinfoException($"Invalid Main Modinfo data: '{_mainModinfoFile.File.FullName}'");
-                _mainModinfoData = mainData;
+                var mainData = await _mainModinfoFile.GetModinfoAsync().ConfigureAwait(false);
+                _mainModinfoData = mainData ?? throw new ModinfoException($"Invalid Main Modinfo data: '{_mainModinfoFile.File.FullName}'");
             }
             return data.MergeInto(_mainModinfoData);
         }
@@ -74,7 +72,7 @@ namespace EawModinfo.File
             var data = base.GetModinfoCore();
             if (_mainModinfoData is null && _mainModinfoFile != null)
             {
-                var mainData = _mainModinfoFile.GetModinfo() as ModinfoData;
+                var mainData = _mainModinfoFile.GetModinfo();
                 _mainModinfoData = mainData ?? throw new ModinfoException($"Invalid Main Modinfo data: '{_mainModinfoFile.File.FullName}'");
             }
             return data.MergeInto(_mainModinfoData);

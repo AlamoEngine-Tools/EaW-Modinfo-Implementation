@@ -1,25 +1,28 @@
 ﻿using System;
+using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using EawModinfo.Utilities;
-using Newtonsoft.Json;
 using Validation;
 
 namespace EawModinfo.Model
 {
     /// <inheritdoc/>
-    public class ModReference : IModReference
+    public struct ModReference : IModReference
     {
         /// <inheritdoc/>
-        [JsonProperty("identifier", Required = Required.Always)]
-        public string Identifier { get; internal init; } = string.Empty;
+        public string Identifier { get; init; }
 
         /// <inheritdoc/>
-        [JsonProperty("modtype", Required = Required.Always)]
-        public ModType Type { get; internal init; }
+        public ModType Type { get; init; }
 
-        [JsonConstructor]
-        internal ModReference()
+        /// <summary>
+        /// Create a new instance.
+        /// </summary>
+        public ModReference(string id, ModType modType)
         {
+            Requires.NotNullOrEmpty(id, nameof(id));
+            Identifier = id;
+            Type = modType;
         }
 
         /// <summary>
@@ -28,7 +31,6 @@ namespace EawModinfo.Model
         /// <param name="modReference">The instance that will copied.</param>
         public ModReference(IModReference modReference)
         {
-            Requires.NotNull(modReference, nameof(modReference));
             Identifier = modReference.Identifier;
             Type = modReference.Type;
         }
@@ -38,10 +40,10 @@ namespace EawModinfo.Model
         /// </summary>
         /// <param name="data">The raw json data.</param>
         /// <returns>The deserialized object.</returns>
-        /// <exception cref="ModinfoParseException">Throws when parsing failed due to missing required properties.</exception>
+        /// <exception cref="ModinfoParseException">Throws when parsing failed, e.g. due to missing required properties.</exception>
         public static ModReference Parse(string data)
         {
-            return ParseUtility.Parse<ModReference>(data);
+            return new ModReference(ParseUtility.Parse<JsonModReference>(data));
         }
 
         bool IEquatable<IModReference>.Equals(IModReference? other)
@@ -52,14 +54,9 @@ namespace EawModinfo.Model
         /// <inheritdoc/>
         public override bool Equals(object? obj)
         {
-            if (obj is null) 
-                return false;
-            if (ReferenceEquals(this, obj)) 
-                return true;
-            if (obj is IModReference reference) 
-                return ((IEquatable<IModReference>)this).Equals(reference);
+            if (obj is IModReference reference)
+                return ((IModReference)this).Equals(reference);
             return false;
-
         }
 
         /// <inheritdoc/>
@@ -70,7 +67,7 @@ namespace EawModinfo.Model
 #else
             unchecked
             {
-                return (Identifier.GetHashCode() * 397) ^ (int) Type;
+                return (Identifier.GetHashCode() * 397) ^ (int)Type;
             }
 #endif
         }

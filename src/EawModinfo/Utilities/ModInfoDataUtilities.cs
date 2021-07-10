@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using EawModinfo.Model;
 using EawModinfo.Spec;
+using NuGet.Versioning;
 
 namespace EawModinfo.Utilities
 {
@@ -30,9 +32,78 @@ namespace EawModinfo.Utilities
                 return target;
             target.Validate();
             baseModinfo.Validate();
-            var newModinfo = new ModinfoData(baseModinfo);
-            newModinfo.MergeFrom(target);
-            return newModinfo;
+            return MergeFrom(baseModinfo, target);
+        }
+
+
+
+        private static IModinfo MergeFrom(IModinfo current, IModinfo target)
+        { 
+            var name = target.Name;
+
+            var summary = current.Summary;
+            if (!string.IsNullOrEmpty(target.Summary))
+                summary = target.Summary;
+
+            var icon = current.Icon;
+            if (!string.IsNullOrEmpty(target.Icon))
+                icon = target.Icon;
+
+            var version = current.Version;
+            if (target.Version != null)
+            {
+                if (target.Version != null)
+                    version = new SemanticVersion(target.Version);
+            }
+
+            var custom = current.Custom;
+            if (target.Custom.Any())
+            {
+                foreach (var customObject in target.Custom)
+                {
+                    if (custom.Contains(customObject))
+                        continue;
+                    custom.Add(customObject);
+                }
+            }
+
+            var steamData = current.SteamData;
+            if (target.SteamData != null)
+            {
+                if (target.SteamData != null)
+                    steamData = new SteamData(target.SteamData);
+            }
+
+            var dependencies = current.Dependencies;
+            if (target.Dependencies.Any())
+            {
+                if (target.Dependencies.Any())
+                    dependencies = target.Dependencies.Select(x => (IModReference)new ModReference(x)).ToList();
+            }
+
+            var languages = current.Languages;
+            if (target.Languages.Any())
+            {
+                if (target.Languages.Any())
+                {
+#if NETSTANDARD2_1
+                    languages = target.Languages.Select(x => (ILanguageInfo) new LanguageInfo(x)).ToHashSet(null);
+#else
+                    languages = target.Languages.Select(x => (ILanguageInfo)new LanguageInfo(x)).Distinct();
+#endif
+                }
+            }
+
+            return new ModinfoData(name)
+            {
+                Custom = custom,
+                SteamData = steamData,
+                Summary = summary,
+                Dependencies = dependencies,
+                Icon = icon,
+                Languages = languages,
+                Version = version
+            };
         }
     }
 }

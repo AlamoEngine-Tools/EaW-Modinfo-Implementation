@@ -4,10 +4,10 @@ using EawModinfo.Utilities;
 using Newtonsoft.Json;
 using Validation;
 
-namespace EawModinfo.Model.Steam
+namespace EawModinfo.Model.Json
 {
     /// <inheritdoc/>
-    public class SteamData : ISteamData
+    internal class JsonSteamData : ISteamData
     {
         internal static readonly string[] GameTags = {"FOC", "EAW"};
 
@@ -44,7 +44,7 @@ namespace EawModinfo.Model.Steam
         public string Title { get; internal set; } = string.Empty;
 
         [JsonConstructor]
-        internal SteamData()
+        internal JsonSteamData()
         {
             Tags = new List<string>();
         }
@@ -53,7 +53,7 @@ namespace EawModinfo.Model.Steam
         /// Creates a new instance from a given <see cref="ISteamData"/> instance.
         /// </summary>
         /// <param name="steamData">The instance that will copied.</param>
-        public SteamData(ISteamData steamData)
+        public JsonSteamData(ISteamData steamData)
         {
             Requires.NotNull(steamData, nameof(steamData));
             Id = steamData.Id;
@@ -64,17 +64,6 @@ namespace EawModinfo.Model.Steam
             Description = steamData.Description;
             PreviewFile = steamData.PreviewFile;
             Title = steamData.Title;
-        }
-
-        /// <summary>
-        /// Parses and deserializes a json data into a <see cref="SteamData"/>
-        /// </summary>
-        /// <param name="data">The raw json data.</param>
-        /// <returns>The deserialized object.</returns>
-        /// <exception cref="ModinfoParseException">Throws when parsing failed due to missing required properties.</exception>
-        public static SteamData Parse(string data)
-        {
-            return ParseUtility.Parse<SteamData>(data);
         }
 
         /// <summary>

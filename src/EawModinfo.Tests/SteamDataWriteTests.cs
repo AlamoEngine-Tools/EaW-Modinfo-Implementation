@@ -1,4 +1,5 @@
-﻿using EawModinfo.Model.Steam;
+﻿using EawModinfo.Model;
+using EawModinfo.Model.Json;
 using EawModinfo.Spec.Steam;
 using Xunit;
 
@@ -9,7 +10,7 @@ namespace EawModinfo.Tests
         [Fact]
         public static void WriteTest()
         {
-            var steamData = new SteamData
+            var steamData = new JsonSteamData
             {
                 ContentFolder = "Test",
                 Id = "123",
@@ -26,7 +27,7 @@ namespace EawModinfo.Tests
             Assert.Contains(@"""metadata"": """"", data);
 
 
-            var steamDat2 = new SteamData
+            var steamDat2 = new JsonSteamData
             {
                 ContentFolder = "Test",
                 Id = "123",

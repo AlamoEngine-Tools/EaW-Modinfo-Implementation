@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Linq;
 using System.Reflection;
-using EawModinfo.Model;
+using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -25,7 +25,7 @@ namespace EawModinfo.Utilities
                 return;
 
 
-            if (property.DeclaringType == typeof(ModinfoData) && typeof(IEnumerable).IsAssignableFrom(property.PropertyType))
+            if (property.DeclaringType == typeof(JsonModinfoData) && typeof(IEnumerable).IsAssignableFrom(property.PropertyType))
             {
                 property.ShouldSerialize =
                     instance =>

@@ -7,7 +7,7 @@ namespace EawModinfo.Spec
     /// Immutable definition of a modinfo as specified in <see href="https://github.com/AlamoEngine-Tools/eaw.modinfo"/>
     /// <remarks>This interface always references the latest stable version of the specification.</remarks>
     /// </summary>
-    public interface IModinfo : IModIdentity
+    public interface IModinfo : IModIdentity, IConvertibleToJson
     {
         /// <summary>
         /// Short summary about the mod.

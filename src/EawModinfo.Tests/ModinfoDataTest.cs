@@ -54,7 +54,6 @@ namespace EawModinfo.Tests
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
             Assert.Single(modinfo.Languages);
-            Assert.Single(modinfo.InternalLanguages);
         }
 
         [Fact]
@@ -75,7 +74,6 @@ namespace EawModinfo.Tests
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
             Assert.Equal(2, modinfo.Languages.Count());
-            Assert.Equal(2, modinfo.InternalLanguages.Count());
         }
 
         [Fact]
@@ -96,7 +94,6 @@ namespace EawModinfo.Tests
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
             Assert.Single(modinfo.Languages);
-            Assert.Single(modinfo.InternalLanguages);
         }
 
         [Fact]
@@ -118,7 +115,6 @@ namespace EawModinfo.Tests
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
             Assert.Single(modinfo.Languages);
-            Assert.Single(modinfo.InternalLanguages);
         }
 
         [Fact]
@@ -131,11 +127,8 @@ namespace EawModinfo.Tests
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
             Assert.Single(modinfo.Languages);
-            Assert.Single(modinfo.InternalLanguages);
             Assert.Equal("en",modinfo.Languages.ElementAt(0).Code);
-            Assert.Equal("en",modinfo.InternalLanguages.ElementAt(0).Code);
             Assert.Equal(LanguageSupportLevel.FullLocalized,modinfo.Languages.ElementAt(0).Support);
-            Assert.Equal(LanguageSupportLevel.FullLocalized,modinfo.InternalLanguages.ElementAt(0).Support);
         }
 
         [Fact]
@@ -259,50 +252,12 @@ namespace EawModinfo.Tests
             Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(data));
         }
 
-
-        [Fact]
-        public void ModIdentityEqualCheck()
-        {
-            IModIdentity i1 = new ModinfoData{Name = "A"};
-            IModIdentity i2 = new ModinfoData{Name = "A"};
-
-            Assert.Equal(i1, i2);
-
-            IModIdentity i3 = new ModinfoData { Name = "A", Version = new SemanticVersion(1, 1, 1) };
-            IModIdentity i4 = new ModinfoData { Name = "A", Version = new SemanticVersion(1, 1, 1) };
-
-            Assert.Equal(i3, i4);
-            Assert.NotEqual(i3, i1);
-
-            IModIdentity i5 = new ModinfoData { Name = "B" };
-            Assert.NotEqual(i1, i5);
-
-            var d1 = new ModReference { Type = ModType.Default, Identifier = "A" };
-            var d2 = new ModReference { Type = ModType.Default, Identifier = "A" };
-            var d3 = new ModReference { Type = ModType.Default, Identifier = "B" };
-
-            Assert.Equal(d1, d2);
-
-            IModIdentity i6 = new ModinfoData { Name = "A", Dependencies = new List<IModReference>(new[] { d1, d3 }) };
-            IModIdentity i7 = new ModinfoData { Name = "A", Dependencies = new List<IModReference>(new[] { d2, d3 }) };
-            IModIdentity i8 = new ModinfoData { Name = "A", Dependencies = new List<IModReference>(new[] { d2 }) };
-            IModIdentity i9 = new ModinfoData { Name = "A", Dependencies = new List<IModReference>(new[] { d3, d1 }) };
-            IModIdentity i10 = new ModinfoData { Name = "A", Dependencies = new List<IModReference>(new[] { d1 }) };
-
-            Assert.Equal(i6, i7);
-            Assert.NotEqual(i6, i8);
-            Assert.NotEqual(i6, i9);
-            Assert.Equal(i8, i10);
-        }
-
-
         [Fact]
         public void WriterTest()
         {
-            var modinfo = new ModinfoData {Name = "Test", Version = new SemanticVersion(1, 1, 1, "BETA")};
+            var modinfo = new ModinfoData("Test") { Version = new SemanticVersion(1, 1, 1, "BETA")};
             var data = modinfo.ToJson(false);
             Assert.Contains(@"""version"": ""1.1.1-BETA""", data);
-            Assert.Contains(@"""code"": ""en""", data);
             Assert.DoesNotContain(@"""custom"":", data);
         }
 

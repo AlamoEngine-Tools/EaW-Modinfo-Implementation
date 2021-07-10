@@ -5,7 +5,7 @@ namespace EawModinfo.Spec.Steam
     /// <summary>
     /// Data structure which represents important properties from the workshops uploader.
     /// </summary>
-    public interface ISteamData
+    public interface ISteamData : IConvertibleToJson
     {
         /// <summary>
         /// The Steam Workshop ID.

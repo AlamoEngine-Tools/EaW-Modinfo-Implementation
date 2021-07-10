@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using EawModinfo.Model;
-using EawModinfo.Model.Steam;
+using EawModinfo.Model.Json;
 using EawModinfo.Spec;
+using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
 using NuGet.Versioning;
 using Xunit;
@@ -14,22 +15,20 @@ namespace EawModinfo.Tests
         [Fact]
         public void Merge()
         {
-            var mainData = new ModinfoData
+            var mainData = new ModinfoData("Mod")
             {
-                Name = "Mod",
                 Icon = "icon.ico",
-                Languages = new[] {new LanguageInfo {Code = "en"}},
-                Dependencies = new List<IModReference>(new[] {new ModReference {Identifier = "bla"}}),
+                Languages = new[] {new LanguageInfo { Code = "en"}},
+                Dependencies = new List<IModReference>(new IModReference[] {new ModReference { Identifier = "bla"}}),
                 Custom = new Dictionary<string, object> { { "testKey1", "value" } }
             };
 
-            var variantData = new ModinfoData
+            var variantData = new ModinfoData("Variant of Mod")
             {
-                Name = "Variant of Mod",
-                Languages = new[] {new LanguageInfo {Code = "en"}, new LanguageInfo {Code = "de"}},
-                SteamData = new SteamData {Id = "123", Tags = new[] {"FOC"}, ContentFolder = "bla", Title = "Title"},
+                Languages = new[] {new LanguageInfo { Code = "en"}, new LanguageInfo { Code = "de"}},
+                SteamData = new JsonSteamData {Id = "123", Tags = new[] {"FOC"}, ContentFolder = "bla", Title = "Title"},
                 Custom = new Dictionary<string, object> { { "testKey2", "value" } },
-                Dependencies = new List<IModReference>(new[]
+                Dependencies = new List<IModReference>(new IModReference[]
                 {
                     new ModReference {Identifier = "bla"}, new ModReference {Identifier = "blub"}
                 }),
@@ -52,9 +51,31 @@ namespace EawModinfo.Tests
             Assert.NotSame(variantData.Version, newData.Version);
 
 
-            var invalid = new ModinfoData();
+            var invalid = new InvalidModinfoMock();
             Assert.Throws<ModinfoException>(() => invalid.MergeInto(newData));
             Assert.Throws<ModinfoException>(() => newData.MergeInto(invalid));
+        }
+
+        internal class InvalidModinfoMock : IModinfo
+        {
+            public bool Equals(IModIdentity? other)
+            {
+                return false;
+            }
+
+            public string Name { get; }
+            public SemanticVersion? Version { get; }
+            public IReadOnlyList<IModReference> Dependencies { get; }
+            public string ToJson(bool validate)
+            {
+                return string.Empty;
+            }
+
+            public string? Summary { get; }
+            public string? Icon { get; }
+            public IDictionary<string, object> Custom { get; }
+            public ISteamData? SteamData { get; }
+            public IEnumerable<ILanguageInfo> Languages { get; }
         }
     }
 }

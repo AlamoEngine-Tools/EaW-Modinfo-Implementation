@@ -63,8 +63,11 @@ namespace EawModinfo.Tests
         [Fact]
         public void TestVariantFile3()
         {
-            var main = new ModinfoData { Name = "Main", Version = new SemanticVersion(1, 1, 1) };
-            main.Dependencies.Add(new ModReference { Identifier = "123", Type = ModType.Workshops });
+            var main = new ModinfoData("Main")
+            {
+                Version = new SemanticVersion(1, 1, 1),
+                Dependencies = new IModReference[] { new ModReference { Identifier = "123", Type = ModType.Workshops } }
+            };
 
             var file = ModinfoDataUtils.CreateVariantFile(new MockFileSystem(), "mods/A");
 

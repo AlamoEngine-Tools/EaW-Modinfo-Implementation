@@ -10,7 +10,11 @@ namespace EawModinfo.Utilities
                 throw new ModinfoParseException("No input data.");
             try
             {
-                return JsonConvert.DeserializeObject<T>(data);
+                var parseResult = JsonConvert.DeserializeObject<T>(data);
+                if (parseResult is null)
+                    throw new ModinfoParseException(
+                        $"Unable to parse input '{data}' to {typeof(T).Name}. Unknown Error!");
+                return parseResult;
             }
             catch (JsonSerializationException cause)
             {
