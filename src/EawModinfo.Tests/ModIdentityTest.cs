@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using EawModinfo.Model;
 using EawModinfo.Spec;
-using NuGet.Versioning;
+using SemanticVersioning;
 using Xunit;
 
 namespace EawModinfo.Tests
@@ -16,8 +16,8 @@ namespace EawModinfo.Tests
 
             Assert.Equal(i1, i2);
 
-            IModIdentity i3 = new ModinfoData("A") { Version = new SemanticVersion(1, 1, 1) };
-            IModIdentity i4 = new ModIdentity("A") { Version = new SemanticVersion(1, 1, 1) };
+            IModIdentity i3 = new ModinfoData("A") { Version = new Version(1, 1, 1) };
+            IModIdentity i4 = new ModIdentity("A") { Version = new Version(1, 1, 1) };
 
             Assert.Equal(i3, i4);
             Assert.NotEqual(i3, i1);

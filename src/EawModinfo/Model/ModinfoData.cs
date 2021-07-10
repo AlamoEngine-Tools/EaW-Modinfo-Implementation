@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
-using NJsonSchema;
-using NJsonSchema.Validation;
-using NuGet.Versioning;
+using SemanticVersioning;
 using Validation;
 
 namespace EawModinfo.Model
@@ -19,7 +15,7 @@ namespace EawModinfo.Model
         public string Name { get; }
 
         /// <inheritdoc/>
-        public SemanticVersion? Version { get; init; }
+        public Version? Version { get; init; }
 
         /// <inheritdoc/>
         public IReadOnlyList<IModReference> Dependencies { get; init; } = new List<IModReference>();

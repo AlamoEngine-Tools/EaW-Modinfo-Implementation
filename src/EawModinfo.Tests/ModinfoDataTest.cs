@@ -4,7 +4,7 @@ using EawModinfo.Model;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 using Newtonsoft.Json.Linq;
-using NuGet.Versioning;
+using SemanticVersioning;
 using Xunit;
 
 namespace EawModinfo.Tests
@@ -40,7 +40,7 @@ namespace EawModinfo.Tests
 
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
-            Assert.Equal(new SemanticVersion(1,1,1, "BETA"), modinfo.Version);
+            Assert.Equal(new Version(1,1,1, "BETA"), modinfo.Version);
         }
 
         [Fact]
@@ -263,7 +263,7 @@ namespace EawModinfo.Tests
         [Fact]
         public void WriterTest()
         {
-            var modinfo = new ModinfoData("Test") { Version = new SemanticVersion(1, 1, 1, "BETA")};
+            var modinfo = new ModinfoData("Test") { Version = new Version(1, 1, 1, "BETA")};
             var data = modinfo.ToJson(false);
             Assert.Contains(@"""version"": ""1.1.1-BETA""", data);
             Assert.DoesNotContain(@"""custom"":", data);
@@ -279,7 +279,7 @@ namespace EawModinfo.Tests
 }";
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
-            Assert.Equal(new SemanticVersion(1, 0, 0) , modinfo.Version);
+            Assert.Equal(new Version(1, 0, 0) , modinfo.Version);
         }
     }
 }

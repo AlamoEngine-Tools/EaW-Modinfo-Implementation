@@ -5,7 +5,7 @@ using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
-using NuGet.Versioning;
+using SemanticVersioning;
 using Xunit;
 
 namespace EawModinfo.Tests
@@ -18,7 +18,7 @@ namespace EawModinfo.Tests
             {
                 new ModinfoData("ModName")
                 {
-                    Version = new SemanticVersion(1, 1, 1, "BETA"), Icon = "path/icon.ico",
+                    Version = new Version(1, 1, 1, "BETA"), Icon = "path/icon.ico",
                     Summary = "Who reads this?"
                 }
             };

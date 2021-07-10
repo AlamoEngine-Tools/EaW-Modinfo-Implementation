@@ -5,7 +5,7 @@ using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
-using NuGet.Versioning;
+using SemanticVersioning;
 using Xunit;
 
 namespace EawModinfo.Tests
@@ -32,7 +32,7 @@ namespace EawModinfo.Tests
                 {
                     new ModReference {Identifier = "bla"}, new ModReference {Identifier = "blub"}
                 }),
-                Version = SemanticVersion.Parse("1.2.2")
+                Version = Version.Parse("1.2.2")
             };
 
             var newData = variantData.MergeInto(mainData);
@@ -47,8 +47,8 @@ namespace EawModinfo.Tests
             Assert.Equal(variantData.SteamData!.Id, newData.SteamData?.Id);
             Assert.Equal(variantData.SteamData!.Title, newData.SteamData?.Title);
             Assert.Equal(2, newData.Custom.Count);
-            Assert.Equal(new SemanticVersion(1,2,2), newData.Version);
-            Assert.NotSame(variantData.Version, newData.Version);
+            Assert.Equal(new Version(1,2,2), newData.Version);
+            Assert.Equal(variantData.Version, newData.Version);
 
 
             var invalid = new InvalidModinfoMock();
@@ -64,7 +64,7 @@ namespace EawModinfo.Tests
             }
 
             public string Name { get; }
-            public SemanticVersion? Version { get; }
+            public Version? Version { get; }
             public IReadOnlyList<IModReference> Dependencies { get; }
             public string ToJson(bool validate)
             {

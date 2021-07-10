@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using NuGet.Versioning;
+using Version = SemanticVersioning.Version;
 
 namespace EawModinfo.Spec
 {
@@ -19,7 +19,7 @@ namespace EawModinfo.Spec
         /// The version of the mod.
         /// <remarks>Since mod developers cannot be forced to specify a version this property is nullable.</remarks>
         /// </summary>
-        SemanticVersion? Version { get; }
+        Version? Version { get; }
 
         /// <summary>
         /// Ordered list of <see cref="IModReference"/>s which this mod is dependent on.

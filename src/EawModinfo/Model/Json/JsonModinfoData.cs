@@ -5,8 +5,8 @@ using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
 using Newtonsoft.Json;
-using NuGet.Versioning;
 using Validation;
+using Version = SemanticVersioning.Version;
 
 namespace EawModinfo.Model.Json
 {
@@ -16,7 +16,7 @@ namespace EawModinfo.Model.Json
     {
         [JsonIgnore] private readonly HashSet<ILanguageInfo> _languages = new();
         [JsonIgnore] private readonly HashSet<JsonLanguageInfo> _jsonLanguages = new();
-        [JsonIgnore] private SemanticVersion? _modVersion;
+        [JsonIgnore] private Version? _modVersion;
         [JsonIgnore] private bool _versionDetermined;
         [JsonIgnore] private bool _languagesDetermined;
 
@@ -51,7 +51,7 @@ namespace EawModinfo.Model.Json
         private string? StringVersion { get; set; }
 
         /// <inheritdoc/>
-        public SemanticVersion? Version
+        public Version? Version
         {
             get
             {
@@ -66,7 +66,7 @@ namespace EawModinfo.Model.Json
             internal set
             {
                 _modVersion = value;
-                StringVersion = value?.ToFullString();
+                StringVersion = value?.ToString();
             }
         }
 

@@ -2,7 +2,6 @@
 using System.Linq;
 using EawModinfo.Model;
 using EawModinfo.Spec;
-using NuGet.Versioning;
 
 namespace EawModinfo.Utilities
 {
@@ -51,10 +50,7 @@ namespace EawModinfo.Utilities
 
             var version = current.Version;
             if (target.Version != null)
-            {
-                if (target.Version != null)
-                    version = new SemanticVersion(target.Version);
-            }
+                version = target.Version;
 
             var custom = current.Custom;
             if (target.Custom.Any())

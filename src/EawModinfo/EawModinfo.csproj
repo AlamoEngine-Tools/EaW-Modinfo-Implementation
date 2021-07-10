@@ -30,7 +30,7 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="NJsonSchema" Version="10.4.4" />
-    <PackageReference Include="NuGet.Versioning" Version="5.10.0" />
+    <PackageReference Include="SemanticVersioning" Version="2.0.0" />
     <PackageReference Include="System.IO.Abstractions" Version="13.2.38" />
     <PackageReference Include="System.Text.Json" Version="5.0.2" />
     <PackageReference Include="Validation" Version="2.5.42" />

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using EawModinfo.Spec;
 using EawModinfo.Utilities;
-using NuGet.Versioning;
+using SemanticVersioning;
 using Validation;
 
 namespace EawModinfo.Model
@@ -13,7 +13,7 @@ namespace EawModinfo.Model
         public string Name { get; }
 
         /// <inheritdoc />
-        public SemanticVersion? Version { get; init; }
+        public Version? Version { get; init; }
 
         /// <inheritdoc />
         public IReadOnlyList<IModReference> Dependencies { get; init; } = new List<IModReference>();

@@ -1,5 +1,5 @@
 ﻿using System;
-using NuGet.Versioning;
+using Version = SemanticVersioning.Version;
 
 namespace EawModinfo.Utilities
 {
@@ -7,14 +7,14 @@ namespace EawModinfo.Utilities
     {
         private static readonly char[] DelimiterChars = {'-', '+'};
 
-        public static SemanticVersion? CreateSanitizedVersion(string? version)
+        public static Version? CreateSanitizedVersion(string? version)
         {
             if (string.IsNullOrEmpty(version))
                 return null;
 
             string[] strArray = version!.Split('.');
             if (strArray.Length == 3)
-                return SemanticVersion.Parse(version);
+                return Version.Parse(version);
             if (strArray.Length >= 5)
                 throw new InvalidOperationException();
 
@@ -34,7 +34,7 @@ namespace EawModinfo.Utilities
             }
 
             string newSemVerString = string.Join(".", versionDigits) + releaseAndBuild;
-            return SemanticVersion.Parse(newSemVerString);
+            return Version.Parse(newSemVerString);
         }
 
         private static void ExtractReleaseAndBuildString(ref string input, out string? releaseAndBuild)
