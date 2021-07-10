@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
+using NJsonSchema;
+using NJsonSchema.Validation;
 using NuGet.Versioning;
 using Validation;
 

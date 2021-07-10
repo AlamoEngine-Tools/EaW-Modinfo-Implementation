@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System.Linq;
+using Newtonsoft.Json;
+using NJsonSchema;
 
 namespace EawModinfo.Utilities
 {
@@ -8,6 +10,12 @@ namespace EawModinfo.Utilities
         { 
             if (string.IsNullOrEmpty(data))
                 throw new ModinfoParseException("No input data.");
+
+            var schema = JsonSchema.FromSampleJson(ModinfoJsonSchema.Schema);
+            var validationErrors = schema.Validate(data);
+            if (validationErrors.Any())
+                throw new ModinfoParseException($"Unable to parse. Error:{validationErrors.First()}");
+
             try
             {
                 var parseResult = JsonConvert.DeserializeObject<T>(data);

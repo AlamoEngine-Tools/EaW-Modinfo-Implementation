@@ -11,6 +11,10 @@ namespace EawModinfo.Tests
 {
     public class ModinfoDataTest
     {
+        private const string InvalidJsonData = @"{
+  ""version"": ""1.0.0"",
+}";
+
         [Fact]
         public void MinimalParseTest()
         {
@@ -242,6 +246,10 @@ namespace EawModinfo.Tests
                 @"
 {
 }"
+            };
+            yield return new object[]
+            {
+                InvalidJsonData
             };
         }
 
