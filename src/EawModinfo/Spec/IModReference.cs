@@ -16,5 +16,7 @@ namespace EawModinfo.Spec
         /// The <see cref="ModType"/> of this reference.
         /// </summary>
         ModType Type { get; }
+
+        SemanticVersioning.Range? VersionRange { get; }
     }
 }

@@ -1,12 +1,56 @@
 using System.Collections.Generic;
 using EawModinfo.Model;
 using EawModinfo.Spec;
+using SemanticVersioning;
 using Xunit;
 
 namespace EawModinfo.Tests
 {
     public class ModReferenceTests
     {
+        public static IEnumerable<object[]> VersionRangeData()
+        {
+            yield return new object[]
+            {
+                @"
+{
+    'identifier':'123123',
+    'modtype':1
+}",
+                null
+            };
+
+            yield return new object[]
+            {
+                @"
+{
+    'identifier':'123123',
+    'modtype':1,
+    'version-range': '*'
+}",
+                new Range("*")
+            };
+
+            yield return new object[]
+            {
+                @"
+{
+    'identifier':'123123',
+    'modtype':1,
+    'version-range': 'someInvalidRange'
+}",
+                null
+            };
+        }
+
+        [Theory]
+        [MemberData(nameof(VersionRangeData))]
+        public void VersionRangeTest(string data, Range? range)
+        {
+            var modReference = ModReference.Parse(data);
+            Assert.Equal(range, modReference.VersionRange);
+        }
+
         [Fact]
         public void EqualsCheck()
         {

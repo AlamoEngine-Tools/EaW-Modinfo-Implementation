@@ -3,6 +3,7 @@ using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using EawModinfo.Utilities;
 using Validation;
+using Range = SemanticVersioning.Range;
 
 namespace EawModinfo.Model
 {
@@ -15,14 +16,18 @@ namespace EawModinfo.Model
         /// <inheritdoc/>
         public ModType Type { get; init; }
 
+        /// <inheritdoc/>
+        public Range? VersionRange { get; }
+
         /// <summary>
         /// Create a new instance.
         /// </summary>
-        public ModReference(string id, ModType modType)
+        public ModReference(string id, ModType modType, Range? range = null)
         {
             Requires.NotNullOrEmpty(id, nameof(id));
             Identifier = id;
             Type = modType;
+            VersionRange = range;
         }
 
         /// <summary>
@@ -33,6 +38,7 @@ namespace EawModinfo.Model
         {
             Identifier = modReference.Identifier;
             Type = modReference.Type;
+            VersionRange = modReference.VersionRange;
         }
 
         /// <summary>

@@ -3,15 +3,27 @@ using EawModinfo.Spec;
 using Newtonsoft.Json;
 using Validation;
 
+#if NET || NETSTANDARD2_1
+using Range = SemanticVersioning.Range;
+#else
+using SemanticVersioning;
+#endif
+
+
 namespace EawModinfo.Model.Json
 {
     internal class JsonModReference : IModReference
     {
         [JsonProperty("identifier", Required = Required.Always)]
-        public string Identifier { get; internal init; } = string.Empty;
+        public string Identifier { get; internal set; } = string.Empty;
 
         [JsonProperty("modtype", Required = Required.Always)]
-        public ModType Type { get; internal init; }
+        public ModType Type { get; internal set; }
+
+        [JsonProperty("version-range", NullValueHandling = NullValueHandling.Ignore)]
+        public string? VersionRangeString { get; internal set; }
+
+        public Range? VersionRange => !Range.TryParse(VersionRangeString, out var range) ? null : range;
 
         [JsonConstructor]
         internal JsonModReference()
