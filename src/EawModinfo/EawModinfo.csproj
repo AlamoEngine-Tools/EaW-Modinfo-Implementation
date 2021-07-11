@@ -20,11 +20,13 @@
     <FileVersion>3.0.0.0</FileVersion>
     <PackageProjectUrl>https://github.com/AlamoEngine-Tools/EaW-Modinfo-Implementation</PackageProjectUrl>
     <RepositoryUrl>https://github.com/AlamoEngine-Tools/EaW-Modinfo-Implementation</RepositoryUrl>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageLicenseFile></PackageLicenseFile>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>../../AlamoEngineTools.snk</AssemblyOriginatorKeyFile>
+    <Version>3.0.0+v.2.3</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,13 +36,6 @@
     <PackageReference Include="System.IO.Abstractions" Version="13.2.38" />
     <PackageReference Include="System.Text.Json" Version="5.0.2" />
     <PackageReference Include="Validation" Version="2.5.42" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
   </ItemGroup>
 
 </Project>
