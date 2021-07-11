@@ -33,9 +33,7 @@ namespace EawModinfo.Utilities
             baseModinfo.Validate();
             return MergeFrom(baseModinfo, target);
         }
-
-
-
+        
         private static IModinfo MergeFrom(IModinfo current, IModinfo target)
         { 
             var name = target.Name;
@@ -65,29 +63,20 @@ namespace EawModinfo.Utilities
 
             var steamData = current.SteamData;
             if (target.SteamData != null)
-            {
-                if (target.SteamData != null)
-                    steamData = new SteamData(target.SteamData);
-            }
+                steamData = new SteamData(target.SteamData);
 
             var dependencies = current.Dependencies;
             if (target.Dependencies.Any())
-            {
-                if (target.Dependencies.Any())
-                    dependencies = target.Dependencies.Select(x => (IModReference)new ModReference(x)).ToList();
-            }
+                dependencies = new DependencyList(target.Dependencies);
 
             var languages = current.Languages;
             if (target.Languages.Any())
             {
-                if (target.Languages.Any())
-                {
 #if NETSTANDARD2_1
                     languages = target.Languages.Select(x => (ILanguageInfo) new LanguageInfo(x)).ToHashSet(null);
 #else
-                    languages = target.Languages.Select(x => (ILanguageInfo)new LanguageInfo(x)).Distinct();
+                languages = target.Languages.Select(x => (ILanguageInfo)new LanguageInfo(x)).Distinct();
 #endif
-                }
             }
 
             return new ModinfoData(name)

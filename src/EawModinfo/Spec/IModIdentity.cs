@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Version = SemanticVersioning.Version;
 
 namespace EawModinfo.Spec
@@ -25,6 +24,6 @@ namespace EawModinfo.Spec
         /// Ordered list of <see cref="IModReference"/>s which this mod is dependent on.
         /// Returns an empty list if the mod has no dependencies.
         /// </summary>
-        IReadOnlyList<IModReference> Dependencies { get; }
+        IModDependencyList Dependencies { get; }
     }
 }

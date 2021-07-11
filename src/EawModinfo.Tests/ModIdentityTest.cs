@@ -31,11 +31,11 @@ namespace EawModinfo.Tests
 
             Assert.Equal(d1, d2);
 
-            IModIdentity i6 = new ModinfoData("A") { Dependencies = new List<IModReference>(new IModReference[] { d1, d3 }) };
-            IModIdentity i7 = new ModIdentity("A") { Dependencies = new List<IModReference>(new IModReference[] { d2, d3 }) };
-            IModIdentity i8 = new ModIdentity("A") { Dependencies = new List<IModReference>(new IModReference[] { d2 }) };
-            IModIdentity i9 = new ModIdentity("A") { Dependencies = new List<IModReference>(new IModReference[] { d3, d1 }) };
-            IModIdentity i10 = new ModinfoData("A") { Dependencies = new List<IModReference>(new IModReference[] { d1 }) };
+            IModIdentity i6 = new ModinfoData("A") { Dependencies = new DependencyList(new IModReference[] { d1, d3 }, DependencyResolveLayout.FullResolved) };
+            IModIdentity i7 = new ModIdentity("A") { Dependencies = new DependencyList(new IModReference[] { d2, d3 }, DependencyResolveLayout.FullResolved) };
+            IModIdentity i8 = new ModIdentity("A") { Dependencies = new DependencyList(new IModReference[] { d2 }, DependencyResolveLayout.FullResolved) };
+            IModIdentity i9 = new ModIdentity("A") { Dependencies = new DependencyList(new IModReference[] { d3, d1 }, DependencyResolveLayout.FullResolved) };
+            IModIdentity i10 = new ModinfoData("A") { Dependencies = new DependencyList(new IModReference[] { d1 }, DependencyResolveLayout.FullResolved) };
 
             Assert.Equal(i6, i7);
             Assert.NotEqual(i6, i8);

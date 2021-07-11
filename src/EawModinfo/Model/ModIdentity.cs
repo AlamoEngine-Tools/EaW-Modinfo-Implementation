@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using EawModinfo.Spec;
+﻿using EawModinfo.Spec;
 using EawModinfo.Utilities;
 using SemanticVersioning;
 using Validation;
@@ -16,7 +15,7 @@ namespace EawModinfo.Model
         public Version? Version { get; init; }
 
         /// <inheritdoc />
-        public IReadOnlyList<IModReference> Dependencies { get; init; } = new List<IModReference>();
+        public IModDependencyList Dependencies { get; init; } = DependencyList.EmptyDependencyList;
 
         /// <summary>
         /// Creates a new instance with a given name.

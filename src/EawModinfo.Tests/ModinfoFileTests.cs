@@ -66,7 +66,7 @@ namespace EawModinfo.Tests
             var main = new ModinfoData("Main")
             {
                 Version = new Version(1, 1, 1),
-                Dependencies = new IModReference[] { new ModReference { Identifier = "123", Type = ModType.Workshops } }
+                Dependencies = new DependencyList(new IModReference[] { new ModReference { Identifier = "123", Type = ModType.Workshops } }, DependencyResolveLayout.FullResolved)
             };
 
             var file = ModinfoDataUtils.CreateVariantFile(new MockFileSystem(), "mods/A");

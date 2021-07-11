@@ -45,7 +45,7 @@ namespace EawModinfo.Tests
             {
                 new ModinfoData("ModName")
                 {
-                    Dependencies = new List<IModReference>(GetModReferences().Select(x => x[0]).OfType<IModReference>())
+                    Dependencies = new DependencyList(GetModReferences().Select(x => x[0]).OfType<IModReference>().ToList(), DependencyResolveLayout.FullResolved)
                 }
             };
         }
@@ -70,7 +70,7 @@ namespace EawModinfo.Tests
             {
                 new ModinfoData("ModName")
                 {
-                    Dependencies = new []{ (IModReference) GetInvalidModReferences().ElementAt(0)[0]}
+                    Dependencies = new DependencyList(new []{ (IModReference) GetInvalidModReferences().ElementAt(0)[0]}, DependencyResolveLayout.FullResolved)
                 }
             };
         }

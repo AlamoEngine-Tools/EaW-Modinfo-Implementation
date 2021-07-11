@@ -18,7 +18,7 @@ namespace EawModinfo.Model
         public Version? Version { get; init; }
 
         /// <inheritdoc/>
-        public IReadOnlyList<IModReference> Dependencies { get; init; } = new List<IModReference>();
+        public IModDependencyList Dependencies { get; init; } = DependencyList.EmptyDependencyList;
 
         /// <inheritdoc/>
         public string? Summary { get; init; }

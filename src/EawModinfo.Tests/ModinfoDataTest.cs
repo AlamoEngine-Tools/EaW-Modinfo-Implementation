@@ -145,6 +145,7 @@ namespace EawModinfo.Tests
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
             Assert.Equal(0, modinfo.Dependencies.Count);
+            Assert.Equal(DependencyResolveLayout.ResolveRecursive, modinfo.Dependencies.ResolveLayout);
         }
 
 
@@ -170,6 +171,75 @@ namespace EawModinfo.Tests
             Assert.Equal(2, modinfo.Dependencies.Count);
             Assert.Equal("12313", modinfo.Dependencies[0].Identifier);
             Assert.Equal("654987", modinfo.Dependencies[1].Identifier);
+            Assert.Equal(DependencyResolveLayout.ResolveRecursive, modinfo.Dependencies.ResolveLayout);
+        }
+
+        [Fact]
+        public void ModRefParseTestWithLayout()
+        {
+            var data = @"
+{
+    'name':'My Mod Name',
+    'dependencies': [
+        'FullResolved',
+        {
+            'identifier':'12313',
+            'modtype':1
+        },
+        {
+            'identifier':'654987',
+            'modtype':1
+        }
+    ]
+}";
+            var modinfo = ModinfoData.Parse(data);
+            Assert.Equal("My Mod Name", modinfo.Name);
+            Assert.Equal(2, modinfo.Dependencies.Count);
+            Assert.Equal("12313", modinfo.Dependencies[0].Identifier);
+            Assert.Equal("654987", modinfo.Dependencies[1].Identifier);
+            Assert.Equal(DependencyResolveLayout.FullResolved, modinfo.Dependencies.ResolveLayout);
+        }
+
+        [Fact]
+        public void ModRefParseTestFailure()
+        {
+            var data = @"
+{
+    'name':'My Mod Name',
+    'dependencies': [
+        {
+            'identifier':'12313',
+            'modtype':1
+        },
+        'FullResolved',
+        {
+            'identifier':'654987',
+            'modtype':1
+        }
+    ]
+}";
+            Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(data));
+        }
+
+        [Fact]
+        public void ModRefParseTestFailure2()
+        {
+            var data = @"
+{
+    'name':'My Mod Name',
+    'dependencies': [
+        'BlaBlub',
+        {
+            'identifier':'12313',
+            'modtype':1
+        },
+        {
+            'identifier':'654987',
+            'modtype':1
+        }
+    ]
+}";
+            Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(data));
         }
 
 
@@ -267,6 +337,17 @@ namespace EawModinfo.Tests
             var data = modinfo.ToJson(false);
             Assert.Contains(@"""version"": ""1.1.1-BETA""", data);
             Assert.DoesNotContain(@"""custom"":", data);
+        }
+
+        [Fact]
+        public void WriterTestDependencyList()
+        {
+            var modinfo = new ModinfoData("Test")
+            {
+                Dependencies = new DependencyList(new List<IModReference>{new ModReference("123", ModType.Default)}, DependencyResolveLayout.FullResolved)
+            };
+            var data = modinfo.ToJson(false);
+            Assert.Contains(@"""FullResolved"",",data);
         }
 
         [Fact]

@@ -119,13 +119,14 @@ namespace EawModinfo.Model.Json
         }
 
         /// <inheritdoc/>
-        [JsonProperty("dependencies", ItemConverterType = typeof(ModReferenceTypeConverter))]
-        public IReadOnlyList<IModReference> Dependencies { get; internal set; }
+        [JsonProperty("dependencies")]
+        [JsonConverter(typeof(DependencyListTypeConverter))]
+        public IModDependencyList Dependencies { get; internal set; }
 
         [JsonConstructor]
         internal JsonModinfoData()
         {
-            Dependencies = new List<IModReference>();
+            Dependencies = new JsonDependencyList();
             Custom = new Dictionary<string, object>();
             InternalLanguages = new HashSet<JsonLanguageInfo>();
         }

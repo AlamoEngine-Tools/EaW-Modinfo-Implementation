@@ -1,5 +1,4 @@
 ﻿using System;
-using EawModinfo.Model;
 using EawModinfo.Model.Json;
 using Newtonsoft.Json;
 

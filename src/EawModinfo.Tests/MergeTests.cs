@@ -19,7 +19,7 @@ namespace EawModinfo.Tests
             {
                 Icon = "icon.ico",
                 Languages = new[] {new LanguageInfo { Code = "en"}},
-                Dependencies = new List<IModReference>(new IModReference[] {new ModReference { Identifier = "bla"}}),
+                Dependencies = new DependencyList(new IModReference[] { new ModReference { Identifier = "bla" } }, DependencyResolveLayout.FullResolved),
                 Custom = new Dictionary<string, object> { { "testKey1", "value" } }
             };
 
@@ -28,10 +28,10 @@ namespace EawModinfo.Tests
                 Languages = new[] {new LanguageInfo { Code = "en"}, new LanguageInfo { Code = "de"}},
                 SteamData = new JsonSteamData {Id = "123", Tags = new[] {"FOC"}, ContentFolder = "bla", Title = "Title"},
                 Custom = new Dictionary<string, object> { { "testKey2", "value" } },
-                Dependencies = new List<IModReference>(new IModReference[]
+                Dependencies = new DependencyList(new IModReference[]
                 {
                     new ModReference {Identifier = "bla"}, new ModReference {Identifier = "blub"}
-                }),
+                }, DependencyResolveLayout.FullResolved),
                 Version = Version.Parse("1.2.2")
             };
 
@@ -65,7 +65,7 @@ namespace EawModinfo.Tests
 
             public string Name { get; }
             public Version? Version { get; }
-            public IReadOnlyList<IModReference> Dependencies { get; }
+            public IModDependencyList Dependencies { get; }
             public string ToJson(bool validate)
             {
                 return string.Empty;
