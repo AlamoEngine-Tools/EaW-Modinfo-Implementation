@@ -25,7 +25,7 @@
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>../../AlamoEngineTools.snk</AssemblyOriginatorKeyFile>
-    <Version>3.0.0+v.2.3</Version>
+    <Version>3.0.0+v2.3</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
