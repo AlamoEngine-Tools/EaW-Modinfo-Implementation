@@ -1,39 +1,41 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net5.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
-    <Version>2.2.0.2</Version>
+    <VersionPrefix>3.0.0</VersionPrefix>
     <PackageId>eaw.modinfo</PackageId>
     <Authors>AnakinSklavenwalker</Authors>
     <Company>Republic at War Modding Team</Company>
     <Product>EaW Modinfo</Product>
     <Description>Reference implementation of the eaw.modinfo specification which is located at https://github.com/AlamoEngine-Tools/eaw.modinfo</Description>
-    <Copyright>2020 - Anakin Sklavenwalker</Copyright>
+    <Copyright>2021 - Anakin Sklavenwalker</Copyright>
     <RepositoryType>git</RepositoryType>
     <PackageTags>petroglyph, alamo, glyphx, foc, eaw</PackageTags>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <AssemblyName>Eaw.Modinfo</AssemblyName>
-    <AssemblyVersion>2.2.0.0</AssemblyVersion>
-    <FileVersion>2.2.0.0</FileVersion>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
     <PackageProjectUrl>https://github.com/AlamoEngine-Tools/EaW-Modinfo-Implementation</PackageProjectUrl>
     <RepositoryUrl>https://github.com/AlamoEngine-Tools/EaW-Modinfo-Implementation</RepositoryUrl>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageLicenseFile></PackageLicenseFile>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile>../../AlamoEngineTools.snk</AssemblyOriginatorKeyFile>
+    <Version>3.0.0+v2.3</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Validation" Version="15.5.31" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="NuGet.Versioning" Version="5.7.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="NJsonSchema" Version="10.4.4" />
+    <PackageReference Include="SemanticVersioning" Version="2.0.0" />
+    <PackageReference Include="System.IO.Abstractions" Version="13.2.38" />
+    <PackageReference Include="System.Text.Json" Version="5.0.2" />
+    <PackageReference Include="Validation" Version="2.5.42" />
   </ItemGroup>
 
 </Project>

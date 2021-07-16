@@ -1,4 +1,4 @@
-﻿using System.IO;
+﻿using System.IO.Abstractions;
 using EawModinfo.Spec;
 
 namespace EawModinfo.File
@@ -6,13 +6,18 @@ namespace EawModinfo.File
     /// <inheritdoc/>
     public sealed class MainModinfoFile : ModinfoFile
     {
+        /// <summary>
+        /// The file name for a main modinfo file.
+        /// </summary>
         public const string ModinfoFileName = "modinfo.json";
-        
+
+        /// <inheritdoc/>
         public override ModinfoFileKind FileKind => ModinfoFileKind.MainFile;
 
         internal override IModFileNameValidator FileNameValidator => new Validator();
 
-        public MainModinfoFile(FileInfo modinfoFile) : base(modinfoFile)
+        /// <inheritdoc/>
+        public MainModinfoFile(IFileInfo modinfoFile) : base(modinfoFile)
         {
         }
         

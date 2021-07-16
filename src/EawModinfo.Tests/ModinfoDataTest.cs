@@ -4,13 +4,17 @@ using EawModinfo.Model;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 using Newtonsoft.Json.Linq;
-using NuGet.Versioning;
+using SemanticVersioning;
 using Xunit;
 
 namespace EawModinfo.Tests
 {
     public class ModinfoDataTest
     {
+        private const string InvalidJsonData = @"{
+  ""version"": ""1.0.0"",
+}";
+
         [Fact]
         public void MinimalParseTest()
         {
@@ -36,7 +40,7 @@ namespace EawModinfo.Tests
 
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
-            Assert.Equal(new SemanticVersion(1,1,1, "BETA"), modinfo.Version);
+            Assert.Equal(new Version(1,1,1, "BETA"), modinfo.Version);
         }
 
         [Fact]
@@ -54,7 +58,6 @@ namespace EawModinfo.Tests
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
             Assert.Single(modinfo.Languages);
-            Assert.Single(modinfo.InternalLanguages);
         }
 
         [Fact]
@@ -75,7 +78,6 @@ namespace EawModinfo.Tests
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
             Assert.Equal(2, modinfo.Languages.Count());
-            Assert.Equal(2, modinfo.InternalLanguages.Count());
         }
 
         [Fact]
@@ -96,7 +98,6 @@ namespace EawModinfo.Tests
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
             Assert.Single(modinfo.Languages);
-            Assert.Single(modinfo.InternalLanguages);
         }
 
         [Fact]
@@ -118,7 +119,6 @@ namespace EawModinfo.Tests
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
             Assert.Single(modinfo.Languages);
-            Assert.Single(modinfo.InternalLanguages);
         }
 
         [Fact]
@@ -131,11 +131,8 @@ namespace EawModinfo.Tests
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
             Assert.Single(modinfo.Languages);
-            Assert.Single(modinfo.InternalLanguages);
             Assert.Equal("en",modinfo.Languages.ElementAt(0).Code);
-            Assert.Equal("en",modinfo.InternalLanguages.ElementAt(0).Code);
             Assert.Equal(LanguageSupportLevel.FullLocalized,modinfo.Languages.ElementAt(0).Support);
-            Assert.Equal(LanguageSupportLevel.FullLocalized,modinfo.InternalLanguages.ElementAt(0).Support);
         }
 
         [Fact]
@@ -148,6 +145,7 @@ namespace EawModinfo.Tests
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
             Assert.Equal(0, modinfo.Dependencies.Count);
+            Assert.Equal(DependencyResolveLayout.ResolveRecursive, modinfo.Dependencies.ResolveLayout);
         }
 
 
@@ -173,6 +171,75 @@ namespace EawModinfo.Tests
             Assert.Equal(2, modinfo.Dependencies.Count);
             Assert.Equal("12313", modinfo.Dependencies[0].Identifier);
             Assert.Equal("654987", modinfo.Dependencies[1].Identifier);
+            Assert.Equal(DependencyResolveLayout.ResolveRecursive, modinfo.Dependencies.ResolveLayout);
+        }
+
+        [Fact]
+        public void ModRefParseTestWithLayout()
+        {
+            var data = @"
+{
+    'name':'My Mod Name',
+    'dependencies': [
+        'FullResolved',
+        {
+            'identifier':'12313',
+            'modtype':1
+        },
+        {
+            'identifier':'654987',
+            'modtype':1
+        }
+    ]
+}";
+            var modinfo = ModinfoData.Parse(data);
+            Assert.Equal("My Mod Name", modinfo.Name);
+            Assert.Equal(2, modinfo.Dependencies.Count);
+            Assert.Equal("12313", modinfo.Dependencies[0].Identifier);
+            Assert.Equal("654987", modinfo.Dependencies[1].Identifier);
+            Assert.Equal(DependencyResolveLayout.FullResolved, modinfo.Dependencies.ResolveLayout);
+        }
+
+        [Fact]
+        public void ModRefParseTestFailure()
+        {
+            var data = @"
+{
+    'name':'My Mod Name',
+    'dependencies': [
+        {
+            'identifier':'12313',
+            'modtype':1
+        },
+        'FullResolved',
+        {
+            'identifier':'654987',
+            'modtype':1
+        }
+    ]
+}";
+            Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(data));
+        }
+
+        [Fact]
+        public void ModRefParseTestFailure2()
+        {
+            var data = @"
+{
+    'name':'My Mod Name',
+    'dependencies': [
+        'BlaBlub',
+        {
+            'identifier':'12313',
+            'modtype':1
+        },
+        {
+            'identifier':'654987',
+            'modtype':1
+        }
+    ]
+}";
+            Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(data));
         }
 
 
@@ -228,7 +295,8 @@ namespace EawModinfo.Tests
 }";
             var modinfo = ModinfoData.Parse(data);
             Assert.Equal("My Mod Name", modinfo.Name);
-            Assert.Equal("123", modinfo.SteamData.Id);
+            Assert.NotNull(modinfo.SteamData);
+            Assert.Equal("123", modinfo.SteamData!.Id);
             Assert.Equal("test", modinfo.SteamData.Title);
             Assert.Equal("path", modinfo.SteamData.ContentFolder);
             Assert.Equal(SteamWorkshopVisibility.Public, modinfo.SteamData.Visibility);
@@ -239,15 +307,19 @@ namespace EawModinfo.Tests
 
         public static IEnumerable<object[]> GetInvalidData()
         {
-            yield return new[]
+            yield return new object[]
             {
                 string.Empty
             };
-            yield return new[]
+            yield return new object[]
             {
                 @"
 {
 }"
+            };
+            yield return new object[]
+            {
+                InvalidJsonData
             };
         }
 
@@ -258,53 +330,48 @@ namespace EawModinfo.Tests
             Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(data));
         }
 
-
-        [Fact]
-        public void ModIdentityEqualCheck()
-        {
-            IModIdentity i1 = new ModinfoData{Name = "A"};
-            IModIdentity i2 = new ModinfoData{Name = "A"};
-
-            Assert.Equal(i1, i2);
-
-            IModIdentity i3 = new ModinfoData { Name = "A", Version = new SemanticVersion(1, 1, 1) };
-            IModIdentity i4 = new ModinfoData { Name = "A", Version = new SemanticVersion(1, 1, 1) };
-
-            Assert.Equal(i3, i4);
-            Assert.NotEqual(i3, i1);
-
-            IModIdentity i5 = new ModinfoData { Name = "B" };
-            Assert.NotEqual(i1, i5);
-
-            var d1 = new ModReference { Type = ModType.Default, Identifier = "A" };
-            var d2 = new ModReference { Type = ModType.Default, Identifier = "A" };
-            var d3 = new ModReference { Type = ModType.Default, Identifier = "B" };
-
-            Assert.Equal(d1, d2);
-
-            IModIdentity i6 = new ModinfoData { Name = "A", Dependencies = new List<IModReference>(new[] { d1, d3 }) };
-            IModIdentity i7 = new ModinfoData { Name = "A", Dependencies = new List<IModReference>(new[] { d2, d3 }) };
-            IModIdentity i8 = new ModinfoData { Name = "A", Dependencies = new List<IModReference>(new[] { d2 }) };
-            IModIdentity i9 = new ModinfoData { Name = "A", Dependencies = new List<IModReference>(new[] { d3, d1 }) };
-            IModIdentity i10 = new ModinfoData { Name = "A", Dependencies = new List<IModReference>(new[] { d1 }) };
-
-            Assert.Equal(i6, i7);
-            Assert.NotEqual(i6, i8);
-            Assert.NotEqual(i6, i9);
-            Assert.Equal(i8, i10);
-        }
-
-
         [Fact]
         public void WriterTest()
         {
-            var modinfo = new ModinfoData();
-            modinfo.Name = "Test";
-            modinfo.Version = new SemanticVersion(1,1,1, "BETA");
+            var modinfo = new ModinfoData("Test") { Version = new Version(1, 1, 1, "BETA")};
             var data = modinfo.ToJson(false);
             Assert.Contains(@"""version"": ""1.1.1-BETA""", data);
-            Assert.Contains(@"""code"": ""en""", data);
             Assert.DoesNotContain(@"""custom"":", data);
+        }
+
+        [Fact]
+        public void WriterTestDependencyList()
+        {
+            var modinfo = new ModinfoData("Test")
+            {
+                Dependencies = new DependencyList(new List<IModReference>{new ModReference("123", ModType.Default)}, DependencyResolveLayout.FullResolved)
+            };
+            var data = modinfo.ToJson(false);
+            Assert.Contains(@"""FullResolved"",",data);
+        }
+
+        [Fact]
+        public void WriterTestModRefRange()
+        {
+            var modinfo = new ModinfoData("Test")
+            {
+                Dependencies = new DependencyList(new List<IModReference> { new ModReference("123", ModType.Default, new Range("1.x")) }, DependencyResolveLayout.ResolveRecursive)
+            };
+            var data = modinfo.ToJson(false);
+            Assert.Contains(@"""version-range"": ""1.x""", data);
+        }
+
+        [Fact]
+        public void TolerantVersionParseTest()
+        {
+            var data = @"
+{
+    'name':'My Mod Name',
+    'version': '1.0'
+}";
+            var modinfo = ModinfoData.Parse(data);
+            Assert.Equal("My Mod Name", modinfo.Name);
+            Assert.Equal(new Version(1, 0, 0) , modinfo.Version);
         }
     }
 }

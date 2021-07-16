@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using EawModinfo.Model;
-using EawModinfo.Model.Steam;
+using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
-using NuGet.Versioning;
+using SemanticVersioning;
 using Xunit;
 
 namespace EawModinfo.Tests
@@ -16,18 +16,17 @@ namespace EawModinfo.Tests
         {
             yield return new object[]
             {
-                new ModinfoData
+                new ModinfoData("ModName")
                 {
-                    Name = "ModName", Version = new SemanticVersion(1, 1, 1, "BETA"), Icon = "path/icon.ico",
+                    Version = new Version(1, 1, 1, "BETA"), Icon = "path/icon.ico",
                     Summary = "Who reads this?"
                 }
             };
-            yield return new object[] {new ModinfoData {Name = "ModName"}};
+            yield return new object[] {new ModinfoData("ModName") };
             yield return new object[]
             {
-                new ModinfoData
+                new ModinfoData("ModName")
                 {
-                    Name = "ModName",
                     Languages = new[]
                     {
                         (ILanguageInfo) GetLanguageInfos().ElementAt(0)[0],
@@ -37,18 +36,16 @@ namespace EawModinfo.Tests
             };
             yield return new object[]
             {
-                new ModinfoData
+                new ModinfoData("ModName")
                 {
-                    Name = "ModName",
                     SteamData = (ISteamData) GetSteamData().ElementAt(0)[0]
                 }
             };
             yield return new object[]
             {
-                new ModinfoData
+                new ModinfoData("ModName")
                 {
-                    Name = "ModName",
-                    Dependencies = new List<IModReference>(GetModReferences().Select(x => x[0]).OfType<IModReference>())
+                    Dependencies = new DependencyList(GetModReferences().Select(x => x[0]).OfType<IModReference>().ToList(), DependencyResolveLayout.FullResolved)
                 }
             };
         }
@@ -57,26 +54,23 @@ namespace EawModinfo.Tests
         {
             yield return new object[]
             {
-                new ModinfoData
+                new ModinfoData("ModName")
                 {
-                    Name = "ModName",
                     SteamData = (ISteamData) GetInvalidSteamData().ElementAt(0)[0]
                 }
             };
             yield return new object[]
             {
-                new ModinfoData
+                new ModinfoData("ModName")
                 {
-                    Name = "ModName",
                     Languages = new []{ (ILanguageInfo) GetInvalidLanguageInfos().ElementAt(0)[0]}
                 }
             };
             yield return new object[]
             {
-                new ModinfoData
+                new ModinfoData("ModName")
                 {
-                    Name = "ModName",
-                    Dependencies = new []{ (IModReference) GetInvalidModReferences().ElementAt(0)[0]}
+                    Dependencies = new DependencyList(new []{ (IModReference) GetInvalidModReferences().ElementAt(0)[0]}, DependencyResolveLayout.FullResolved)
                 }
             };
         }
@@ -100,7 +94,7 @@ namespace EawModinfo.Tests
         {
             yield return new object[]
             {
-                new SteamData
+                new JsonSteamData
                 {
                     Id = "1234312", Tags = new[] {"EAW"}, Metadata = "bla", ContentFolder = "testFolder",
                     Visibility = SteamWorkshopVisibility.FriendsOnly, Title = "MyTitle"
@@ -109,7 +103,7 @@ namespace EawModinfo.Tests
             };
             yield return new object[]
             {
-                new SteamData
+                new JsonSteamData
                 {
                     Id = "1234312", Tags = new[] {"EAW"}, Metadata = "bla", ContentFolder = "testFolder",
                     Title = "MyTitle"
@@ -118,12 +112,12 @@ namespace EawModinfo.Tests
             };
             yield return new object[]
             {
-                new SteamData {Id = "1234312", Tags = new[] {"EAW"}, ContentFolder = "testFolder", Title = "MyTitle"},
+                new JsonSteamData {Id = "1234312", Tags = new[] {"EAW"}, ContentFolder = "testFolder", Title = "MyTitle"},
                 false
             };
             yield return new object[]
             {
-                new SteamData
+                new JsonSteamData
                 {
                     Id = "1234312", Tags = new[] {"EAW"}, ContentFolder = "testFolder",
                     Description = "Some description", Title = "MyTitle"
@@ -134,24 +128,24 @@ namespace EawModinfo.Tests
 
         public static IEnumerable<object[]> GetInvalidSteamData()
         {
-            yield return new object[] {new SteamData(), true};
+            yield return new object[] {new JsonSteamData(), true};
             yield return new object[]
-                {new SteamData {Id = "asd", Tags = new[] {"EAW"}, ContentFolder = "testFolder"}, true};
+                {new JsonSteamData {Id = "asd", Tags = new[] {"EAW"}, ContentFolder = "testFolder"}, true};
             yield return new object[]
-                {new SteamData {Id = "0", Tags = new[] {"EAW"}, ContentFolder = "testFolder"}, true};
+                {new JsonSteamData {Id = "0", Tags = new[] {"EAW"}, ContentFolder = "testFolder"}, true};
             yield return new object[]
-                {new SteamData {Id = "-123", Tags = new[] {"EAW"}, ContentFolder = "testFolder"}, true};
+                {new JsonSteamData {Id = "-123", Tags = new[] {"EAW"}, ContentFolder = "testFolder"}, true};
             yield return new object[]
             {
-                new SteamData {Id = "129381209812430981329048", Tags = new[] {"EAW"}, ContentFolder = "testFolder"},
+                new JsonSteamData {Id = "129381209812430981329048", Tags = new[] {"EAW"}, ContentFolder = "testFolder"},
                 true
             };
             yield return new object[]
-                {new SteamData {Id = "1234", Tags = new string[0], ContentFolder = "testFolder"}, true};
-            yield return new object[] {new SteamData {Id = "1234", Tags = null, ContentFolder = "testFolder"}, true};
-            yield return new object[] {new SteamData {Id = "1234", Tags = new[] { "EAW" }, ContentFolder = ""}, true};
-            yield return new object[] {new SteamData {Id = "1234", Tags = new[] { "EAW" }, ContentFolder = null}, true};
-            yield return new object[] {new SteamData {Id = "1234312", Tags = new[] {"test"}, Metadata = "bla", ContentFolder = "testFolder"}, true};
+                {new JsonSteamData {Id = "1234", Tags = new string[0], ContentFolder = "testFolder"}, true};
+            yield return new object[] {new JsonSteamData {Id = "1234", Tags = null!, ContentFolder = "testFolder"}, true};
+            yield return new object[] {new JsonSteamData {Id = "1234", Tags = new[] { "EAW" }, ContentFolder = ""}, true};
+            yield return new object[] {new JsonSteamData {Id = "1234", Tags = new[] { "EAW" }, ContentFolder = null!}, true};
+            yield return new object[] {new JsonSteamData {Id = "1234312", Tags = new[] {"test"}, Metadata = "bla", ContentFolder = "testFolder"}, true};
         }
 
         [Theory]
@@ -167,14 +161,14 @@ namespace EawModinfo.Tests
 
         public static IEnumerable<object[]> GetModReferences()
         {
-            yield return new object[] {new ModReference {Identifier = "en", Type = ModType.Default}, false};
-            yield return new object[] {new ModReference {Identifier = "en/ba/fr", Type = ModType.Default}, false};
-            yield return new object[] {new ModReference {Identifier = "en\\ba\\fr", Type = ModType.Default}, false};
-            yield return new object[] {new ModReference {Identifier = "c:\\en\\ba\\fr", Type = ModType.Default}, false};
-            yield return new object[] {new ModReference {Identifier = "../en/../../ba", Type = ModType.Default}, false};
-            yield return new object[] {new ModReference {Identifier = "123456", Type = ModType.Default}, false};
-            yield return new object[] {new ModReference {Identifier = "123456", Type = ModType.Workshops}, false};
-            yield return new object[] {new ModReference {Identifier = "blabla", Type = ModType.Virtual}, false};
+            yield return new object[] {new ModReference { Identifier = "en", Type = ModType.Default}, false};
+            yield return new object[] {new ModReference { Identifier = "en/ba/fr", Type = ModType.Default}, false};
+            yield return new object[] {new ModReference { Identifier = "en\\ba\\fr", Type = ModType.Default}, false};
+            yield return new object[] {new ModReference { Identifier = "c:\\en\\ba\\fr", Type = ModType.Default}, false};
+            yield return new object[] {new ModReference { Identifier = "../en/../../ba", Type = ModType.Default}, false};
+            yield return new object[] {new ModReference { Identifier = "123456", Type = ModType.Default}, false};
+            yield return new object[] {new ModReference { Identifier = "123456", Type = ModType.Workshops}, false};
+            yield return new object[] {new ModReference { Identifier = "blabla", Type = ModType.Virtual}, false};
         }
 
         public static IEnumerable<object[]> GetInvalidModReferences()
@@ -184,17 +178,17 @@ namespace EawModinfo.Tests
             {
                 new ModReference
                 {
-                    Identifier = null, Type = ModType.Default
+                    Identifier = null!, Type = ModType.Default
                 },
                 true
             };
-            yield return new object[] {new ModReference {Identifier = null, Type = ModType.Workshops}, true};
-            yield return new object[] {new ModReference {Identifier = null, Type = ModType.Virtual}, true};
-            yield return new object[] {new ModReference {Identifier = string.Empty, Type = ModType.Default}, true};
-            yield return new object[] {new ModReference {Identifier = string.Empty, Type = ModType.Workshops}, true};
-            yield return new object[] {new ModReference {Identifier = string.Empty, Type = ModType.Virtual}, true};
-            yield return new object[] {new ModReference {Identifier = "-1", Type = ModType.Workshops}, true};
-            yield return new object[] {new ModReference {Identifier = "0", Type = ModType.Workshops}, true};
+            yield return new object[] {new ModReference { Identifier = null!, Type = ModType.Workshops}, true};
+            yield return new object[] {new ModReference { Identifier = null!, Type = ModType.Virtual}, true};
+            yield return new object[] {new ModReference { Identifier = string.Empty, Type = ModType.Default}, true};
+            yield return new object[] {new ModReference { Identifier = string.Empty, Type = ModType.Workshops}, true};
+            yield return new object[] {new ModReference { Identifier = string.Empty, Type = ModType.Virtual}, true};
+            yield return new object[] {new ModReference { Identifier = "-1", Type = ModType.Workshops}, true};
+            yield return new object[] {new ModReference { Identifier = "0", Type = ModType.Workshops}, true};
             yield return new object[]
                 {new ModReference {Identifier = "12921908098098098309481234", Type = ModType.Workshops}, true};
         }
@@ -216,8 +210,8 @@ namespace EawModinfo.Tests
         public static IEnumerable<object[]> GetLanguageInfos()
         {
             yield return new object[] {new LanguageInfo {Code = "en"}, false};
-            yield return new object[] {new LanguageInfo {Code = "de"}, false};
-            yield return new object[] {new LanguageInfo {Code = "es"}, false};
+            yield return new object[] {new LanguageInfo { Code = "de"}, false};
+            yield return new object[] {new LanguageInfo { Code = "es"}, false};
         }
 
 
@@ -232,10 +226,10 @@ namespace EawModinfo.Tests
                 },
                 true
             };
-            yield return new object[] {new LanguageInfo {Code = "ens"}, true};
-            yield return new object[] {new LanguageInfo {Code = "de-de"}, true};
-            yield return new object[] {new LanguageInfo {Code = "deu"}, true};
-            yield return new object[] {new LanguageInfo {Code = "iv"}, true};
+            yield return new object[] {new LanguageInfo { Code = "ens"}, true};
+            yield return new object[] {new LanguageInfo { Code = "de-de"}, true};
+            yield return new object[] {new LanguageInfo { Code = "deu"}, true};
+            yield return new object[] {new LanguageInfo { Code = "iv"}, true};
         }
 
 

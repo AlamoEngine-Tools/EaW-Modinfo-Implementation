@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using EawModinfo.Model;
+using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using Xunit;
 
@@ -11,8 +12,8 @@ namespace EawModinfo.Tests
         public void EqualsCheck()
         {
             ILanguageInfo a = new LanguageInfo {Code = "en", Support = LanguageSupportLevel.FullLocalized};
-            ILanguageInfo b = new LanguageInfo {Code = "en", Support = LanguageSupportLevel.SFX};
-            ILanguageInfo c = new LanguageInfo {Code = "de", Support = LanguageSupportLevel.FullLocalized};
+            ILanguageInfo b = new JsonLanguageInfo(new LanguageInfo { Code = "en", Support = LanguageSupportLevel.SFX });
+            ILanguageInfo c = new LanguageInfo { Code = "de", Support = LanguageSupportLevel.FullLocalized};
             var d = LanguageInfo.Default;
 
             Assert.Equal(a, b);

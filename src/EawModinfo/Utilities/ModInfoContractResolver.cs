@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Linq;
 using System.Reflection;
-using EawModinfo.Model;
+using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -10,7 +10,7 @@ namespace EawModinfo.Utilities
 {
     internal class ModInfoContractResolver : DefaultContractResolver
     {
-        public static readonly ModInfoContractResolver Instance = new ModInfoContractResolver();
+        public static readonly ModInfoContractResolver Instance = new();
 
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
@@ -25,24 +25,20 @@ namespace EawModinfo.Utilities
                 return;
 
 
-            if (property.DeclaringType == typeof(ModinfoData) && typeof(IEnumerable).IsAssignableFrom(property.PropertyType))
+            if (property.DeclaringType == typeof(JsonModinfoData) && typeof(IEnumerable).IsAssignableFrom(property.PropertyType))
             {
                 property.ShouldSerialize =
                     instance =>
                     {
                         var modinfo = (IModinfo) instance;
                         var name = property.PropertyName;
-                        switch (name)
+                        return name switch
                         {
-                            case "custom":
-                                return modinfo.Custom.Any();
-                            case "languages":
-                                return modinfo.Languages.Any();
-                            case "dependencies":
-                                return modinfo.Dependencies.Any();
-                            default:
-                                return true;
-                        }
+                            "custom" => modinfo.Custom.Any(),
+                            "languages" => modinfo.Languages.Any(),
+                            "dependencies" => modinfo.Dependencies.Any(),
+                            _ => true
+                        };
                     };
             }
         }

@@ -1,27 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using EawModinfo.Spec;
-using Microsoft;
+using Validation;
 
 namespace EawModinfo.File
 {
+    /// <inheritdoc/>
     public sealed class ModinfoFileFinder : IModinfoFileFinder
     {
         /// <inheritdoc/>
-        public DirectoryInfo Directory { get; set; }
+        public IDirectoryInfo Directory { get; set; }
 
         /// <inheritdoc/>
         public IModinfo? BaseModinfo { get; set; }
 
-        public ModinfoFileFinder(DirectoryInfo directoryInfo, IModinfo? baseModinfo)
+        /// <summary>
+        /// Creates a new <see cref="ModinfoFileFinder"/> instance
+        /// </summary>
+        /// <param name="directoryInfo">The directory where to search.</param>
+        /// <param name="baseModinfo">The base <see cref="IModinfo"/> that shall get merged from, if present.</param>
+        public ModinfoFileFinder(IDirectoryInfo directoryInfo, IModinfo? baseModinfo)
         {
             Directory = directoryInfo;
             BaseModinfo = baseModinfo;
         }
 
-        public ModinfoFileFinder(DirectoryInfo directoryInfo) : this(directoryInfo, null)
+        /// <summary>
+        /// Creates a new <see cref="ModinfoFileFinder"/> instance.
+        /// </summary>
+        /// <param name="directoryInfo">The directory where to search.</param>
+        public ModinfoFileFinder(IDirectoryInfo directoryInfo) : this(directoryInfo, null)
         {
         }
 
@@ -32,7 +43,7 @@ namespace EawModinfo.File
         /// <returns>A new instance of a <see cref="IModinfoFile"/></returns>
         /// <exception cref="ArgumentNullException">When <paramref name="directory"/> is null.</exception>
         /// <exception cref="DirectoryNotFoundException">When <paramref name="directory"/>does not exists.</exception>
-        public static IModinfoFile? FindMain(DirectoryInfo directory)
+        public static IModinfoFile? FindMain(IDirectoryInfo directory)
         {
             Requires.NotNull(directory, nameof(directory));
             var result = CreateInstanceAndFind(directory, FindOptions.FindMain);
@@ -46,7 +57,7 @@ namespace EawModinfo.File
         /// <returns>An collection with all found variant files.</returns>
         /// <exception cref="ArgumentNullException">When <paramref name="directory"/> is null.</exception>
         /// <exception cref="DirectoryNotFoundException">When <paramref name="directory"/>does not exists.</exception>
-        public static ICollection<IModinfoFile> FindVariants(DirectoryInfo directory)
+        public static ICollection<IModinfoFile> FindVariants(IDirectoryInfo directory)
         {
             Requires.NotNull(directory, nameof(directory));
             var result = CreateInstanceAndFind(directory, FindOptions.FindVariants);
@@ -62,14 +73,14 @@ namespace EawModinfo.File
         /// <returns>An collection with all found variant files.</returns>
         /// <exception cref="ArgumentNullException">When <paramref name="directory"/> is null.</exception>
         /// <exception cref="DirectoryNotFoundException">When <paramref name="directory"/>does not exists.</exception>
-        public static IEnumerable<IModinfoFile> FindVariants(DirectoryInfo directory, IModinfo? baseModinfo)
+        public static IEnumerable<IModinfoFile> FindVariants(IDirectoryInfo directory, IModinfo? baseModinfo)
         {
             Requires.NotNull(directory, nameof(directory));
             var result = CreateInstanceAndFind(directory, FindOptions.FindVariants, baseModinfo);
             return new List<IModinfoFile>(result.Variants);
         }
 
-        internal static ModinfoFinderCollection CreateInstanceAndFind(DirectoryInfo directory, FindOptions options, IModinfo? baseData = null)
+        internal static ModinfoFinderCollection CreateInstanceAndFind(IDirectoryInfo directory, FindOptions options, IModinfo? baseData = null)
         {
             var finder = new ModinfoFileFinder(directory, baseData);
             return finder.Find(options);
@@ -112,14 +123,14 @@ namespace EawModinfo.File
             if (!Directory.Exists)
                 throw new DirectoryNotFoundException($"Directory could not be found at '{Directory.FullName}'");
             ModinfoFile? mainModinfoFile = FindMainModinfoFileCore();
-            List<ModinfoVariantFile> variantFiles = new List<ModinfoVariantFile>();
+            List<ModinfoVariantFile> variantFiles = new();
             if (options.HasFlag(FindOptions.FindVariants))
                 variantFiles.AddRange(FindModinfoVariantFilesCore(mainModinfoFile?.GetModinfo() ?? BaseModinfo));
 
 
-            if (!options.HasFlag(FindOptions.FindMain))
-                return new ModinfoFinderCollection(Directory, null, variantFiles);
-            return new ModinfoFinderCollection(Directory, mainModinfoFile, variantFiles);
+            return !options.HasFlag(FindOptions.FindMain)
+                ? new ModinfoFinderCollection(Directory, null, variantFiles)
+                : new ModinfoFinderCollection(Directory, mainModinfoFile, variantFiles);
         }
 
         private MainModinfoFile? FindMainModinfoFileCore()
