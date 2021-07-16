@@ -23,6 +23,7 @@ namespace EawModinfo.Model.Json
         [JsonProperty("version-range", NullValueHandling = NullValueHandling.Ignore)]
         public string? VersionRangeString { get; internal set; }
 
+        [JsonIgnore]
         public Range? VersionRange => !Range.TryParse(VersionRangeString, out var range) ? null : range;
 
         [JsonConstructor]
@@ -35,6 +36,7 @@ namespace EawModinfo.Model.Json
             Requires.NotNull(modReference, nameof(modReference));
             Identifier = modReference.Identifier;
             Type = modReference.Type;
+            VersionRangeString = modReference.VersionRange?.ToString();
         }
 
         bool IEquatable<IModReference>.Equals(IModReference? other)

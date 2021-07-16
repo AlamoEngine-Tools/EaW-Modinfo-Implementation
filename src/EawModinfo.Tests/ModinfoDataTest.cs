@@ -351,6 +351,17 @@ namespace EawModinfo.Tests
         }
 
         [Fact]
+        public void WriterTestModRefRange()
+        {
+            var modinfo = new ModinfoData("Test")
+            {
+                Dependencies = new DependencyList(new List<IModReference> { new ModReference("123", ModType.Default, new Range("1.x")) }, DependencyResolveLayout.ResolveRecursive)
+            };
+            var data = modinfo.ToJson(false);
+            Assert.Contains(@"""version-range"": ""1.x""", data);
+        }
+
+        [Fact]
         public void TolerantVersionParseTest()
         {
             var data = @"
