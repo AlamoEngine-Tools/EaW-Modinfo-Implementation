@@ -47,7 +47,7 @@ namespace EawModinfo.Spec
         /// <param name="mainModinfo">A potential main modinfo file.</param>
         /// <param name="variants">An enumeration of variant modinfo files.</param>
         /// <exception cref="ModinfoException">When illegal data was passed.</exception>
-        internal ModinfoFinderCollection(IDirectoryInfo directory, IModinfoFile? mainModinfo, IEnumerable<IModinfoFile> variants)
+        public ModinfoFinderCollection(IDirectoryInfo directory, IModinfoFile? mainModinfo, IEnumerable<IModinfoFile> variants)
         {
             Requires.NotNull(directory, nameof(directory));
             Requires.NotNull(variants, nameof(variants));
@@ -60,13 +60,33 @@ namespace EawModinfo.Spec
             Variants = variants.ToList();
         }
 
-        internal ModinfoFinderCollection(IDirectoryInfo directory, IModinfoFile mainModinfo) : 
+        /// <summary>
+        /// Creates a new instance of this collection, with only a main modinfo file.
+        /// </summary>
+        /// <param name="directory">The source directory.</param>
+        /// <param name="mainModinfo">The main modinfo file. Can be <see langword="null"/></param>
+        /// <exception cref="ModinfoException">When illegal data was passed.</exception>
+        public ModinfoFinderCollection(IDirectoryInfo directory, IModinfoFile? mainModinfo) : 
             this(directory, mainModinfo, Enumerable.Empty<IModinfoFile>())
         {
         }
 
-        internal ModinfoFinderCollection(IDirectoryInfo directory, IEnumerable<IModinfoFile> variants) :
+        /// <summary>
+        /// Creates a new instance of this collection, with only a variant modinfo files.
+        /// </summary>
+        /// <param name="directory">The source directory.</param>
+        /// <param name="variants">An enumeration of variant modinfo files.</param>
+        /// <exception cref="ModinfoException">When illegal data was passed.</exception>
+        public ModinfoFinderCollection(IDirectoryInfo directory, IEnumerable<IModinfoFile> variants) :
             this(directory, null, variants)
+        {
+        }
+
+        /// <summary>
+        /// Creates an empty instance of this collection.
+        /// </summary>
+        /// <param name="directory">The source directory.</param>
+        public ModinfoFinderCollection(IDirectoryInfo directory) : this(directory, null, Enumerable.Empty<IModinfoFile>())
         {
         }
 
