@@ -95,5 +95,14 @@ namespace EawModinfo.Tests
             Assert.Throws<ModinfoException>(() => new ModinfoFinderCollection(
                 fs.DirectoryInfo.FromDirectoryName("mods/A"), new IModinfoFile[] {variant, mainFile}));
         }
+
+        [Fact]
+        public void Test8()
+        {
+            var fs = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var collection = new ModinfoFinderCollection(fs.DirectoryInfo.FromDirectoryName("mods/A"));
+            Assert.Null(collection.MainModinfo);
+            Assert.Empty(collection.Variants);
+        }
     }
 }
