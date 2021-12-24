@@ -1,5 +1,7 @@
 # EaW-Modinfo-Implementation
 
+[![CI/CD Master](https://github.com/AlamoEngine-Tools/EaW-Modinfo-Implementation/actions/workflows/main.yml/badge.svg)](https://github.com/AlamoEngine-Tools/EaW-Modinfo-Implementation/actions/workflows/main.yml)
+
 C# implementation for the [EaW Modinfo Specification](https://github.com/AlamoEngine-Tools/eaw.modinfo)
 
 ## Features
