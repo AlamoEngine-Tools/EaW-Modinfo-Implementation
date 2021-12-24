@@ -1,0 +1,41 @@
+name: Get Version Metadata
+
+on:
+  workflow_call:
+    inputs:
+      metadata-file-path:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+    outputs:
+      version-with-metadata:
+        value: ${{ jobs.build-version.outputs.version-with-metadata }}
+
+jobs:
+  build-version:
+    name: Get Version Metadata
+    runs-on: ubuntu-latest
+
+    outputs:
+      version-with-metadata: ${{ steps.build-version.outputs.realVersion }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Read Metadata File
+        id: read-version
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ${{inputs.metadata-file-path}}
+
+      - id: build-version
+        name: Build Version with Metadata
+        env:
+          tmp: ${{inputs.version}}
+          meta: ${{steps.read-version.outputs.content}}
+        run: |
+          if [ ! -z "$meta" ]; then tmp="$tmp+$meta"; fi
+          echo "::set-output name=realVersion::$tmp"
