@@ -1,4 +1,9 @@
 ﻿using System.Runtime.CompilerServices;
 
+#if DEBUG
+[assembly: InternalsVisibleTo("EawModinfo.Tests")]
+#else
 [assembly: InternalsVisibleTo("EawModinfo.Tests, PublicKey=00240000048000009400000006020000002400005253413100040000010001006de98c7e7aaf09d58dcf9b795560d595ba312cc6ada08c10848ff118d8eec62f6175188c7b1a1d3522d2dcaab98888b69a3fe5d0aaff15a2723db78917a7b159749b1a8a8cb8b3294fe6e828277f5209f40979dbdc71cf1c7501bfb1efadec93153731cbff315c4ce7e33e8eb0ef7b36eebc25900fd9c4c7fe5e4c3ffe54e6ca")]
+#endif
+
 
