@@ -11,24 +11,24 @@ jobs:
     name: Build & Test
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
-        configuration: [Debug, Release]
-        dotnet-framework: [5.0.x]
+        os: [windows-latest, ubuntu-latest]
       fail-fast: false
+    
     runs-on: ${{ matrix.os }}
-    continue-on-error: true
+
     steps:
     - name: Checkout
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
+
     - name: Setup .NET Core SDK
-      uses: actions/setup-dotnet@v1.7.2
+      uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{ matrix.dotnet-framework }}
-    - name: Build
-      run: dotnet build src/EawModinfo/EawModinfo.csproj -f net5.0
+        dotnet-version: | 
+            3.1.x
+            5.0.x
+            6.0.x
+        
     - name: Unit Test
-      run: dotnet test src/EawModinfo.Tests/EawModinfo.Tests.csproj -f net5.0
-      env:
-        Configuration: ${{ matrix.configuration }}
+      run: dotnet test --configuration Release --logger "GitHubActions"
