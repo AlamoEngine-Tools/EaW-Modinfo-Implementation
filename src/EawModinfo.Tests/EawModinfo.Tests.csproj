@@ -8,10 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="C:\Users\Anakin\source\repos\AlamoEngine-Tools\EaW-Modinfo-Implementation\README.md" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="GitHubActionsTestLogger" Version="1.2.0" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
 		<PackageReference Include="System.IO.Abstractions" Version="16.0.1" />
