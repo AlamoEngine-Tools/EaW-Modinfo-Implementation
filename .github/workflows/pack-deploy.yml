@@ -31,10 +31,13 @@ jobs:
         with:
           fetch-depth: "0"
 
-      - name: Setup .NET SDK
+      - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: | 
+            3.1.x
+            5.0.x
+            6.0.x
 
       - name: Pack
         run: dotnet pack --configuration Release -p:Version=${{env.assembly-version}}.0.0 -p:PackageVersion=${{inputs.package-version}} /p:InformationalVersion=${{inputs.package-version}} --output ${{ env.PACKAGE_OUTPUT_DIR }}
