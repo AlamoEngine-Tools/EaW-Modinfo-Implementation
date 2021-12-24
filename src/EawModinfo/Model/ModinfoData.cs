@@ -92,7 +92,7 @@ namespace EawModinfo.Model
         }
 
         /// <inheritdoc/>
-        public bool Equals(IModIdentity other)
+        public bool Equals(IModIdentity? other)
         {
             return ModIdentityEqualityComparer.Default.Equals(this, other);
         }
