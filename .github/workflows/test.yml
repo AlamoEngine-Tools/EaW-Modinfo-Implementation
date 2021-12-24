@@ -1,10 +1,12 @@
-name: EaW Modinfo Implementation Build & Test
+name: Build-Test
 
 on:
+  workflow_call:
+  workflow_dispatch:
   push:
-    branches: [ master, develop ]
+    branches: [ develop ]
   pull_request:
-    branches: [ master, develop ]
+    branches: [ develop ]
 
 jobs:
   build-test:
@@ -30,5 +32,5 @@ jobs:
             5.0.x
             6.0.x
         
-    - name: Unit Test
+    - name: Build & Test in Release Mode
       run: dotnet test --configuration Release --logger "GitHubActions"
