@@ -1,0 +1,47 @@
+name: CI/CD Master
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+concurrency: deploy-tagging
+
+jobs:
+
+# Builds and tests the solution.
+  build-test:
+    uses: AlamoEngine-Tools/EaW-Modinfo-Implementation/.github/workflows/test.yml@master
+
+# Creates a new tag based on git history messages between the [latest-tag - HEAD].
+  tag:
+    needs: build-test
+    uses: AlamoEngine-Tools/EaW-Modinfo-Implementation/.github/workflows/tag.yml@master
+    with:
+      create: ${{ github.event_name == 'push' }}
+
+# Reads a file which may contain metadata information which shall be appended to the actual build version.
+  build-real-version:
+    needs: tag
+    uses: AlamoEngine-Tools/EaW-Modinfo-Implementation/.github/workflows/getVersionMetadata.yml@master
+    with:
+      version: ${{needs.tag.outputs.new-tag}}
+      metadata-file-path: ./spec/version.txt
+
+# Packs and deploys artifacts.
+  pack-deploy:
+    if: ${{ github.event_name == 'push' && needs.tag.outputs.part != '' }} # Only deploy if we have a new tag.
+    needs: build-real-version
+    uses: AlamoEngine-Tools/EaW-Modinfo-Implementation/.github/workflows/pack-deploy.yml@master
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+    with:
+      package-version: ${{ needs.build-real-version.outputs.version-with-metadata }}
+
+  # Create a GitHub Release.
+  release:
+    needs: [tag, pack-deploy]
+    uses: AlamoEngine-Tools/EaW-Modinfo-Implementation/.github/workflows/release.yml@master
+    with:
+      tag: ${{needs.tag.outputs.new-tag}}
