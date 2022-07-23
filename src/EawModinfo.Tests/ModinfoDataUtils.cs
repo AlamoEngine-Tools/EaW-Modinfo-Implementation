@@ -5,11 +5,11 @@ using EawModinfo.File;
 using EawModinfo.Spec;
 using Validation;
 
-namespace EawModinfo.Tests
+namespace EawModinfo.Tests;
+
+internal static class ModinfoDataUtils
 {
-    internal static class ModinfoDataUtils
-    {
-        internal static string MainModinfoData = @"{
+    internal static string MainModinfoData = @"{
 	""name"": ""testmod"",
 	""version"": ""1.1.1-BETA"",
 	""languages"": [
@@ -26,7 +26,7 @@ namespace EawModinfo.Tests
 	}
 }";
 
-        internal static string VariantMainModinfoData = @"{
+    internal static string VariantMainModinfoData = @"{
 	""name"": ""testmodVariant"",
 	""version"": ""1.1.1-BETA"",
 	""languages"": [
@@ -43,35 +43,34 @@ namespace EawModinfo.Tests
 	}
 }";
 
-        internal static string VariantModifnoData = @"{
+    internal static string VariantModifnoData = @"{
 	""name"": ""Addon""
 }";
 
-        internal static IFileInfo CreateModifnoFile(MockFileSystem fs, string path)
-        {
-            Requires.NotNull(fs, nameof(fs));
-            const string name = "modinfo.json";
-            return CreateFile(fs, path, name, MainModinfoData);
-        }
+    internal static IFileInfo CreateModifnoFile(MockFileSystem fs, string path)
+    {
+        Requires.NotNull(fs, nameof(fs));
+        const string name = "modinfo.json";
+        return CreateFile(fs, path, name, MainModinfoData);
+    }
 
-        internal static IFileInfo CreateVariantMainFile(MockFileSystem fs, string path)
-        {
-            const string name = "variantMain-modinfo.json";
-            return CreateFile(fs, path, name, VariantMainModinfoData);
-        }
+    internal static IFileInfo CreateVariantMainFile(MockFileSystem fs, string path)
+    {
+        const string name = "variantMain-modinfo.json";
+        return CreateFile(fs, path, name, VariantMainModinfoData);
+    }
 
-        internal static IFileInfo CreateVariantFile(MockFileSystem fs, string path)
-        {
-            const string name = "variant-modinfo.json";
-            return CreateFile(fs, path, name, VariantModifnoData);
-        }
+    internal static IFileInfo CreateVariantFile(MockFileSystem fs, string path)
+    {
+        const string name = "variant-modinfo.json";
+        return CreateFile(fs, path, name, VariantModifnoData);
+    }
 
-        internal static IFileInfo CreateFile(MockFileSystem fs, string path, string name, string data)
-        {
-            Requires.NotNull(fs, nameof(fs));
-            var fullPath = fs.Path.Combine(path, name);
-            fs.AddFile(fullPath, new MockFileData(data));
-            return fs.FileInfo.FromFileName(fullPath);
-        }
+    internal static IFileInfo CreateFile(MockFileSystem fs, string path, string name, string data)
+    {
+        Requires.NotNull(fs, nameof(fs));
+        var fullPath = fs.Path.Combine(path, name);
+        fs.AddFile(fullPath, new MockFileData(data));
+        return fs.FileInfo.FromFileName(fullPath);
     }
 }

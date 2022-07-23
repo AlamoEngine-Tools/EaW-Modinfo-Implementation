@@ -4,73 +4,72 @@ using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using Xunit;
 
-namespace EawModinfo.Tests
+namespace EawModinfo.Tests;
+
+public class LanguageInfoTests
 {
-    public class LanguageInfoTests
+    [Fact]
+    public void EqualsCheck()
     {
-        [Fact]
-        public void EqualsCheck()
-        {
-            ILanguageInfo a = new LanguageInfo {Code = "en", Support = LanguageSupportLevel.FullLocalized};
-            ILanguageInfo b = new JsonLanguageInfo(new LanguageInfo { Code = "en", Support = LanguageSupportLevel.SFX });
-            ILanguageInfo c = new LanguageInfo { Code = "de", Support = LanguageSupportLevel.FullLocalized};
-            var d = LanguageInfo.Default;
+        ILanguageInfo a = new LanguageInfo {Code = "en", Support = LanguageSupportLevel.FullLocalized};
+        ILanguageInfo b = new JsonLanguageInfo(new LanguageInfo { Code = "en", Support = LanguageSupportLevel.SFX });
+        ILanguageInfo c = new LanguageInfo { Code = "de", Support = LanguageSupportLevel.FullLocalized};
+        var d = LanguageInfo.Default;
 
-            Assert.Equal(a, b);
-            Assert.NotEqual(a, c);
-            Assert.Equal(a, d);
-            Assert.Equal(LanguageSupportLevel.FullLocalized, d.Support);
-        }
+        Assert.Equal(a, b);
+        Assert.NotEqual(a, c);
+        Assert.Equal(a, d);
+        Assert.Equal(LanguageSupportLevel.FullLocalized, d.Support);
+    }
 
-        public static IEnumerable<object[]> GetData()
+    public static IEnumerable<object[]> GetData()
+    {
+        yield return new object[]
         {
-            yield return new object[]
-            {
-                @"
+            @"
 {
     'code':'en'
 }",
-                "en", LanguageSupportLevel.FullLocalized
-            };
-            yield return new object[]
-            {
-                @"
+            "en", LanguageSupportLevel.FullLocalized
+        };
+        yield return new object[]
+        {
+            @"
 {
     'code':'en',
     'support': 7
 }",
-                "en", LanguageSupportLevel.FullLocalized
-            };
+            "en", LanguageSupportLevel.FullLocalized
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
 {
     'code':'en',
     'support': 1
 }",
-                "en", LanguageSupportLevel.Text
-            };
+            "en", LanguageSupportLevel.Text
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
 {
     'code':'en',
     'support': 3
 }",
-                "en", LanguageSupportLevel.Text | LanguageSupportLevel.Speech
-            };
-        }
+            "en", LanguageSupportLevel.Text | LanguageSupportLevel.Speech
+        };
+    }
 
-        [Theory]
-        [MemberData(nameof(GetData))]
-        public void ParseTests(string data, string expectedCode, LanguageSupportLevel expectedLevel)
-        {
-            var languageInfo = LanguageInfo.Parse(data);
-            Assert.Equal(expectedCode, languageInfo.Code);
-            Assert.Equal(expectedLevel, languageInfo.Support);
-            Assert.NotNull(languageInfo.Culture);
-        }
+    [Theory]
+    [MemberData(nameof(GetData))]
+    public void ParseTests(string data, string expectedCode, LanguageSupportLevel expectedLevel)
+    {
+        var languageInfo = LanguageInfo.Parse(data);
+        Assert.Equal(expectedCode, languageInfo.Code);
+        Assert.Equal(expectedLevel, languageInfo.Support);
+        Assert.NotNull(languageInfo.Culture);
     }
 }

@@ -5,77 +5,76 @@ using EawModinfo.Utilities;
 using Validation;
 using Range = SemanticVersioning.Range;
 
-namespace EawModinfo.Model
+namespace EawModinfo.Model;
+
+/// <inheritdoc/>
+public struct ModReference : IModReference
 {
     /// <inheritdoc/>
-    public struct ModReference : IModReference
+    public string Identifier { get; init; }
+
+    /// <inheritdoc/>
+    public ModType Type { get; init; }
+
+    /// <inheritdoc/>
+    public Range? VersionRange { get; }
+
+    /// <summary>
+    /// Create a new instance.
+    /// </summary>
+    public ModReference(string id, ModType modType, Range? range = null)
     {
-        /// <inheritdoc/>
-        public string Identifier { get; init; }
+        Requires.NotNullOrEmpty(id, nameof(id));
+        Identifier = id;
+        Type = modType;
+        VersionRange = range;
+    }
 
-        /// <inheritdoc/>
-        public ModType Type { get; init; }
+    /// <summary>
+    /// Creates a new instance from a given <see cref="IModReference"/> instance.
+    /// </summary>
+    /// <param name="modReference">The instance that will copied.</param>
+    public ModReference(IModReference modReference)
+    {
+        Identifier = modReference.Identifier;
+        Type = modReference.Type;
+        VersionRange = modReference.VersionRange;
+    }
 
-        /// <inheritdoc/>
-        public Range? VersionRange { get; }
+    /// <summary>
+    /// Parses and deserializes a json data into a <see cref="ModReference"/>
+    /// </summary>
+    /// <param name="data">The raw json data.</param>
+    /// <returns>The deserialized object.</returns>
+    /// <exception cref="ModinfoParseException">Throws when parsing failed, e.g. due to missing required properties.</exception>
+    public static ModReference Parse(string data)
+    {
+        return new ModReference(ParseUtility.Parse<JsonModReference>(data));
+    }
 
-        /// <summary>
-        /// Create a new instance.
-        /// </summary>
-        public ModReference(string id, ModType modType, Range? range = null)
-        {
-            Requires.NotNullOrEmpty(id, nameof(id));
-            Identifier = id;
-            Type = modType;
-            VersionRange = range;
-        }
+    bool IEquatable<IModReference>.Equals(IModReference? other)
+    {
+        return Identifier == other?.Identifier && Type == other.Type;
+    }
 
-        /// <summary>
-        /// Creates a new instance from a given <see cref="IModReference"/> instance.
-        /// </summary>
-        /// <param name="modReference">The instance that will copied.</param>
-        public ModReference(IModReference modReference)
-        {
-            Identifier = modReference.Identifier;
-            Type = modReference.Type;
-            VersionRange = modReference.VersionRange;
-        }
+    /// <inheritdoc/>
+    public override bool Equals(object? obj)
+    {
+        if (obj is IModReference reference)
+            return ((IModReference)this).Equals(reference);
+        return false;
+    }
 
-        /// <summary>
-        /// Parses and deserializes a json data into a <see cref="ModReference"/>
-        /// </summary>
-        /// <param name="data">The raw json data.</param>
-        /// <returns>The deserialized object.</returns>
-        /// <exception cref="ModinfoParseException">Throws when parsing failed, e.g. due to missing required properties.</exception>
-        public static ModReference Parse(string data)
-        {
-            return new ModReference(ParseUtility.Parse<JsonModReference>(data));
-        }
-
-        bool IEquatable<IModReference>.Equals(IModReference? other)
-        {
-            return Identifier == other?.Identifier && Type == other.Type;
-        }
-
-        /// <inheritdoc/>
-        public override bool Equals(object? obj)
-        {
-            if (obj is IModReference reference)
-                return ((IModReference)this).Equals(reference);
-            return false;
-        }
-
-        /// <inheritdoc/>
-        public override int GetHashCode()
-        {
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
 #if NETSTANDARD2_1 || NET
             return HashCode.Combine(Identifier, (int) Type);
 #else
-            unchecked
-            {
-                return (Identifier.GetHashCode() * 397) ^ (int)Type;
-            }
-#endif
+        unchecked
+        {
+            return (Identifier.GetHashCode() * 397) ^ (int)Type;
         }
+#endif
     }
 }

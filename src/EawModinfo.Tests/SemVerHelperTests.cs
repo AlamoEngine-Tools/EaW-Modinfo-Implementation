@@ -4,44 +4,43 @@ using SemanticVersioning;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EawModinfo.Tests
+namespace EawModinfo.Tests;
+
+public class SemVerHelperTests
 {
-    public class SemVerHelperTests
+    private readonly ITestOutputHelper _output;
+
+    public SemVerHelperTests(ITestOutputHelper output)
     {
-        private readonly ITestOutputHelper _output;
+        _output = output;
+    }
 
-        public SemVerHelperTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
+    public static IEnumerable<object?[]> GetTestData()
+    {
+        yield return new object?[] { null, null };
+        yield return new object[] {"1", new Version(1, 0, 0)};
+        yield return new object[] {"1.0", new Version(1, 0, 0)};
+        yield return new object[] {"1.0.0", new Version(1, 0, 0)};
+        yield return new object[] {"1.0.0.0", new Version(1, 0, 0)};
 
-        public static IEnumerable<object?[]> GetTestData()
-        {
-            yield return new object?[] { null, null };
-            yield return new object[] {"1", new Version(1, 0, 0)};
-            yield return new object[] {"1.0", new Version(1, 0, 0)};
-            yield return new object[] {"1.0.0", new Version(1, 0, 0)};
-            yield return new object[] {"1.0.0.0", new Version(1, 0, 0)};
+        yield return new object[] {"1.0.0.1", new Version(1, 0, 0)};
+        yield return new object[] {"1.0.0.1-pre1", new Version(1, 0, 0, "pre1")};
 
-            yield return new object[] {"1.0.0.1", new Version(1, 0, 0)};
-            yield return new object[] {"1.0.0.1-pre1", new Version(1, 0, 0, "pre1")};
+        yield return new object[] {"1.0.0.1+2", new Version(1, 0, 0, null, "2")};
 
-            yield return new object[] {"1.0.0.1+2", new Version(1, 0, 0, null, "2")};
-
-            yield return new object[] { "1-pre1", new Version(1, 0, 0, "pre1") };
-            yield return new object[] { "1-pre1+1", new Version(1, 0, 0, "pre1", "1") };
-        }
+        yield return new object[] { "1-pre1", new Version(1, 0, 0, "pre1") };
+        yield return new object[] { "1-pre1+1", new Version(1, 0, 0, "pre1", "1") };
+    }
 
 
 
-        [Theory]
-        [MemberData(nameof(GetTestData))]
-        public void TestSanitized(string? inputData, Version? semanticVersion)
-        {
-            var newVersion = SemVerHelper.CreateSanitizedVersion(inputData);
-            if (semanticVersion is not null)
-                _output.WriteLine(semanticVersion.ToString());
-            Assert.Equal(semanticVersion, newVersion);
-        }
+    [Theory]
+    [MemberData(nameof(GetTestData))]
+    public void TestSanitized(string? inputData, Version? semanticVersion)
+    {
+        var newVersion = SemVerHelper.CreateSanitizedVersion(inputData);
+        if (semanticVersion is not null)
+            _output.WriteLine(semanticVersion.ToString());
+        Assert.Equal(semanticVersion, newVersion);
     }
 }

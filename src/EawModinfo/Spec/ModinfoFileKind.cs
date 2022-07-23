@@ -1,17 +1,16 @@
-﻿namespace EawModinfo.Spec
+﻿namespace EawModinfo.Spec;
+
+/// <summary>
+/// Identifier for a <see cref="IModinfoFile"/>
+/// </summary>
+public enum ModinfoFileKind
 {
     /// <summary>
-    /// Identifier for a <see cref="IModinfoFile"/>
+    /// This is the "main" modinfo file, as described by the spec.
     /// </summary>
-    public enum ModinfoFileKind
-    {
-        /// <summary>
-        /// This is the "main" modinfo file, as described by the spec.
-        /// </summary>
-        MainFile,
-        /// <summary>
-        /// This is a "variant" modinfo file, as described by the spec.
-        /// </summary>
-        VariantFile
-    }
+    MainFile,
+    /// <summary>
+    /// This is a "variant" modinfo file, as described by the spec.
+    /// </summary>
+    VariantFile
 }

@@ -4,128 +4,127 @@ using EawModinfo.Spec;
 using SemanticVersioning;
 using Xunit;
 
-namespace EawModinfo.Tests
+namespace EawModinfo.Tests;
+
+public class ModReferenceTests
 {
-    public class ModReferenceTests
+    public static IEnumerable<object[]> VersionRangeData()
     {
-        public static IEnumerable<object[]> VersionRangeData()
+        yield return new object[]
         {
-            yield return new object[]
-            {
-                @"
+            @"
 {
     'identifier':'123123',
     'modtype':1
 }",
-                null
-            };
+            null
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
 {
     'identifier':'123123',
     'modtype':1,
     'version-range': '*'
 }",
-                new Range("*")
-            };
+            new Range("*")
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
 {
     'identifier':'123123',
     'modtype':1,
     'version-range': 'someInvalidRange'
 }",
-                null
-            };
-        }
+            null
+        };
+    }
 
-        [Theory]
-        [MemberData(nameof(VersionRangeData))]
-        public void VersionRangeTest(string data, Range? range)
+    [Theory]
+    [MemberData(nameof(VersionRangeData))]
+    public void VersionRangeTest(string data, Range? range)
+    {
+        var modReference = ModReference.Parse(data);
+        Assert.Equal(range, modReference.VersionRange);
+    }
+
+    [Fact]
+    public void EqualsCheck()
+    {
+        IModReference a = new ModReference { Type = ModType.Workshops, Identifier = "123213"};
+        IModReference b = new ModReference { Type = ModType.Workshops, Identifier = "123213"};
+        IModReference c = new ModReference { Type = ModType.Default, Identifier = "123213"};
+        IModReference d = new ModReference { Type = ModType.Default, Identifier = "123213"};
+
+        Assert.Equal(a, b);
+        Assert.NotEqual(a, c);
+        Assert.Equal(c, d);
+    }
+
+    public static IEnumerable<object[]> GetData()
+    {
+        yield return new object[]
         {
-            var modReference = ModReference.Parse(data);
-            Assert.Equal(range, modReference.VersionRange);
-        }
-
-        [Fact]
-        public void EqualsCheck()
-        {
-            IModReference a = new ModReference { Type = ModType.Workshops, Identifier = "123213"};
-            IModReference b = new ModReference { Type = ModType.Workshops, Identifier = "123213"};
-            IModReference c = new ModReference { Type = ModType.Default, Identifier = "123213"};
-            IModReference d = new ModReference { Type = ModType.Default, Identifier = "123213"};
-
-            Assert.Equal(a, b);
-            Assert.NotEqual(a, c);
-            Assert.Equal(c, d);
-        }
-
-        public static IEnumerable<object[]> GetData()
-        {
-            yield return new object[]
-            {
-                @"
+            @"
 {
     'identifier':'123123',
     'modtype':1
 }",
-                "123123", ModType.Workshops
-            };
+            "123123", ModType.Workshops
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
 {
     'identifier':'123123',
 }",
-                "123123", ModType.Workshops, true
-            };
+            "123123", ModType.Workshops, true
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
 {
     'modtype':1,
 }",
-                "123123", ModType.Workshops, true
-            };
+            "123123", ModType.Workshops, true
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
 {
     'modtype':-1,
 }",
-                "123123", ModType.Workshops, true
-            };
+            "123123", ModType.Workshops, true
+        };
 
-            yield return new object[]
-            {
-                @"
+        yield return new object[]
+        {
+            @"
 {
     'modtype':50,
 }",
-                "123123", ModType.Workshops, true
-            };
+            "123123", ModType.Workshops, true
+        };
 
-        }
+    }
 
-        [Theory]
-        [MemberData(nameof(GetData))]
-        public void ParseTests(string data, string expectedCode, ModType expectedLevel, bool throws = false)
+    [Theory]
+    [MemberData(nameof(GetData))]
+    public void ParseTests(string data, string expectedCode, ModType expectedLevel, bool throws = false)
+    {
+        if (throws)
+            Assert.Throws<ModinfoParseException>(() => ModReference.Parse(data));
+        else
         {
-            if (throws)
-                Assert.Throws<ModinfoParseException>(() => ModReference.Parse(data));
-            else
-            {
-                var modReference = ModReference.Parse(data);
-                Assert.Equal(expectedCode, modReference.Identifier);
-                Assert.Equal(expectedLevel, modReference.Type);
-            }
+            var modReference = ModReference.Parse(data);
+            Assert.Equal(expectedCode, modReference.Identifier);
+            Assert.Equal(expectedLevel, modReference.Type);
         }
     }
 }
