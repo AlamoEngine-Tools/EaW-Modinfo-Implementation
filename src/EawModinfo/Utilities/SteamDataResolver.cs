@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using EawModinfo.Model;
 using EawModinfo.Model.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;

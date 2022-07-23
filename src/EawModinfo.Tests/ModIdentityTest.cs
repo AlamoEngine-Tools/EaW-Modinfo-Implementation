@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using EawModinfo.Model;
 using EawModinfo.Spec;
 using SemanticVersioning;

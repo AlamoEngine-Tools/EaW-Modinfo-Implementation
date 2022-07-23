@@ -1,9 +1,5 @@
-using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
-using EawModinfo.File;
-using EawModinfo.Spec;
-using Validation;
 
 namespace EawModinfo.Tests;
 
@@ -49,7 +45,6 @@ internal static class ModinfoDataUtils
 
     internal static IFileInfo CreateModifnoFile(MockFileSystem fs, string path)
     {
-        Requires.NotNull(fs, nameof(fs));
         const string name = "modinfo.json";
         return CreateFile(fs, path, name, MainModinfoData);
     }
@@ -68,7 +63,6 @@ internal static class ModinfoDataUtils
 
     internal static IFileInfo CreateFile(MockFileSystem fs, string path, string name, string data)
     {
-        Requires.NotNull(fs, nameof(fs));
         var fullPath = fs.Path.Combine(path, name);
         fs.AddFile(fullPath, new MockFileData(data));
         return fs.FileInfo.FromFileName(fullPath);

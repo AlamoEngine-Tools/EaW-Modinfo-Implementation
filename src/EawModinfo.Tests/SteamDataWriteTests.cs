@@ -1,5 +1,4 @@
-﻿using EawModinfo.Model;
-using EawModinfo.Model.Json;
+﻿using EawModinfo.Model.Json;
 using EawModinfo.Spec.Steam;
 using Xunit;
 
