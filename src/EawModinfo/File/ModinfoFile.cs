@@ -114,7 +114,7 @@ public abstract class ModinfoFile : IModinfoFile
     {
         var fs = File.FileSystem;
 
-#if NET || NETSTANDARD2_1
+#if NETSTANDARD2_1
             return fs.File.ReadAllTextAsync(File.FullName);
 #else
         using var reader = fs.File.OpenText(File.FullName);

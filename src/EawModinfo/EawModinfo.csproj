@@ -6,7 +6,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
+		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
 		<AssemblyName>Eaw.Modinfo</AssemblyName>
 		<Nullable>enable</Nullable>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
@@ -22,11 +22,15 @@
 
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-		<PackageReference Include="NJsonSchema" Version="10.6.6" />
-		<PackageReference Include="SemanticVersioning" Version="2.0.0" />
-		<PackageReference Include="System.IO.Abstractions" Version="16.0.1" />
-		<PackageReference Include="System.Text.Json" Version="6.0.1" />
-		<PackageReference Include="Validation" Version="2.5.42" />
+		<PackageReference Include="NJsonSchema" Version="10.7.2" />
+		<PackageReference Include="SemanticVersioning" Version="2.0.2" />
+		<PackageReference Include="System.IO.Abstractions" Version="17.0.24" />
+		<PackageReference Include="System.Text.Json" Version="6.0.5" />
+		<PackageReference Include="Validation" Version="2.5.51" />
+	</ItemGroup>
+
+	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+		<PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
 	</ItemGroup>
 
 </Project>

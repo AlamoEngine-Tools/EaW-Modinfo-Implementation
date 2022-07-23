@@ -68,13 +68,6 @@ public struct ModReference : IModReference
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-#if NETSTANDARD2_1 || NET
-            return HashCode.Combine(Identifier, (int) Type);
-#else
-        unchecked
-        {
-            return (Identifier.GetHashCode() * 397) ^ (int)Type;
-        }
-#endif
+        return HashCode.Combine(Identifier, (int) Type);
     }
 }

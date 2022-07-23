@@ -3,10 +3,6 @@ using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using EawModinfo.Utilities;
 
-#if NETSTANDARD2_1 || NET
-using System;
-#endif
-
 namespace EawModinfo.Model
 {
 
