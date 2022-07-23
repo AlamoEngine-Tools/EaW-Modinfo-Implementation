@@ -13,17 +13,23 @@ namespace EawModinfo.Tests;
 
 public class ModinfoDataTest
 {
+<<<<<<< HEAD
     private readonly ITestOutputHelper _output;
 
+=======
+>>>>>>> to c# 10 namespaces
     private const string InvalidJsonData = @"{
   ""version"": ""1.0.0"",
 }";
 
+<<<<<<< HEAD
     public ModinfoDataTest(ITestOutputHelper output)
     {
         _output = output;
     }
 
+=======
+>>>>>>> to c# 10 namespaces
     [Fact]
     public void MinimalParseTest()
     {
@@ -49,7 +55,11 @@ public class ModinfoDataTest
 
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
+<<<<<<< HEAD
         Assert.Equal(new SemVersion(1,1,1, "BETA"), modinfo.Version);
+=======
+        Assert.Equal(new Version(1,1,1, "BETA"), modinfo.Version);
+>>>>>>> to c# 10 namespaces
     }
 
     [Fact]
@@ -263,7 +273,11 @@ public class ModinfoDataTest
     }
 
     [Fact]
+<<<<<<< HEAD
     public void ModRefParseTestFailure_EmptyDependenciesOnlyLayout()
+=======
+    public void CustomParseTest()
+>>>>>>> to c# 10 namespaces
     {
         var data = @"
 {
@@ -303,9 +317,14 @@ public class ModinfoDataTest
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Equal(2, modinfo.Custom.Count);
+<<<<<<< HEAD
         Assert.Equal("123", ((JsonElement)modinfo.Custom["test-key2"]).GetString());
 
         Assert.IsType<JsonElement>(modinfo.Custom["test-key"]);
+=======
+        Assert.Equal("123", modinfo.Custom["test-key2"]);
+        Assert.Equal(new JObject(), modinfo.Custom["test-key"]);
+>>>>>>> to c# 10 namespaces
     }
 
 
@@ -333,8 +352,12 @@ public class ModinfoDataTest
         Assert.Equal("test", modinfo.SteamData.Title);
         Assert.Equal("path", modinfo.SteamData.ContentFolder);
         Assert.Equal(SteamWorkshopVisibility.Public, modinfo.SteamData.Visibility);
+<<<<<<< HEAD
         Assert.Equal("test", modinfo.SteamData.Metadata);
         Assert.Null(modinfo.SteamData.Description);
+=======
+        Assert.Null(modinfo.SteamData.Metadata);
+>>>>>>> to c# 10 namespaces
         Assert.Equal(2, modinfo.SteamData.Tags.Count());
             
     }
@@ -342,11 +365,19 @@ public class ModinfoDataTest
     public static IEnumerable<object[]> GetInvalidData()
     {
         yield return new object[]
+<<<<<<< HEAD
         {
             string.Empty
         };
         yield return new object[]
         {
+=======
+        {
+            string.Empty
+        };
+        yield return new object[]
+        {
+>>>>>>> to c# 10 namespaces
             @"
 {
 }"
@@ -367,9 +398,14 @@ public class ModinfoDataTest
     [Fact]
     public void WriterTest()
     {
+<<<<<<< HEAD
         var modinfo = new ModinfoData("Test") { Version = new SemVersion(1, 1, 1, "BETA")};
         var data = modinfo.ToJson(false);
         _output.WriteLine(data);
+=======
+        var modinfo = new ModinfoData("Test") { Version = new Version(1, 1, 1, "BETA")};
+        var data = modinfo.ToJson(false);
+>>>>>>> to c# 10 namespaces
         Assert.Contains(@"""version"": ""1.1.1-BETA""", data);
         Assert.DoesNotContain(@"""custom"":", data);
     }
@@ -382,7 +418,10 @@ public class ModinfoDataTest
             Dependencies = new DependencyList(new List<IModReference>{new ModReference("123", ModType.Default)}, DependencyResolveLayout.FullResolved)
         };
         var data = modinfo.ToJson(false);
+<<<<<<< HEAD
         _output.WriteLine(data);
+=======
+>>>>>>> to c# 10 namespaces
         Assert.Contains(@"""FullResolved"",",data);
     }
 
@@ -391,12 +430,19 @@ public class ModinfoDataTest
     {
         var modinfo = new ModinfoData("Test")
         {
+<<<<<<< HEAD
             Dependencies = new DependencyList(new List<IModReference> { new ModReference("123", ModType.Default, SemVersionRange.Parse("1.*")) }, DependencyResolveLayout.ResolveRecursive)
         };
         var data = modinfo.ToJson(false);
         _output.WriteLine(data);
         Assert.DoesNotContain(@"""ResolveRecursive"",", data);
         Assert.Contains(@"""version-range"": ""1.*""", data);
+=======
+            Dependencies = new DependencyList(new List<IModReference> { new ModReference("123", ModType.Default, new Range("1.x")) }, DependencyResolveLayout.ResolveRecursive)
+        };
+        var data = modinfo.ToJson(false);
+        Assert.Contains(@"""version-range"": ""1.x""", data);
+>>>>>>> to c# 10 namespaces
     }
 
     [Fact]
@@ -409,6 +455,10 @@ public class ModinfoDataTest
 }";
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
+<<<<<<< HEAD
         Assert.Equal(new SemVersion(1, 0, 0) , modinfo.Version);
+=======
+        Assert.Equal(new Version(1, 0, 0) , modinfo.Version);
+>>>>>>> to c# 10 namespaces
     }
 }

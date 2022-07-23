@@ -6,7 +6,11 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
+<<<<<<< HEAD
 		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+=======
+		<TargetFrameworks>netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
+>>>>>>> to c# 10 namespaces
 		<AssemblyName>Eaw.Modinfo</AssemblyName>
 		<Nullable>enable</Nullable>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>

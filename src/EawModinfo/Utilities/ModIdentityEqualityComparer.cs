@@ -31,6 +31,27 @@ public class ModIdentityEqualityComparer : IEqualityComparer<IModIdentity>
         _includeDependencies = includeDependencies;
         _stringComparison = stringComparison;
     }
+<<<<<<< HEAD
+
+    /// <inheritdoc/>
+    public bool Equals(IModIdentity? x, IModIdentity? y)
+    {
+        if (y is null || x is null)
+            return false;
+        if (ReferenceEquals(x, y))
+            return true;
+
+        if (!x.Name.Equals(y.Name, _stringComparison))
+            return false;
+
+        if (_includeVersion)
+        {
+            if (!(x.Version is null && y.Version is null))
+            {
+                if (!Equals(x.Version, y.Version))
+                    return false;
+            }
+=======
 
     /// <inheritdoc/>
     public bool Equals(IModIdentity? x, IModIdentity? y)
@@ -59,6 +80,32 @@ public class ModIdentityEqualityComparer : IEqualityComparer<IModIdentity>
 
             if (!x.Dependencies.SequenceEqual(y.Dependencies))
                 return false;
+>>>>>>> to c# 10 namespaces
+        }
+        return true;
+    }
+
+<<<<<<< HEAD
+        if (_includeDependencies)
+        {
+            if (x.Dependencies.Count != y.Dependencies.Count)
+                return false;
+
+            if (!x.Dependencies.SequenceEqual(y.Dependencies))
+                return false;
+=======
+    /// <inheritdoc/>
+    public int GetHashCode(IModIdentity obj)
+    {
+        unchecked
+        {
+            var hashCode = obj.Name.GetHashCode();
+            if (_includeVersion) 
+                hashCode = (hashCode * 397) ^ (obj.Version != null ? obj.Version.GetHashCode() : 0);
+            if (_includeDependencies) 
+                hashCode = (hashCode * 397) ^ obj.Dependencies.GetHashCode();
+            return hashCode;
+>>>>>>> to c# 10 namespaces
         }
         return true;
     }

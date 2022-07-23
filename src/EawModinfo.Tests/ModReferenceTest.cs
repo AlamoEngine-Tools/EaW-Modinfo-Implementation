@@ -28,7 +28,11 @@ public class ModReferenceTests
     ""modtype"":1,
     ""version-range"": ""*""
 }",
+<<<<<<< HEAD
             SemVersionRange.Parse("*")
+=======
+            new Range("*")
+>>>>>>> to c# 10 namespaces
         };
 
         yield return new object[]
@@ -45,7 +49,11 @@ public class ModReferenceTests
 
     [Theory]
     [MemberData(nameof(VersionRangeData))]
+<<<<<<< HEAD
     public void VersionRangeTest(string data, SemVersionRange? range)
+=======
+    public void VersionRangeTest(string data, Range? range)
+>>>>>>> to c# 10 namespaces
     {
         var modReference = ModReference.Parse(data);
         Assert.Equal(range, modReference.VersionRange);

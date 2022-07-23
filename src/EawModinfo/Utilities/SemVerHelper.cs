@@ -7,14 +7,22 @@ internal static class SemVerHelper
 {
     private static readonly char[] DelimiterChars = {'-', '+'};
 
+<<<<<<< HEAD
     public static SemVersion? CreateSanitizedVersion(string? version)
+=======
+    public static Version? CreateSanitizedVersion(string? version)
+>>>>>>> to c# 10 namespaces
     {
         if (string.IsNullOrEmpty(version))
             return null;
 
         string[] strArray = version!.Split('.');
         if (strArray.Length == 3)
+<<<<<<< HEAD
             return SemVersion.Parse(version, SemVersionStyles.Any);
+=======
+            return Version.Parse(version);
+>>>>>>> to c# 10 namespaces
         if (strArray.Length >= 5)
             throw new InvalidOperationException();
 
@@ -34,7 +42,11 @@ internal static class SemVerHelper
         }
 
         string newSemVerString = string.Join(".", versionDigits) + releaseAndBuild;
+<<<<<<< HEAD
         return SemVersion.Parse(newSemVerString, SemVersionStyles.Any);
+=======
+        return Version.Parse(newSemVerString);
+>>>>>>> to c# 10 namespaces
     }
 
     private static void ExtractReleaseAndBuildString(ref string input, out string? releaseAndBuild)

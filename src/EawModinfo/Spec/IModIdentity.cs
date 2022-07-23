@@ -18,7 +18,11 @@ public interface IModIdentity : IEquatable<IModIdentity>
     /// The version of the mod.
     /// <remarks>Since mod developers cannot be forced to specify a version this property is nullable.</remarks>
     /// </summary>
+<<<<<<< HEAD
     SemVersion? Version { get; }
+=======
+    Version? Version { get; }
+>>>>>>> to c# 10 namespaces
 
     /// <summary>
     /// Ordered list of <see cref="IModReference"/>s which this mod is dependent on.

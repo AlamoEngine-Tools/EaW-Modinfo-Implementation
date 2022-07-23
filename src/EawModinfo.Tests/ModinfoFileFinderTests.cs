@@ -56,7 +56,11 @@ public class ModinfoFileFinderTests
         const string fileName = "empty.txt";
         var filePath = fs.Path.Combine(path, fileName);
 
+<<<<<<< HEAD
         fs.AddFile(filePath, new MockFileData(string.Empty));
+=======
+        fs.AddFile(filePath, MockFileData.NullObject);
+>>>>>>> to c# 10 namespaces
 
         Scenarios[2] = fs.DirectoryInfo.FromDirectoryName(path);
     }

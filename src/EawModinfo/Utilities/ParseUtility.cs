@@ -10,6 +10,7 @@ namespace EawModinfo.Utilities;
 
 internal static class ParseUtility
 {
+<<<<<<< HEAD
     public static readonly JsonSerializerOptions SerializerOptions = new()
     {
         AllowTrailingCommas = true,
@@ -40,11 +41,14 @@ internal static class ParseUtility
         }
     }
 
+=======
+>>>>>>> to c# 10 namespaces
     public static T Parse<T>(string data)
     { 
         if (string.IsNullOrEmpty(data))
             throw new ModinfoParseException("No input data.");
 
+<<<<<<< HEAD
         var schema = JsonSchema.FromText(ModinfoJsonSchema.Schema);
         var validationErrors = schema.Evaluate(data, new EvaluationOptions
         {
@@ -57,12 +61,26 @@ internal static class ParseUtility
         try
         {
             var parseResult = JsonSerializer.Deserialize<T>(data, SerializerOptions);
+=======
+        var schema = JsonSchema.FromSampleJson(ModinfoJsonSchema.Schema);
+        var validationErrors = schema.Validate(data);
+        if (validationErrors.Any())
+            throw new ModinfoParseException($"Unable to parse. Error:{validationErrors.First()}");
+
+        try
+        {
+            var parseResult = JsonConvert.DeserializeObject<T>(data);
+>>>>>>> to c# 10 namespaces
             if (parseResult is null)
                 throw new ModinfoParseException(
                     $"Unable to parse input '{data}' to {typeof(T).Name}. Unknown Error!");
             return parseResult;
         }
+<<<<<<< HEAD
         catch (JsonException cause)
+=======
+        catch (JsonSerializationException cause)
+>>>>>>> to c# 10 namespaces
         {
             throw new ModinfoParseException(cause.Message, cause);
         }

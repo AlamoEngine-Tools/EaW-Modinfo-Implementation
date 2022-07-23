@@ -15,8 +15,13 @@ public class ModIdentityTest
 
         Assert.Equal(i1, i2);
 
+<<<<<<< HEAD
         IModIdentity i3 = new ModinfoData("A") { Version = new SemVersion(1, 1, 1) };
         IModIdentity i4 = new ModIdentity("A") { Version = new SemVersion(1, 1, 1) };
+=======
+        IModIdentity i3 = new ModinfoData("A") { Version = new Version(1, 1, 1) };
+        IModIdentity i4 = new ModIdentity("A") { Version = new Version(1, 1, 1) };
+>>>>>>> to c# 10 namespaces
 
         Assert.Equal(i3, i4);
         Assert.NotEqual(i3, i1);
