@@ -16,21 +16,21 @@ namespace EawModinfo.Model.Json
     {
         [JsonPropertyName("identifier")]
         [JsonRequired]
-        public string Identifier { get; internal set; } = string.Empty;
+        public string Identifier { get; set; } = string.Empty;
 
         [JsonPropertyName("modtype")]
         [JsonRequired]
-        public ModType Type { get; internal set; }
+        public ModType Type { get; set; }
 
         [JsonPropertyName("version-range")]
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-        public string? VersionRangeString { get; internal set; }
+        public string? VersionRangeString { get; set; }
 
         [JsonIgnore]
         public Range? VersionRange => !Range.TryParse(VersionRangeString, out var range) ? null : range;
 
         [JsonConstructor]
-        internal JsonModReference()
+        public JsonModReference()
         {
         }
 

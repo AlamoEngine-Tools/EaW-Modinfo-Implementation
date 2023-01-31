@@ -66,14 +66,10 @@ public class ModIdentityEqualityComparer : IEqualityComparer<IModIdentity>
     /// <inheritdoc/>
     public int GetHashCode(IModIdentity obj)
     {
-        unchecked
-        {
-            var hashCode = obj.Name.GetHashCode();
-            if (_includeVersion) 
-                hashCode = (hashCode * 397) ^ (obj.Version != null ? obj.Version.GetHashCode() : 0);
-            if (_includeDependencies) 
-                hashCode = (hashCode * 397) ^ obj.Dependencies.GetHashCode();
-            return hashCode;
-        }
+        if (_includeVersion)
+            return _includeDependencies
+                ? HashCode.Combine(obj.Name, obj.Version, obj.Dependencies)
+                : HashCode.Combine(obj.Name, obj.Version);
+        return HashCode.Combine(obj.Name);
     }
 }

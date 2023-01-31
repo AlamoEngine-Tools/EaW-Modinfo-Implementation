@@ -1,26 +1,35 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using EawModinfo.Model;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
-using Newtonsoft.Json.Linq;
 using SemanticVersioning;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace EawModinfo.Tests;
 
 public class ModinfoDataTest
 {
+    private readonly ITestOutputHelper _output;
+
     private const string InvalidJsonData = @"{
   ""version"": ""1.0.0"",
 }";
+
+    public ModinfoDataTest(ITestOutputHelper output)
+    {
+        _output = output;
+    }
 
     [Fact]
     public void MinimalParseTest()
     {
         var data = @"
 {
-    'name':'My Mod Name'
+    ""name"":""My Mod Name""
 }";
 
         var modinfo = ModinfoData.Parse(data);
@@ -34,8 +43,8 @@ public class ModinfoDataTest
     {
         var data = @"
 {
-    'name':'My Mod Name',
-    'version':'1.1.1-BETA'
+    ""name"":""My Mod Name"",
+    ""version"":""1.1.1-BETA""
 }";
 
         var modinfo = ModinfoData.Parse(data);
@@ -48,10 +57,10 @@ public class ModinfoDataTest
     {
         var data = @"
 {
-    'name':'My Mod Name',
-    'languages':[
+    ""name"":""My Mod Name"",
+    ""languages"":[
         {
-            'code':'en'
+            ""code"":""en""
         }
     ]
 }";
@@ -65,13 +74,13 @@ public class ModinfoDataTest
     {
         var data = @"
 {
-    'name':'My Mod Name',
-    'languages':[
+    ""name"":""My Mod Name"",
+    ""languages"":[
         {
-            'code':'en'
+            ""code"":""en""
         },
         {
-            'code':'de'
+            ""code"":""de""
         }
     ]
 }";
@@ -85,13 +94,13 @@ public class ModinfoDataTest
     {
         var data = @"
 {
-    'name':'My Mod Name',
-    'languages':[
+    ""name"":""My Mod Name"",
+    ""languages"":[
         {
-            'code':'en'
+            ""code"":""en""
         },
         {
-            'code':'en'
+            ""code"":""en""
         }
     ]
 }";
@@ -105,14 +114,14 @@ public class ModinfoDataTest
     {
         var data = @"
 {
-    'name':'My Mod Name',
-    'languages':[
+    ""name"":""My Mod Name"",
+    ""languages"":[
         {
-            'code':'en'
+            ""code"":""en""
         },
         {
-            'code':'en',
-            'support':3
+            ""code"":""en"",
+            ""support"":3
         }
     ]
 }";
@@ -126,7 +135,7 @@ public class ModinfoDataTest
     {
         var data = @"
 {
-    'name':'My Mod Name'
+    ""name"":""My Mod Name""
 }";
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
@@ -140,7 +149,7 @@ public class ModinfoDataTest
     {
         var data = @"
 {
-    'name':'My Mod Name'
+    ""name"":""My Mod Name""
 }";
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
@@ -154,15 +163,15 @@ public class ModinfoDataTest
     {
         var data = @"
 {
-    'name':'My Mod Name',
-    'dependencies': [
+    ""name"":""My Mod Name"",
+    ""dependencies"": [
         {
-            'identifier':'12313',
-            'modtype':1
+            ""identifier"":""12313"",
+            ""modtype"":1
         },
         {
-            'identifier':'654987',
-            'modtype':1
+            ""identifier"":""654987"",
+            ""modtype"":1
         }
     ]
 }";
@@ -179,16 +188,16 @@ public class ModinfoDataTest
     {
         var data = @"
 {
-    'name':'My Mod Name',
-    'dependencies': [
-        'FullResolved',
+    ""name"":""My Mod Name"",
+    ""dependencies"": [
+        ""FullResolved"",
         {
-            'identifier':'12313',
-            'modtype':1
+            ""identifier"":""12313"",
+            ""modtype"":1
         },
         {
-            'identifier':'654987',
-            'modtype':1
+            ""identifier"":""654987"",
+            ""modtype"":1
         }
     ]
 }";
@@ -205,16 +214,16 @@ public class ModinfoDataTest
     {
         var data = @"
 {
-    'name':'My Mod Name',
-    'dependencies': [
+    ""name"":""My Mod Name"",
+    ""dependencies"": [
         {
-            'identifier':'12313',
-            'modtype':1
+            ""identifier"":""12313"",
+            ""modtype"":1
         },
-        'FullResolved',
+        ""FullResolved"",
         {
-            'identifier':'654987',
-            'modtype':1
+            ""identifier"":""654987"",
+            ""modtype"":1
         }
     ]
 }";
@@ -226,18 +235,40 @@ public class ModinfoDataTest
     {
         var data = @"
 {
-    'name':'My Mod Name',
-    'dependencies': [
-        'BlaBlub',
+    ""name"":""My Mod Name"",
+    ""dependencies"": [
+        ""BlaBlub"",
         {
-            'identifier':'12313',
-            'modtype':1
+            ""identifier"":""12313"",
+            ""modtype"":1
         },
         {
-            'identifier':'654987',
-            'modtype':1
+            ""identifier"":""654987"",
+            ""modtype"":1
         }
     ]
+}";
+        Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(data));
+    }
+
+    [Fact]
+    public void ModRefParseTestFailure_EmptyDependencies()
+    {
+        var data = @"
+{
+    ""name"":""My Mod Name"",
+    ""dependencies"": [ ]
+}";
+        Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(data));
+    }
+
+    [Fact]
+    public void ModRefParseTestFailure_EmptyDependenciesOnlyLayout()
+    {
+        var data = @"
+{
+    ""name"":""My Mod Name"",
+    ""dependencies"": [ ""FullResolved"" ]
 }";
         Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(data));
     }
@@ -248,8 +279,8 @@ public class ModinfoDataTest
     {
         var data = @"
 {
-    'name':'My Mod Name',
-    'custom': {
+    ""name"":""My Mod Name"",
+    ""custom"": {
         
     }
 }";
@@ -263,17 +294,18 @@ public class ModinfoDataTest
     {
         var data = @"
 {
-    'name':'My Mod Name',
-    'custom': {
-        'test-key':{},
-        'test-key2':'123',
+    ""name"":""My Mod Name"",
+    ""custom"": {
+        ""test-key"":{},
+        ""test-key2"":""123"",
     }
 }";
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Equal(2, modinfo.Custom.Count);
-        Assert.Equal("123", modinfo.Custom["test-key2"]);
-        Assert.Equal(new JObject(), modinfo.Custom["test-key"]);
+        Assert.Equal("123", ((JsonElement)modinfo.Custom["test-key2"]).GetString());
+
+        Assert.IsType<JsonElement>(modinfo.Custom["test-key"]);
     }
 
 
@@ -282,14 +314,15 @@ public class ModinfoDataTest
     {
         var data = @"
 {
-    'name':'My Mod Name',
-    'steamdata': {
-        'publishedfileid':'123',
-        'contentfolder':'path',
-        'visibility':0,
-        'title':'test',
-        'tags':[
-            'foc', 'eaw'
+    ""name"":""My Mod Name"",
+    ""steamdata"": {
+        ""publishedfileid"":""123"",
+        ""contentfolder"":""path"",
+        ""metadata"": ""test"",
+        ""visibility"":0,
+        ""title"":""test"",
+        ""tags"":[
+            ""foc"", ""eaw""
         ]
     }
 }";
@@ -300,7 +333,8 @@ public class ModinfoDataTest
         Assert.Equal("test", modinfo.SteamData.Title);
         Assert.Equal("path", modinfo.SteamData.ContentFolder);
         Assert.Equal(SteamWorkshopVisibility.Public, modinfo.SteamData.Visibility);
-        Assert.Null(modinfo.SteamData.Metadata);
+        Assert.Equal("test", modinfo.SteamData.Metadata);
+        Assert.Null(modinfo.SteamData.Description);
         Assert.Equal(2, modinfo.SteamData.Tags.Count());
             
     }
@@ -335,6 +369,7 @@ public class ModinfoDataTest
     {
         var modinfo = new ModinfoData("Test") { Version = new Version(1, 1, 1, "BETA")};
         var data = modinfo.ToJson(false);
+        _output.WriteLine(data);
         Assert.Contains(@"""version"": ""1.1.1-BETA""", data);
         Assert.DoesNotContain(@"""custom"":", data);
     }
@@ -347,6 +382,7 @@ public class ModinfoDataTest
             Dependencies = new DependencyList(new List<IModReference>{new ModReference("123", ModType.Default)}, DependencyResolveLayout.FullResolved)
         };
         var data = modinfo.ToJson(false);
+        _output.WriteLine(data);
         Assert.Contains(@"""FullResolved"",",data);
     }
 
@@ -358,6 +394,8 @@ public class ModinfoDataTest
             Dependencies = new DependencyList(new List<IModReference> { new ModReference("123", ModType.Default, new Range("1.x")) }, DependencyResolveLayout.ResolveRecursive)
         };
         var data = modinfo.ToJson(false);
+        _output.WriteLine(data);
+        Assert.DoesNotContain(@"""ResolveRecursive"",", data);
         Assert.Contains(@"""version-range"": ""1.x""", data);
     }
 
@@ -366,8 +404,8 @@ public class ModinfoDataTest
     {
         var data = @"
 {
-    'name':'My Mod Name',
-    'version': '1.0'
+    ""name"":""My Mod Name"",
+    ""version"": ""1.0""
 }";
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);

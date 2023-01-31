@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml;
 using EawModinfo.Spec;
@@ -38,6 +39,7 @@ internal class JsonModinfoData : IModinfo
     /// <inheritdoc/>
     [JsonPropertyName("name")]
     [JsonRequired]
+    [JsonInclude]
     public string Name { get; internal set; } = string.Empty;
 
     /// <inheritdoc/>
@@ -48,8 +50,9 @@ internal class JsonModinfoData : IModinfo
     [JsonPropertyName("icon")] 
     public string? Icon { get; internal set; }
 
-    [JsonPropertyName("version")] 
-    private string? StringVersion { get; set; }
+    [JsonPropertyName("version")]
+    [JsonInclude]
+    public string? StringVersion { get; set; }
 
     /// <inheritdoc/>
     [JsonIgnore]
@@ -74,16 +77,16 @@ internal class JsonModinfoData : IModinfo
 
     /// <inheritdoc/>
     [JsonPropertyName("custom")] 
-    public IDictionary<string, object> Custom { get; internal set; }
+    public IDictionary<string, object> Custom { get; set; }
 
     /// <inheritdoc/>
     [JsonPropertyName("steamdata")]
     [JsonConverter(typeof(SteamDataTypeConverter))]
-    public ISteamData? SteamData { get; internal set; }
+    public ISteamData? SteamData { get; set; }
 
 
     [JsonPropertyName("languages")]
-    internal IEnumerable<JsonLanguageInfo> InternalLanguages
+    public IEnumerable<JsonLanguageInfo> InternalLanguages
     {
         get => _jsonLanguages;
         set
@@ -124,10 +127,10 @@ internal class JsonModinfoData : IModinfo
     /// <inheritdoc/>
     [JsonPropertyName("dependencies")]
     [JsonConverter(typeof(DependencyListTypeConverter))]
-    public IModDependencyList Dependencies { get; internal set; }
+    public IModDependencyList Dependencies { get; set; }
 
     [JsonConstructor]
-    internal JsonModinfoData()
+    public JsonModinfoData()
     {
         Dependencies = new JsonDependencyList();
         Custom = new Dictionary<string, object>();
@@ -157,11 +160,7 @@ internal class JsonModinfoData : IModinfo
     {
         if (validate)
             this.Validate();
-        return JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
-        {
-            NullValueHandling = NullValueHandling.Ignore,
-            ContractResolver = ModInfoContractResolver.Instance
-        });
+        return JsonSerializer.Serialize(this, ParseUtility.SerializerOptions);
     }
         
     bool IEquatable<IModIdentity>.Equals(IModIdentity? other)

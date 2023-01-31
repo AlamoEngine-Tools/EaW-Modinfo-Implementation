@@ -28,7 +28,7 @@ public class LanguageInfoTests
         {
             @"
 {
-    'code':'en'
+    ""code"":""en""
 }",
             "en", LanguageSupportLevel.FullLocalized
         };
@@ -36,8 +36,8 @@ public class LanguageInfoTests
         {
             @"
 {
-    'code':'en',
-    'support': 7
+    ""code"":""en"",
+    ""support"": 7
 }",
             "en", LanguageSupportLevel.FullLocalized
         };
@@ -46,8 +46,8 @@ public class LanguageInfoTests
         {
             @"
 {
-    'code':'en',
-    'support': 1
+    ""code"":""en"",
+    ""support"": 1
 }",
             "en", LanguageSupportLevel.Text
         };
@@ -56,8 +56,8 @@ public class LanguageInfoTests
         {
             @"
 {
-    'code':'en',
-    'support': 3
+    ""code"":""en"",
+    ""support"": 3
 }",
             "en", LanguageSupportLevel.Text | LanguageSupportLevel.Speech
         };

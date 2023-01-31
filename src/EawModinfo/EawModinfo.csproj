@@ -20,12 +20,12 @@
 		<InheritDocEnabled>true</InheritDocEnabled>
 	</PropertyGroup>
 
-	<ItemGroup>		<PackageReference Include="JsonSchema.Net" Version="3.3.2" />
-
+	<ItemGroup>
+		<PackageReference Include="JsonSchema.Net" Version="4.0.0-beta2" />
 		<PackageReference Include="SemanticVersioning" Version="2.0.2" />
 		<PackageReference Include="System.IO.Abstractions" Version="19.1.13" />
 		<PackageReference Include="System.Text.Json" Version="7.0.1" />
-		<PackageReference Include="Validation" Version="2.5.51" PrivateAssets="all" />
+		<PackageReference Include="Validation" Version="2.5.51" PrivateAssets="compile" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">

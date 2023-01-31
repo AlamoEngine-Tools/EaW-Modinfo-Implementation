@@ -14,8 +14,8 @@ public class ModReferenceTests
         {
             @"
 {
-    'identifier':'123123',
-    'modtype':1
+    ""identifier"":""123123"",
+    ""modtype"":1
 }",
             null
         };
@@ -24,9 +24,9 @@ public class ModReferenceTests
         {
             @"
 {
-    'identifier':'123123',
-    'modtype':1,
-    'version-range': '*'
+    ""identifier"":""123123"",
+    ""modtype"":1,
+    ""version-range"": ""*""
 }",
             new Range("*")
         };
@@ -35,9 +35,9 @@ public class ModReferenceTests
         {
             @"
 {
-    'identifier':'123123',
-    'modtype':1,
-    'version-range': 'someInvalidRange'
+    ""identifier"":""123123"",
+    ""modtype"":1,
+    ""version-range"": ""someInvalidRange""
 }",
             null
         };
@@ -70,8 +70,8 @@ public class ModReferenceTests
         {
             @"
 {
-    'identifier':'123123',
-    'modtype':1
+    ""identifier"":""123123"",
+    ""modtype"":1
 }",
             "123123", ModType.Workshops
         };
@@ -80,7 +80,7 @@ public class ModReferenceTests
         {
             @"
 {
-    'identifier':'123123',
+    ""identifier"":""123123"",
 }",
             "123123", ModType.Workshops, true
         };
@@ -89,7 +89,7 @@ public class ModReferenceTests
         {
             @"
 {
-    'modtype':1,
+    ""modtype"":1,
 }",
             "123123", ModType.Workshops, true
         };
@@ -98,7 +98,7 @@ public class ModReferenceTests
         {
             @"
 {
-    'modtype':-1,
+    ""modtype"":-1,
 }",
             "123123", ModType.Workshops, true
         };
@@ -107,7 +107,7 @@ public class ModReferenceTests
         {
             @"
 {
-    'modtype':50,
+    ""modtype"":50,
 }",
             "123123", ModType.Workshops, true
         };
