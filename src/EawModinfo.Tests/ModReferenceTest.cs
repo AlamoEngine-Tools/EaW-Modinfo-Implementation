@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using EawModinfo.Model;
 using EawModinfo.Spec;
-using SemanticVersioning;
+using Semver.Ranges;
 using Xunit;
 
 namespace EawModinfo.Tests;
@@ -28,7 +28,7 @@ public class ModReferenceTests
     ""modtype"":1,
     ""version-range"": ""*""
 }",
-            new Range("*")
+            SemVersionRange.Parse("*")
         };
 
         yield return new object[]
@@ -45,7 +45,7 @@ public class ModReferenceTests
 
     [Theory]
     [MemberData(nameof(VersionRangeData))]
-    public void VersionRangeTest(string data, Range? range)
+    public void VersionRangeTest(string data, SemVersionRange? range)
     {
         var modReference = ModReference.Parse(data);
         Assert.Equal(range, modReference.VersionRange);

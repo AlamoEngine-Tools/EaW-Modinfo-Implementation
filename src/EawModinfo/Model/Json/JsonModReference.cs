@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 using EawModinfo.Spec;
+using Semver.Ranges;
 using Validation;
-
-#if NET || NETSTANDARD2_1
-using Range = SemanticVersioning.Range;
-#else
-using SemanticVersioning;
-#endif
 
 
 namespace EawModinfo.Model.Json
@@ -27,7 +22,7 @@ namespace EawModinfo.Model.Json
         public string? VersionRangeString { get; set; }
 
         [JsonIgnore]
-        public Range? VersionRange => !Range.TryParse(VersionRangeString, out var range) ? null : range;
+        public SemVersionRange? VersionRange => !SemVersionRange.TryParse(VersionRangeString, out var range) ? null : range;
 
         [JsonConstructor]
         public JsonModReference()

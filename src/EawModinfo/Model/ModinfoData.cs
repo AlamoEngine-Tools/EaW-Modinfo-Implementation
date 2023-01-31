@@ -3,7 +3,7 @@ using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
-using SemanticVersioning;
+using Semver;
 using Validation;
 
 namespace EawModinfo.Model;
@@ -15,7 +15,7 @@ public sealed record ModinfoData : IModinfo
     public string Name { get; }
 
     /// <inheritdoc/>
-    public Version? Version { get; init; }
+    public SemVersion? Version { get; init; }
 
     /// <inheritdoc/>
     public IModDependencyList Dependencies { get; init; } = DependencyList.EmptyDependencyList;

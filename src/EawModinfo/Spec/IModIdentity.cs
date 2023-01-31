@@ -1,5 +1,5 @@
 ﻿using System;
-using Version = SemanticVersioning.Version;
+using Semver;
 
 namespace EawModinfo.Spec;
 
@@ -18,7 +18,7 @@ public interface IModIdentity : IEquatable<IModIdentity>
     /// The version of the mod.
     /// <remarks>Since mod developers cannot be forced to specify a version this property is nullable.</remarks>
     /// </summary>
-    Version? Version { get; }
+    SemVersion? Version { get; }
 
     /// <summary>
     /// Ordered list of <see cref="IModReference"/>s which this mod is dependent on.
