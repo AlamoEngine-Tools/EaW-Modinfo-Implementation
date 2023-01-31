@@ -5,7 +5,7 @@ using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
-using SemanticVersioning;
+using Semver;
 using Xunit;
 
 namespace EawModinfo.Tests;
@@ -18,7 +18,7 @@ public class ModinfoValidatorTests
         {
             new ModinfoData("ModName")
             {
-                Version = new Version(1, 1, 1, "BETA"), Icon = "path/icon.ico",
+                Version = new SemVersion(1, 1, 1, "BETA"), Icon = "path/icon.ico",
                 Summary = "Who reads this?"
             }
         };

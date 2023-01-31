@@ -2,8 +2,8 @@
 using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using EawModinfo.Utilities;
+using Semver.Ranges;
 using Validation;
-using Range = SemanticVersioning.Range;
 
 namespace EawModinfo.Model;
 
@@ -17,12 +17,12 @@ public struct ModReference : IModReference
     public ModType Type { get; init; }
 
     /// <inheritdoc/>
-    public Range? VersionRange { get; }
+    public SemVersionRange? VersionRange { get; }
 
     /// <summary>
     /// Create a new instance.
     /// </summary>
-    public ModReference(string id, ModType modType, Range? range = null)
+    public ModReference(string id, ModType modType, SemVersionRange? range = null)
     {
         Requires.NotNullOrEmpty(id, nameof(id));
         Identifier = id;

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using EawModinfo.Model;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
-using SemanticVersioning;
+using Semver;
+using Semver.Ranges;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -49,7 +49,7 @@ public class ModinfoDataTest
 
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
-        Assert.Equal(new Version(1,1,1, "BETA"), modinfo.Version);
+        Assert.Equal(new SemVersion(1,1,1, "BETA"), modinfo.Version);
     }
 
     [Fact]
@@ -367,7 +367,7 @@ public class ModinfoDataTest
     [Fact]
     public void WriterTest()
     {
-        var modinfo = new ModinfoData("Test") { Version = new Version(1, 1, 1, "BETA")};
+        var modinfo = new ModinfoData("Test") { Version = new SemVersion(1, 1, 1, "BETA")};
         var data = modinfo.ToJson(false);
         _output.WriteLine(data);
         Assert.Contains(@"""version"": ""1.1.1-BETA""", data);
@@ -391,12 +391,12 @@ public class ModinfoDataTest
     {
         var modinfo = new ModinfoData("Test")
         {
-            Dependencies = new DependencyList(new List<IModReference> { new ModReference("123", ModType.Default, new Range("1.x")) }, DependencyResolveLayout.ResolveRecursive)
+            Dependencies = new DependencyList(new List<IModReference> { new ModReference("123", ModType.Default, SemVersionRange.Parse("1.*")) }, DependencyResolveLayout.ResolveRecursive)
         };
         var data = modinfo.ToJson(false);
         _output.WriteLine(data);
         Assert.DoesNotContain(@"""ResolveRecursive"",", data);
-        Assert.Contains(@"""version-range"": ""1.x""", data);
+        Assert.Contains(@"""version-range"": ""1.*""", data);
     }
 
     [Fact]
@@ -409,6 +409,6 @@ public class ModinfoDataTest
 }";
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
-        Assert.Equal(new Version(1, 0, 0) , modinfo.Version);
+        Assert.Equal(new SemVersion(1, 0, 0) , modinfo.Version);
     }
 }

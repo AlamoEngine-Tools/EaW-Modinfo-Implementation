@@ -1,4 +1,5 @@
 ﻿using System;
+using Semver.Ranges;
 
 namespace EawModinfo.Spec;
 
@@ -25,5 +26,5 @@ public interface IModReference : IEquatable<IModReference>
     /// <remarks>
     /// As stated in the specification this property is not used for equality matching.
     /// </remarks>
-    SemanticVersioning.Range? VersionRange { get; }
+    SemVersionRange? VersionRange { get; }
 }

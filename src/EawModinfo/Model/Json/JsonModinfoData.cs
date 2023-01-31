@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Xml;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
+using Semver;
 using Validation;
-using Version = SemanticVersioning.Version;
 
 namespace EawModinfo.Model.Json;
 
@@ -17,7 +16,7 @@ internal class JsonModinfoData : IModinfo
 {
     [JsonIgnore] private readonly HashSet<ILanguageInfo> _languages = new();
     [JsonIgnore] private readonly HashSet<JsonLanguageInfo> _jsonLanguages = new();
-    [JsonIgnore] private Version? _modVersion;
+    [JsonIgnore] private SemVersion? _modVersion;
     [JsonIgnore] private bool _versionDetermined;
     [JsonIgnore] private bool _languagesDetermined;
 
@@ -56,7 +55,7 @@ internal class JsonModinfoData : IModinfo
 
     /// <inheritdoc/>
     [JsonIgnore]
-    public Version? Version
+    public SemVersion? Version
     {
         get
         {
