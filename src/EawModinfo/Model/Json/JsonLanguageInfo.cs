@@ -8,19 +8,24 @@ namespace EawModinfo.Model.Json;
 internal class JsonLanguageInfo : ILanguageInfo
 {
     /// <inheritdoc/>
-    [JsonPropertyName("code")] public string Code { get; private set; } = string.Empty;
+    [JsonPropertyName("code")]
+    public string Code { get; }
 
     /// <inheritdoc/>
     [JsonPropertyName("support")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
-    public LanguageSupportLevel Support { get; private set; }
+    public LanguageSupportLevel Support { get; }
 
-       
     [JsonConstructor]
-    internal JsonLanguageInfo()
+    public JsonLanguageInfo(string code, LanguageSupportLevel support)
     {
+        Code = code;
+        if (support == 0)
+            support = LanguageSupportLevel.Default;
+        Support = support;
     }
 
+       
     /// <summary>
     /// Creates a new instance from a given <see cref="ILanguageInfo"/> instance.
     /// </summary>

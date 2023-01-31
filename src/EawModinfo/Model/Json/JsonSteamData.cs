@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml;
 using EawModinfo.Spec.Steam;
@@ -15,42 +16,45 @@ internal class JsonSteamData : ISteamData
     /// <inheritdoc/>
     [JsonPropertyName("publishedfileid")]
     [JsonRequired]
-    public string Id { get; internal set; } = string.Empty;
+    public string Id { get; set; } = string.Empty;
 
     /// <inheritdoc/>
     [JsonPropertyName("contentfolder")]
     [JsonRequired]
-    public string ContentFolder { get; internal set; } = string.Empty;
+    public string ContentFolder { get; set; } = string.Empty;
 
     /// <inheritdoc/>
     [JsonPropertyName("visibility")]
     [JsonRequired]
-    public SteamWorkshopVisibility Visibility { get; internal set; }
+    public SteamWorkshopVisibility Visibility { get; set; }
 
     /// <inheritdoc/>
     [JsonPropertyName("metadata")]
-    public string? Metadata { get; internal set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+    public string? Metadata { get; set; }
 
     /// <inheritdoc/>
     [JsonPropertyName("tags")]
     [JsonRequired]
-    public IEnumerable<string> Tags { get; internal set; }
+    public IEnumerable<string> Tags { get; set; }
 
     /// <inheritdoc/>
     [JsonPropertyName("description")]
-    public string? Description { get; internal set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+    public string? Description { get; set; }
 
     /// <inheritdoc/>
-    [JsonPropertyName("previewfile")] 
-    public string? PreviewFile { get; internal set; }
+    [JsonPropertyName("previewfile")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+    public string? PreviewFile { get; set; }
 
     /// <inheritdoc/>
     [JsonPropertyName("title")]
     [JsonRequired]
-    public string Title { get; internal set; } = string.Empty;
+    public string Title { get; set; } = string.Empty;
 
     [JsonConstructor]
-    internal JsonSteamData()
+    public JsonSteamData()
     {
         Tags = new List<string>();
     }
@@ -81,10 +85,7 @@ internal class JsonSteamData : ISteamData
     {
         if (validate)
             this.Validate();
-        return JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
-        {
-            NullValueHandling = NullValueHandling.Include,
-            ContractResolver = SteamDataResolver.Instance
-        });
+
+        return JsonSerializer.Serialize(this, ParseUtility.SerializerOptions);
     }
 }
