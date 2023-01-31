@@ -1,8 +1,8 @@
 <Project>
 	<PropertyGroup>
 		<Product>EaW Modinfo</Product>
-		<Copyright>Copyright © Anakin Sklavenwalker 2019-2021</Copyright>
-		<Authors>Anakin Sklavenwalker</Authors>
+		<Copyright>Copyright © AnakinRaW 2019-2023</Copyright>
+		<Authors>AnakinRaW</Authors>
 		<Company>Republic at War Modding Team</Company>
 		<PackageTags>petroglyph, alamo, glyphx, foc, eaw</PackageTags>
 		<PackageProjectUrl>https://github.com/AlamoEngine-Tools/EaW-Modinfo-Implementation</PackageProjectUrl>

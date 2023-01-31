@@ -21,12 +21,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-		<PackageReference Include="NJsonSchema" Version="10.7.2" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+		<PackageReference Include="NJsonSchema" Version="10.8.0" />
 		<PackageReference Include="SemanticVersioning" Version="2.0.2" />
-		<PackageReference Include="System.IO.Abstractions" Version="17.0.24" />
-		<PackageReference Include="System.Text.Json" Version="6.0.5" />
-		<PackageReference Include="Validation" Version="2.5.51" PrivateAssets="all"/>
+		<PackageReference Include="System.IO.Abstractions" Version="19.1.13" />
+		<PackageReference Include="System.Text.Json" Version="7.0.1" />
+		<PackageReference Include="Validation" Version="2.5.51" PrivateAssets="compile" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
