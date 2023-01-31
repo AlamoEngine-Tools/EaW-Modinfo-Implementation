@@ -2,7 +2,6 @@
 using System.Linq;
 using EawModinfo.Model.Json;
 using EawModinfo.Spec;
-using Newtonsoft.Json;
 
 namespace EawModinfo.Utilities;
 

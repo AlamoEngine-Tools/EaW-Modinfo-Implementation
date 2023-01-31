@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
+using System.Xml;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
-using Newtonsoft.Json;
 using Validation;
 
 namespace EawModinfo.Model.Json;
@@ -12,35 +13,40 @@ internal class JsonSteamData : ISteamData
     internal static readonly string[] GameTags = {"FOC", "EAW"};
 
     /// <inheritdoc/>
-    [JsonProperty("publishedfileid", Required = Required.Always)]
+    [JsonPropertyName("publishedfileid")]
+    [JsonRequired]
     public string Id { get; internal set; } = string.Empty;
 
     /// <inheritdoc/>
-    [JsonProperty("contentfolder", Required = Required.Always)]
+    [JsonPropertyName("contentfolder")]
+    [JsonRequired]
     public string ContentFolder { get; internal set; } = string.Empty;
 
     /// <inheritdoc/>
-    [JsonProperty("visibility", Required = Required.Always)]
+    [JsonPropertyName("visibility")]
+    [JsonRequired]
     public SteamWorkshopVisibility Visibility { get; internal set; }
 
     /// <inheritdoc/>
-    [JsonProperty("metadata")]
+    [JsonPropertyName("metadata")]
     public string? Metadata { get; internal set; }
 
     /// <inheritdoc/>
-    [JsonProperty("tags", Required = Required.Always)]
+    [JsonPropertyName("tags")]
+    [JsonRequired]
     public IEnumerable<string> Tags { get; internal set; }
 
     /// <inheritdoc/>
-    [JsonProperty("description")]
+    [JsonPropertyName("description")]
     public string? Description { get; internal set; }
 
     /// <inheritdoc/>
-    [JsonProperty("previewfile")] 
+    [JsonPropertyName("previewfile")] 
     public string? PreviewFile { get; internal set; }
 
     /// <inheritdoc/>
-    [JsonProperty("title", Required = Required.Always)]
+    [JsonPropertyName("title")]
+    [JsonRequired]
     public string Title { get; internal set; } = string.Empty;
 
     [JsonConstructor]

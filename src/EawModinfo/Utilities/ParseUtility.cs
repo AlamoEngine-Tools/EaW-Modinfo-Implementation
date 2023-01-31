@@ -1,8 +1,4 @@
-﻿using System.Linq;
-using Newtonsoft.Json;
-using NJsonSchema;
-
-namespace EawModinfo.Utilities;
+﻿namespace EawModinfo.Utilities;
 
 internal static class ParseUtility
 {
