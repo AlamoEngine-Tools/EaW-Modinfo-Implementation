@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
+using System.Xml;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
-using Newtonsoft.Json;
 using Validation;
 using Version = SemanticVersioning.Version;
 
 namespace EawModinfo.Model.Json;
 
 /// <inheritdoc/>
-[JsonObject(MemberSerialization.OptIn)]
 internal class JsonModinfoData : IModinfo
 {
     [JsonIgnore] private readonly HashSet<ILanguageInfo> _languages = new();
@@ -36,21 +36,23 @@ internal class JsonModinfoData : IModinfo
     [JsonIgnore] public bool HasDependencies => Dependencies.Count > 0;
 
     /// <inheritdoc/>
-    [JsonProperty("name", Required = Required.Always)]
+    [JsonPropertyName("name")]
+    [JsonRequired]
     public string Name { get; internal set; } = string.Empty;
 
     /// <inheritdoc/>
-    [JsonProperty("summary")] 
+    [JsonPropertyName("summary")] 
     public string? Summary { get; internal set; }
 
     /// <inheritdoc/>
-    [JsonProperty("icon")] 
+    [JsonPropertyName("icon")] 
     public string? Icon { get; internal set; }
 
-    [JsonProperty("version")] 
+    [JsonPropertyName("version")] 
     private string? StringVersion { get; set; }
 
     /// <inheritdoc/>
+    [JsonIgnore]
     public Version? Version
     {
         get
@@ -71,16 +73,16 @@ internal class JsonModinfoData : IModinfo
     }
 
     /// <inheritdoc/>
-    [JsonProperty("custom")] 
+    [JsonPropertyName("custom")] 
     public IDictionary<string, object> Custom { get; internal set; }
 
     /// <inheritdoc/>
-    [JsonProperty("steamdata")]
+    [JsonPropertyName("steamdata")]
     [JsonConverter(typeof(SteamDataTypeConverter))]
     public ISteamData? SteamData { get; internal set; }
 
 
-    [JsonProperty("languages")]
+    [JsonPropertyName("languages")]
     internal IEnumerable<JsonLanguageInfo> InternalLanguages
     {
         get => _jsonLanguages;
@@ -93,6 +95,7 @@ internal class JsonModinfoData : IModinfo
     }
 
     /// <inheritdoc/>
+    [JsonIgnore]
     public IEnumerable<ILanguageInfo> Languages
     {
         get
@@ -119,7 +122,7 @@ internal class JsonModinfoData : IModinfo
     }
 
     /// <inheritdoc/>
-    [JsonProperty("dependencies")]
+    [JsonPropertyName("dependencies")]
     [JsonConverter(typeof(DependencyListTypeConverter))]
     public IModDependencyList Dependencies { get; internal set; }
 

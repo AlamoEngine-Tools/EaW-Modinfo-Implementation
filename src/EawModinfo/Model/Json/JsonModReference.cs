@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using EawModinfo.Spec;
-using Newtonsoft.Json;
 using Validation;
 
 #if NET || NETSTANDARD2_1
@@ -14,13 +14,16 @@ namespace EawModinfo.Model.Json
 {
     internal class JsonModReference : IModReference
     {
-        [JsonProperty("identifier", Required = Required.Always)]
+        [JsonPropertyName("identifier")]
+        [JsonRequired]
         public string Identifier { get; internal set; } = string.Empty;
 
-        [JsonProperty("modtype", Required = Required.Always)]
+        [JsonPropertyName("modtype")]
+        [JsonRequired]
         public ModType Type { get; internal set; }
 
-        [JsonProperty("version-range", NullValueHandling = NullValueHandling.Ignore)]
+        [JsonPropertyName("version-range")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public string? VersionRangeString { get; internal set; }
 
         [JsonIgnore]

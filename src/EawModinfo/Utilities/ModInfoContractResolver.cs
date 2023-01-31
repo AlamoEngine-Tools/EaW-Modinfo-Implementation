@@ -3,8 +3,6 @@ using System.Linq;
 using System.Reflection;
 using EawModinfo.Model.Json;
 using EawModinfo.Spec;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace EawModinfo.Utilities;
 
