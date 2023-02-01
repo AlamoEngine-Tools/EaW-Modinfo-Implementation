@@ -54,10 +54,10 @@ public class ModReferenceTests
     [Fact]
     public void EqualsCheck()
     {
-        IModReference a = new ModReference { Type = ModType.Workshops, Identifier = "123213"};
-        IModReference b = new ModReference { Type = ModType.Workshops, Identifier = "123213"};
-        IModReference c = new ModReference { Type = ModType.Default, Identifier = "123213"};
-        IModReference d = new ModReference { Type = ModType.Default, Identifier = "123213"};
+        IModReference a = new ModReference { Type = ModType.Workshops, Identifier = "123213" };
+        IModReference b = new ModReference { Type = ModType.Workshops, Identifier = "123213" };
+        IModReference c = new ModReference { Type = ModType.Default, Identifier = "123213" };
+        IModReference d = new ModReference { Type = ModType.Default, Identifier = "123213" };
 
         Assert.Equal(a, b);
         Assert.NotEqual(a, c);

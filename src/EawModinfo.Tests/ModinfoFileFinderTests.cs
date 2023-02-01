@@ -158,7 +158,7 @@ public class ModinfoFileFinderTests
 
     [Fact]
     public void TestMerge()
-    { 
+    {
         var finder = new ModinfoFileFinder(Scenarios[3]);
         var vars = finder.Find(FindOptions.FindVariants);
         var all = finder.Find(FindOptions.FindAny);

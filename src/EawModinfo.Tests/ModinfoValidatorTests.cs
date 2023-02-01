@@ -22,7 +22,7 @@ public class ModinfoValidatorTests
                 Summary = "Who reads this?"
             }
         };
-        yield return new object[] {new ModinfoData("ModName") };
+        yield return new object[] { new ModinfoData("ModName") };
         yield return new object[]
         {
             new ModinfoData("ModName")
@@ -49,7 +49,7 @@ public class ModinfoValidatorTests
             }
         };
     }
-        
+
     public static IEnumerable<object[]> GetInvalidModinfo()
     {
         yield return new object[]
@@ -128,7 +128,7 @@ public class ModinfoValidatorTests
 
     public static IEnumerable<object[]> GetInvalidSteamData()
     {
-        yield return new object[] {new JsonSteamData(), true};
+        yield return new object[] { new JsonSteamData(), true };
         yield return new object[]
             {new JsonSteamData {Id = "asd", Tags = new[] {"EAW"}, ContentFolder = "testFolder"}, true};
         yield return new object[]
@@ -142,10 +142,10 @@ public class ModinfoValidatorTests
         };
         yield return new object[]
             {new JsonSteamData {Id = "1234", Tags = new string[0], ContentFolder = "testFolder"}, true};
-        yield return new object[] {new JsonSteamData {Id = "1234", Tags = null!, ContentFolder = "testFolder"}, true};
-        yield return new object[] {new JsonSteamData {Id = "1234", Tags = new[] { "EAW" }, ContentFolder = ""}, true};
-        yield return new object[] {new JsonSteamData {Id = "1234", Tags = new[] { "EAW" }, ContentFolder = null!}, true};
-        yield return new object[] {new JsonSteamData {Id = "1234312", Tags = new[] {"test"}, Metadata = "bla", ContentFolder = "testFolder"}, true};
+        yield return new object[] { new JsonSteamData { Id = "1234", Tags = null!, ContentFolder = "testFolder" }, true };
+        yield return new object[] { new JsonSteamData { Id = "1234", Tags = new[] { "EAW" }, ContentFolder = "" }, true };
+        yield return new object[] { new JsonSteamData { Id = "1234", Tags = new[] { "EAW" }, ContentFolder = null! }, true };
+        yield return new object[] { new JsonSteamData { Id = "1234312", Tags = new[] { "test" }, Metadata = "bla", ContentFolder = "testFolder" }, true };
     }
 
     [Theory]
@@ -161,19 +161,19 @@ public class ModinfoValidatorTests
 
     public static IEnumerable<object[]> GetModReferences()
     {
-        yield return new object[] {new ModReference { Identifier = "en", Type = ModType.Default}, false};
-        yield return new object[] {new ModReference { Identifier = "en/ba/fr", Type = ModType.Default}, false};
-        yield return new object[] {new ModReference { Identifier = "en\\ba\\fr", Type = ModType.Default}, false};
-        yield return new object[] {new ModReference { Identifier = "c:\\en\\ba\\fr", Type = ModType.Default}, false};
-        yield return new object[] {new ModReference { Identifier = "../en/../../ba", Type = ModType.Default}, false};
-        yield return new object[] {new ModReference { Identifier = "123456", Type = ModType.Default}, false};
-        yield return new object[] {new ModReference { Identifier = "123456", Type = ModType.Workshops}, false};
-        yield return new object[] {new ModReference { Identifier = "blabla", Type = ModType.Virtual}, false};
+        yield return new object[] { new ModReference { Identifier = "en", Type = ModType.Default }, false };
+        yield return new object[] { new ModReference { Identifier = "en/ba/fr", Type = ModType.Default }, false };
+        yield return new object[] { new ModReference { Identifier = "en\\ba\\fr", Type = ModType.Default }, false };
+        yield return new object[] { new ModReference { Identifier = "c:\\en\\ba\\fr", Type = ModType.Default }, false };
+        yield return new object[] { new ModReference { Identifier = "../en/../../ba", Type = ModType.Default }, false };
+        yield return new object[] { new ModReference { Identifier = "123456", Type = ModType.Default }, false };
+        yield return new object[] { new ModReference { Identifier = "123456", Type = ModType.Workshops }, false };
+        yield return new object[] { new ModReference { Identifier = "blabla", Type = ModType.Virtual }, false };
     }
 
     public static IEnumerable<object[]> GetInvalidModReferences()
     {
-        yield return new object[] {new ModReference(), true};
+        yield return new object[] { new ModReference(), true };
         yield return new object[]
         {
             new ModReference
@@ -182,13 +182,13 @@ public class ModinfoValidatorTests
             },
             true
         };
-        yield return new object[] {new ModReference { Identifier = null!, Type = ModType.Workshops}, true};
-        yield return new object[] {new ModReference { Identifier = null!, Type = ModType.Virtual}, true};
-        yield return new object[] {new ModReference { Identifier = string.Empty, Type = ModType.Default}, true};
-        yield return new object[] {new ModReference { Identifier = string.Empty, Type = ModType.Workshops}, true};
-        yield return new object[] {new ModReference { Identifier = string.Empty, Type = ModType.Virtual}, true};
-        yield return new object[] {new ModReference { Identifier = "-1", Type = ModType.Workshops}, true};
-        yield return new object[] {new ModReference { Identifier = "0", Type = ModType.Workshops}, true};
+        yield return new object[] { new ModReference { Identifier = null!, Type = ModType.Workshops }, true };
+        yield return new object[] { new ModReference { Identifier = null!, Type = ModType.Virtual }, true };
+        yield return new object[] { new ModReference { Identifier = string.Empty, Type = ModType.Default }, true };
+        yield return new object[] { new ModReference { Identifier = string.Empty, Type = ModType.Workshops }, true };
+        yield return new object[] { new ModReference { Identifier = string.Empty, Type = ModType.Virtual }, true };
+        yield return new object[] { new ModReference { Identifier = "-1", Type = ModType.Workshops }, true };
+        yield return new object[] { new ModReference { Identifier = "0", Type = ModType.Workshops }, true };
         yield return new object[]
             {new ModReference {Identifier = "12921908098098098309481234", Type = ModType.Workshops}, true};
     }
@@ -209,15 +209,15 @@ public class ModinfoValidatorTests
 
     public static IEnumerable<object[]> GetLanguageInfos()
     {
-        yield return new object[] {new LanguageInfo {Code = "en"}, false};
-        yield return new object[] {new LanguageInfo { Code = "de"}, false};
-        yield return new object[] {new LanguageInfo { Code = "es"}, false};
+        yield return new object[] { new LanguageInfo { Code = "en" }, false };
+        yield return new object[] { new LanguageInfo { Code = "de" }, false };
+        yield return new object[] { new LanguageInfo { Code = "es" }, false };
     }
 
 
     public static IEnumerable<object[]> GetInvalidLanguageInfos()
     {
-        yield return new object[] {new LanguageInfo(), true};
+        yield return new object[] { new LanguageInfo(), true };
         yield return new object[]
         {
             new LanguageInfo
@@ -226,10 +226,10 @@ public class ModinfoValidatorTests
             },
             true
         };
-        yield return new object[] {new LanguageInfo { Code = "ens"}, true};
-        yield return new object[] {new LanguageInfo { Code = "de-de"}, true};
-        yield return new object[] {new LanguageInfo { Code = "deu"}, true};
-        yield return new object[] {new LanguageInfo { Code = "iv"}, true};
+        yield return new object[] { new LanguageInfo { Code = "ens" }, true };
+        yield return new object[] { new LanguageInfo { Code = "de-de" }, true };
+        yield return new object[] { new LanguageInfo { Code = "deu" }, true };
+        yield return new object[] { new LanguageInfo { Code = "iv" }, true };
     }
 
 

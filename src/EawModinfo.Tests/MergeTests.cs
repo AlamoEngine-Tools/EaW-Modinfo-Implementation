@@ -32,6 +32,7 @@ public class MergeTests
             {
                 new ModReference {Identifier = "bla"}, new ModReference {Identifier = "blub"}
             }, DependencyResolveLayout.FullResolved),
+
             Version = SemVersion.Parse("1.2.2")
         };
 
@@ -64,7 +65,9 @@ public class MergeTests
         }
 
         public string Name { get; }
+
         public SemVersion? Version { get; }
+
         public IModDependencyList Dependencies { get; }
         public string ToJson(bool validate)
         {

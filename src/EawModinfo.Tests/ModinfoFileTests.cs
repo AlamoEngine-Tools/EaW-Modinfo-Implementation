@@ -16,7 +16,7 @@ public class ModinfoFileTests
         var fileInfo = ModinfoDataUtils.CreateModifnoFile(new MockFileSystem(), "mods/A");
         IModinfoFile modinfoFile = new MainModinfoFile(fileInfo);
 
-        Assert.Equal(ModinfoFileKind.MainFile,modinfoFile.FileKind);
+        Assert.Equal(ModinfoFileKind.MainFile, modinfoFile.FileKind);
 
         Assert.Null(Record.Exception(modinfoFile.ValidateFile));
         Assert.Null(Record.Exception(modinfoFile.GetModinfo));
@@ -46,7 +46,7 @@ public class ModinfoFileTests
 
         var variantFileInfo = ModinfoDataUtils.CreateVariantFile(fs, "mods/A");
         IModinfoFile variantFile = new ModinfoVariantFile(variantFileInfo, mainFile);
-            
+
         Assert.Equal(ModinfoFileKind.VariantFile, variantFile.FileKind);
 
         Assert.Null(Record.Exception(variantFile.ValidateFile));

@@ -18,7 +18,7 @@ public class ModIdentityEqualityComparer : IEqualityComparer<IModIdentity>
     private readonly bool _includeVersion;
     private readonly bool _includeDependencies;
     private readonly StringComparison _stringComparison;
-        
+
     /// <summary>
     /// Creates a new <see cref="IModIdentity"/> equality comparer.
     /// </summary>

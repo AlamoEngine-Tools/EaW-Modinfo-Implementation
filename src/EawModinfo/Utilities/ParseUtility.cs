@@ -26,7 +26,7 @@ internal static class ParseUtility
     {
         if (typeof(JsonModinfoData).IsAssignableFrom(obj.Type))
         {
-            var propsToIgnoreWhenEmpty = obj.Properties.Where(p => 
+            var propsToIgnoreWhenEmpty = obj.Properties.Where(p =>
                 p.Name is "custom" or "languages" or "dependencies");
             foreach (var propertyInfo in propsToIgnoreWhenEmpty)
                 propertyInfo.ShouldSerialize = (_, value) => value is ICollection { Count: > 0 };
@@ -41,7 +41,7 @@ internal static class ParseUtility
     }
 
     public static T Parse<T>(string data)
-    { 
+    {
         if (string.IsNullOrEmpty(data))
             throw new ModinfoParseException("No input data.");
 

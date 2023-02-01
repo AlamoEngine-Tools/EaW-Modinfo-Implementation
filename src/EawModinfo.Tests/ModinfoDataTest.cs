@@ -37,7 +37,7 @@ public class ModinfoDataTest
         Assert.Null(modinfo.Version);
         Assert.Null(modinfo.SteamData);
     }
-        
+
     [Fact]
     public void VersionParseTest()
     {
@@ -49,7 +49,7 @@ public class ModinfoDataTest
 
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
-        Assert.Equal(new SemVersion(1,1,1, "BETA"), modinfo.Version);
+        Assert.Equal(new SemVersion(1, 1, 1, "BETA"), modinfo.Version);
     }
 
     [Fact]
@@ -140,8 +140,8 @@ public class ModinfoDataTest
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Single(modinfo.Languages);
-        Assert.Equal("en",modinfo.Languages.ElementAt(0).Code);
-        Assert.Equal(LanguageSupportLevel.FullLocalized,modinfo.Languages.ElementAt(0).Support);
+        Assert.Equal("en", modinfo.Languages.ElementAt(0).Code);
+        Assert.Equal(LanguageSupportLevel.FullLocalized, modinfo.Languages.ElementAt(0).Support);
     }
 
     [Fact]
@@ -336,7 +336,7 @@ public class ModinfoDataTest
         Assert.Equal("test", modinfo.SteamData.Metadata);
         Assert.Null(modinfo.SteamData.Description);
         Assert.Equal(2, modinfo.SteamData.Tags.Count());
-            
+
     }
 
     public static IEnumerable<object[]> GetInvalidData()
@@ -367,7 +367,7 @@ public class ModinfoDataTest
     [Fact]
     public void WriterTest()
     {
-        var modinfo = new ModinfoData("Test") { Version = new SemVersion(1, 1, 1, "BETA")};
+        var modinfo = new ModinfoData("Test") { Version = new SemVersion(1, 1, 1, "BETA") };
         var data = modinfo.ToJson(false);
         _output.WriteLine(data);
         Assert.Contains(@"""version"": ""1.1.1-BETA""", data);
@@ -379,11 +379,11 @@ public class ModinfoDataTest
     {
         var modinfo = new ModinfoData("Test")
         {
-            Dependencies = new DependencyList(new List<IModReference>{new ModReference("123", ModType.Default)}, DependencyResolveLayout.FullResolved)
+            Dependencies = new DependencyList(new List<IModReference> { new ModReference("123", ModType.Default) }, DependencyResolveLayout.FullResolved)
         };
         var data = modinfo.ToJson(false);
         _output.WriteLine(data);
-        Assert.Contains(@"""FullResolved"",",data);
+        Assert.Contains(@"""FullResolved"",", data);
     }
 
     [Fact]
@@ -409,6 +409,6 @@ public class ModinfoDataTest
 }";
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
-        Assert.Equal(new SemVersion(1, 0, 0) , modinfo.Version);
+        Assert.Equal(new SemVersion(1, 0, 0), modinfo.Version);
     }
 }

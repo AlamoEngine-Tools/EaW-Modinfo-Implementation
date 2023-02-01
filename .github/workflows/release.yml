@@ -9,7 +9,7 @@ on:
 jobs:
 
 # Builds and tests the solution.
-  build-test:
+  test:
     uses: ./.github/workflows/test.yml
 
   pack:

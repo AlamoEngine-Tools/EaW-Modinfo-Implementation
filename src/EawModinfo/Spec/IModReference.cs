@@ -20,11 +20,11 @@ public interface IModReference : IEquatable<IModReference>
 
     /// <summary>
     /// Optional, NPM-style compatible version range for this instance.
-    /// 
-    /// It's concrete data semantics is defined by the tool producing and using this property.
+    /// Its concrete data semantics is defined by the tool producing and using this property.
     /// </summary>
     /// <remarks>
     /// As stated in the specification this property is not used for equality matching.
     /// </remarks>
     SemVersionRange? VersionRange { get; }
+
 }
