@@ -11,6 +11,9 @@ namespace EawModinfo.Utilities;
 internal static class ParseUtility
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> System text json (#134)
     public static readonly JsonSerializerOptions SerializerOptions = new()
     {
         AllowTrailingCommas = true,
@@ -41,14 +44,20 @@ internal static class ParseUtility
         }
     }
 
+<<<<<<< HEAD
 =======
 >>>>>>> to c# 10 namespaces
+=======
+>>>>>>> System text json (#134)
     public static T Parse<T>(string data)
     { 
         if (string.IsNullOrEmpty(data))
             throw new ModinfoParseException("No input data.");
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> System text json (#134)
         var schema = JsonSchema.FromText(ModinfoJsonSchema.Schema);
         var validationErrors = schema.Evaluate(data, new EvaluationOptions
         {
@@ -57,6 +66,7 @@ internal static class ParseUtility
 
         if (validationErrors.HasErrors)
             throw new ModinfoParseException($"Unable to parse. Error: {validationErrors.Errors!.First()}");
+<<<<<<< HEAD
 
         try
         {
@@ -71,16 +81,26 @@ internal static class ParseUtility
         {
             var parseResult = JsonConvert.DeserializeObject<T>(data);
 >>>>>>> to c# 10 namespaces
+=======
+
+        try
+        {
+            var parseResult = JsonSerializer.Deserialize<T>(data, SerializerOptions);
+>>>>>>> System text json (#134)
             if (parseResult is null)
                 throw new ModinfoParseException(
                     $"Unable to parse input '{data}' to {typeof(T).Name}. Unknown Error!");
             return parseResult;
         }
 <<<<<<< HEAD
+<<<<<<< HEAD
         catch (JsonException cause)
 =======
         catch (JsonSerializationException cause)
 >>>>>>> to c# 10 namespaces
+=======
+        catch (JsonException cause)
+>>>>>>> System text json (#134)
         {
             throw new ModinfoParseException(cause.Message, cause);
         }

@@ -97,6 +97,7 @@ public class ModIdentityEqualityComparer : IEqualityComparer<IModIdentity>
     /// <inheritdoc/>
     public int GetHashCode(IModIdentity obj)
     {
+<<<<<<< HEAD
         unchecked
         {
             var hashCode = obj.Name.GetHashCode();
@@ -113,6 +114,8 @@ public class ModIdentityEqualityComparer : IEqualityComparer<IModIdentity>
     /// <inheritdoc/>
     public int GetHashCode(IModIdentity obj)
     {
+=======
+>>>>>>> System text json (#134)
         if (_includeVersion)
             return _includeDependencies
                 ? HashCode.Combine(obj.Name, obj.Version, obj.Dependencies)

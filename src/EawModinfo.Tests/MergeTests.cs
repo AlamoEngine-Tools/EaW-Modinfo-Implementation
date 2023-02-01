@@ -33,10 +33,14 @@ public class MergeTests
                 new ModReference {Identifier = "bla"}, new ModReference {Identifier = "blub"}
             }, DependencyResolveLayout.FullResolved),
 <<<<<<< HEAD
+<<<<<<< HEAD
             Version = SemVersion.Parse("1.2.2")
 =======
             Version = Version.Parse("1.2.2")
 >>>>>>> to c# 10 namespaces
+=======
+            Version = SemVersion.Parse("1.2.2")
+>>>>>>> System text json (#134)
         };
 
         var newData = variantData.MergeInto(mainData);
@@ -52,10 +56,14 @@ public class MergeTests
         Assert.Equal(variantData.SteamData!.Title, newData.SteamData?.Title);
         Assert.Equal(2, newData.Custom.Count);
 <<<<<<< HEAD
+<<<<<<< HEAD
         Assert.Equal(new SemVersion(1,2,2), newData.Version);
 =======
         Assert.Equal(new Version(1,2,2), newData.Version);
 >>>>>>> to c# 10 namespaces
+=======
+        Assert.Equal(new SemVersion(1,2,2), newData.Version);
+>>>>>>> System text json (#134)
         Assert.Equal(variantData.Version, newData.Version);
 
 
@@ -73,10 +81,14 @@ public class MergeTests
 
         public string Name { get; }
 <<<<<<< HEAD
+<<<<<<< HEAD
         public SemVersion? Version { get; }
 =======
         public Version? Version { get; }
 >>>>>>> to c# 10 namespaces
+=======
+        public SemVersion? Version { get; }
+>>>>>>> System text json (#134)
         public IModDependencyList Dependencies { get; }
         public string ToJson(bool validate)
         {

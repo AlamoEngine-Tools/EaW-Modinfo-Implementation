@@ -8,6 +8,7 @@ using EawModinfo.Spec.Steam;
 namespace EawModinfo.Utilities;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 internal class SteamDataTypeConverter : JsonConverter<ISteamData>
 {
     public override bool CanConvert(Type objectType)
@@ -25,20 +26,27 @@ internal class SteamDataTypeConverter : JsonConverter<ISteamData>
         JsonSerializer.Serialize(writer, new JsonSteamData(value), options);
 =======
 internal class SteamDataTypeConverter : JsonConverter
+=======
+internal class SteamDataTypeConverter : JsonConverter<ISteamData>
+>>>>>>> System text json (#134)
 {
-    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
-    {
-        serializer.Serialize(writer, value);
-    }
-
-    public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
-    {
-        return serializer.Deserialize<JsonSteamData>(reader);
-    }
-
     public override bool CanConvert(Type objectType)
     {
         return true;
+    }
+
+    public override ISteamData? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        return new SteamData(JsonSerializer.Deserialize<JsonSteamData>(ref reader, options)!);
+    }
+
+    public override void Write(Utf8JsonWriter writer, ISteamData value, JsonSerializerOptions options)
+    {
+<<<<<<< HEAD
+        return true;
 >>>>>>> to c# 10 namespaces
+=======
+        JsonSerializer.Serialize(writer, new JsonSteamData(value), options);
+>>>>>>> System text json (#134)
     }
 }

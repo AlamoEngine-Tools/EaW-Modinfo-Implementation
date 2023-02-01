@@ -31,8 +31,12 @@ public interface IModReference : IEquatable<IModReference>
     /// As stated in the specification this property is not used for equality matching.
     /// </remarks>
 <<<<<<< HEAD
+<<<<<<< HEAD
     SemVersionRange? VersionRange { get; }
 =======
     SemanticVersioning.Range? VersionRange { get; }
 >>>>>>> to c# 10 namespaces
+=======
+    SemVersionRange? VersionRange { get; }
+>>>>>>> System text json (#134)
 }

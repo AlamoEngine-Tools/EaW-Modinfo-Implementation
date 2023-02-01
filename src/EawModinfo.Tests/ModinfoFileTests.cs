@@ -56,10 +56,14 @@ public class ModinfoFileTests
         var data = variantFile.GetModinfo();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         Assert.Equal(new SemVersion(1, 1, 1, "BETA"), data.Version);
 =======
         Assert.Equal(new Version(1, 1, 1, "BETA"), data.Version);
 >>>>>>> to c# 10 namespaces
+=======
+        Assert.Equal(new SemVersion(1, 1, 1, "BETA"), data.Version);
+>>>>>>> System text json (#134)
         Assert.Single(data.Custom);
         Assert.Single(data.Languages);
     }
@@ -70,10 +74,14 @@ public class ModinfoFileTests
         var main = new ModinfoData("Main")
         {
 <<<<<<< HEAD
+<<<<<<< HEAD
             Version = new SemVersion(1, 1, 1),
 =======
             Version = new Version(1, 1, 1),
 >>>>>>> to c# 10 namespaces
+=======
+            Version = new SemVersion(1, 1, 1),
+>>>>>>> System text json (#134)
             Dependencies = new DependencyList(new IModReference[] { new ModReference { Identifier = "123", Type = ModType.Workshops } }, DependencyResolveLayout.FullResolved)
         };
 
@@ -90,10 +98,14 @@ public class ModinfoFileTests
         var data = modinfoFile.GetModinfo();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         Assert.Equal(new SemVersion(1, 1, 1), data.Version);
 =======
         Assert.Equal(new Version(1, 1, 1), data.Version);
 >>>>>>> to c# 10 namespaces
+=======
+        Assert.Equal(new SemVersion(1, 1, 1), data.Version);
+>>>>>>> System text json (#134)
         Assert.Single(data.Dependencies);
     }
 

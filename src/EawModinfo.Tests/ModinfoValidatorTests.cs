@@ -19,10 +19,14 @@ public class ModinfoValidatorTests
             new ModinfoData("ModName")
             {
 <<<<<<< HEAD
+<<<<<<< HEAD
                 Version = new SemVersion(1, 1, 1, "BETA"), Icon = "path/icon.ico",
 =======
                 Version = new Version(1, 1, 1, "BETA"), Icon = "path/icon.ico",
 >>>>>>> to c# 10 namespaces
+=======
+                Version = new SemVersion(1, 1, 1, "BETA"), Icon = "path/icon.ico",
+>>>>>>> System text json (#134)
                 Summary = "Who reads this?"
             }
         };

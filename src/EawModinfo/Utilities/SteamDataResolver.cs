@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 namespace EawModinfo.Utilities;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 internal class NullToEmptyStringSerializerConverter : JsonConverter<string?>
 {
     public override bool HandleNull => true;
@@ -24,44 +25,32 @@ internal class NullToEmptyStringSerializerConverter : JsonConverter<string?>
         writer.WriteStringValue(value ?? "");
 =======
 internal class SteamDataResolver : DefaultContractResolver
+=======
+internal class NullToEmptyStringSerializerConverter : JsonConverter<string?>
+>>>>>>> System text json (#134)
 {
-    public static SteamDataResolver Instance = new();
-    protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
+    public override bool HandleNull => true;
+
+    public override bool CanConvert(Type typeToConvert)
     {
-        var property = base.CreateProperty(member, memberSerialization);
-
-        if (property.DeclaringType == typeof(JsonSteamData) && property.PropertyType == typeof(string))
-        {
-            switch (member.Name)
-            {
-                case nameof(JsonSteamData.Metadata):
-                case nameof(JsonSteamData.PreviewFile):
-                case nameof(JsonSteamData.Description):
-                    property.ValueProvider = new NullToEmptyStringValueProvider(property.ValueProvider);
-                    break;
-            }
-        }
-
-        return property;
+        return typeToConvert == typeof(string);
     }
 
-    private class NullToEmptyStringValueProvider : IValueProvider
+    public override string? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        private readonly IValueProvider? _provider;
-        public NullToEmptyStringValueProvider(IValueProvider? provider)
-        {
-            _provider = provider;
-        }
+        return reader.GetString();
+    }
 
-        public object GetValue(object target)
-        {
-            return _provider?.GetValue(target) ?? string.Empty;
-        }
-
+<<<<<<< HEAD
         public void SetValue(object target, object? value)
         {
             _provider?.SetValue(target, value);
         }
 >>>>>>> to c# 10 namespaces
+=======
+    public override void Write(Utf8JsonWriter writer, string? value, JsonSerializerOptions options)
+    {
+        writer.WriteStringValue(value ?? "");
+>>>>>>> System text json (#134)
     }
 }

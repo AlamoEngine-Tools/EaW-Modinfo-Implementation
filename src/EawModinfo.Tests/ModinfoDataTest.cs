@@ -14,22 +14,33 @@ namespace EawModinfo.Tests;
 public class ModinfoDataTest
 {
 <<<<<<< HEAD
+<<<<<<< HEAD
     private readonly ITestOutputHelper _output;
 
 =======
 >>>>>>> to c# 10 namespaces
+=======
+    private readonly ITestOutputHelper _output;
+
+>>>>>>> System text json (#134)
     private const string InvalidJsonData = @"{
   ""version"": ""1.0.0"",
 }";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> System text json (#134)
     public ModinfoDataTest(ITestOutputHelper output)
     {
         _output = output;
     }
 
+<<<<<<< HEAD
 =======
 >>>>>>> to c# 10 namespaces
+=======
+>>>>>>> System text json (#134)
     [Fact]
     public void MinimalParseTest()
     {
@@ -56,10 +67,14 @@ public class ModinfoDataTest
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
 <<<<<<< HEAD
+<<<<<<< HEAD
         Assert.Equal(new SemVersion(1,1,1, "BETA"), modinfo.Version);
 =======
         Assert.Equal(new Version(1,1,1, "BETA"), modinfo.Version);
 >>>>>>> to c# 10 namespaces
+=======
+        Assert.Equal(new SemVersion(1,1,1, "BETA"), modinfo.Version);
+>>>>>>> System text json (#134)
     }
 
     [Fact]
@@ -274,10 +289,14 @@ public class ModinfoDataTest
 
     [Fact]
 <<<<<<< HEAD
+<<<<<<< HEAD
     public void ModRefParseTestFailure_EmptyDependenciesOnlyLayout()
 =======
     public void CustomParseTest()
 >>>>>>> to c# 10 namespaces
+=======
+    public void ModRefParseTestFailure_EmptyDependenciesOnlyLayout()
+>>>>>>> System text json (#134)
     {
         var data = @"
 {
@@ -318,6 +337,7 @@ public class ModinfoDataTest
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Equal(2, modinfo.Custom.Count);
 <<<<<<< HEAD
+<<<<<<< HEAD
         Assert.Equal("123", ((JsonElement)modinfo.Custom["test-key2"]).GetString());
 
         Assert.IsType<JsonElement>(modinfo.Custom["test-key"]);
@@ -325,6 +345,11 @@ public class ModinfoDataTest
         Assert.Equal("123", modinfo.Custom["test-key2"]);
         Assert.Equal(new JObject(), modinfo.Custom["test-key"]);
 >>>>>>> to c# 10 namespaces
+=======
+        Assert.Equal("123", ((JsonElement)modinfo.Custom["test-key2"]).GetString());
+
+        Assert.IsType<JsonElement>(modinfo.Custom["test-key"]);
+>>>>>>> System text json (#134)
     }
 
 
@@ -353,11 +378,16 @@ public class ModinfoDataTest
         Assert.Equal("path", modinfo.SteamData.ContentFolder);
         Assert.Equal(SteamWorkshopVisibility.Public, modinfo.SteamData.Visibility);
 <<<<<<< HEAD
+<<<<<<< HEAD
         Assert.Equal("test", modinfo.SteamData.Metadata);
         Assert.Null(modinfo.SteamData.Description);
 =======
         Assert.Null(modinfo.SteamData.Metadata);
 >>>>>>> to c# 10 namespaces
+=======
+        Assert.Equal("test", modinfo.SteamData.Metadata);
+        Assert.Null(modinfo.SteamData.Description);
+>>>>>>> System text json (#134)
         Assert.Equal(2, modinfo.SteamData.Tags.Count());
             
     }
@@ -399,6 +429,7 @@ public class ModinfoDataTest
     public void WriterTest()
     {
 <<<<<<< HEAD
+<<<<<<< HEAD
         var modinfo = new ModinfoData("Test") { Version = new SemVersion(1, 1, 1, "BETA")};
         var data = modinfo.ToJson(false);
         _output.WriteLine(data);
@@ -406,6 +437,11 @@ public class ModinfoDataTest
         var modinfo = new ModinfoData("Test") { Version = new Version(1, 1, 1, "BETA")};
         var data = modinfo.ToJson(false);
 >>>>>>> to c# 10 namespaces
+=======
+        var modinfo = new ModinfoData("Test") { Version = new SemVersion(1, 1, 1, "BETA")};
+        var data = modinfo.ToJson(false);
+        _output.WriteLine(data);
+>>>>>>> System text json (#134)
         Assert.Contains(@"""version"": ""1.1.1-BETA""", data);
         Assert.DoesNotContain(@"""custom"":", data);
     }
@@ -419,9 +455,13 @@ public class ModinfoDataTest
         };
         var data = modinfo.ToJson(false);
 <<<<<<< HEAD
+<<<<<<< HEAD
         _output.WriteLine(data);
 =======
 >>>>>>> to c# 10 namespaces
+=======
+        _output.WriteLine(data);
+>>>>>>> System text json (#134)
         Assert.Contains(@"""FullResolved"",",data);
     }
 
@@ -430,6 +470,7 @@ public class ModinfoDataTest
     {
         var modinfo = new ModinfoData("Test")
         {
+<<<<<<< HEAD
 <<<<<<< HEAD
             Dependencies = new DependencyList(new List<IModReference> { new ModReference("123", ModType.Default, SemVersionRange.Parse("1.*")) }, DependencyResolveLayout.ResolveRecursive)
         };
@@ -443,6 +484,14 @@ public class ModinfoDataTest
         var data = modinfo.ToJson(false);
         Assert.Contains(@"""version-range"": ""1.x""", data);
 >>>>>>> to c# 10 namespaces
+=======
+            Dependencies = new DependencyList(new List<IModReference> { new ModReference("123", ModType.Default, SemVersionRange.Parse("1.*")) }, DependencyResolveLayout.ResolveRecursive)
+        };
+        var data = modinfo.ToJson(false);
+        _output.WriteLine(data);
+        Assert.DoesNotContain(@"""ResolveRecursive"",", data);
+        Assert.Contains(@"""version-range"": ""1.*""", data);
+>>>>>>> System text json (#134)
     }
 
     [Fact]
@@ -456,9 +505,13 @@ public class ModinfoDataTest
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
 <<<<<<< HEAD
+<<<<<<< HEAD
         Assert.Equal(new SemVersion(1, 0, 0) , modinfo.Version);
 =======
         Assert.Equal(new Version(1, 0, 0) , modinfo.Version);
 >>>>>>> to c# 10 namespaces
+=======
+        Assert.Equal(new SemVersion(1, 0, 0) , modinfo.Version);
+>>>>>>> System text json (#134)
     }
 }
