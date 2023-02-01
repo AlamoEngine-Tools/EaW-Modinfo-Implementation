@@ -56,15 +56,7 @@ public class ModinfoFileFinderTests
         const string fileName = "empty.txt";
         var filePath = fs.Path.Combine(path, fileName);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
         fs.AddFile(filePath, new MockFileData(string.Empty));
-=======
-        fs.AddFile(filePath, MockFileData.NullObject);
->>>>>>> to c# 10 namespaces
-=======
-        fs.AddFile(filePath, new MockFileData(string.Empty));
->>>>>>> b7dafff0b6609730c7665be9f05a50996f5a0bbd
 
         Scenarios[2] = fs.DirectoryInfo.FromDirectoryName(path);
     }
@@ -166,7 +158,7 @@ public class ModinfoFileFinderTests
 
     [Fact]
     public void TestMerge()
-    { 
+    {
         var finder = new ModinfoFileFinder(Scenarios[3]);
         var vars = finder.Find(FindOptions.FindVariants);
         var all = finder.Find(FindOptions.FindAny);

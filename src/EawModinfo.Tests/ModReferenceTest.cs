@@ -28,19 +28,7 @@ public class ModReferenceTests
     ""modtype"":1,
     ""version-range"": ""*""
 }",
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
             SemVersionRange.Parse("*")
-=======
-            new Range("*")
->>>>>>> to c# 10 namespaces
-=======
-            SemVersionRange.Parse("*")
->>>>>>> System text json (#134)
-=======
-            SemVersionRange.Parse("*")
->>>>>>> b7dafff0b6609730c7665be9f05a50996f5a0bbd
         };
 
         yield return new object[]
@@ -57,19 +45,7 @@ public class ModReferenceTests
 
     [Theory]
     [MemberData(nameof(VersionRangeData))]
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     public void VersionRangeTest(string data, SemVersionRange? range)
-=======
-    public void VersionRangeTest(string data, Range? range)
->>>>>>> to c# 10 namespaces
-=======
-    public void VersionRangeTest(string data, SemVersionRange? range)
->>>>>>> System text json (#134)
-=======
-    public void VersionRangeTest(string data, SemVersionRange? range)
->>>>>>> b7dafff0b6609730c7665be9f05a50996f5a0bbd
     {
         var modReference = ModReference.Parse(data);
         Assert.Equal(range, modReference.VersionRange);
@@ -78,10 +54,10 @@ public class ModReferenceTests
     [Fact]
     public void EqualsCheck()
     {
-        IModReference a = new ModReference { Type = ModType.Workshops, Identifier = "123213"};
-        IModReference b = new ModReference { Type = ModType.Workshops, Identifier = "123213"};
-        IModReference c = new ModReference { Type = ModType.Default, Identifier = "123213"};
-        IModReference d = new ModReference { Type = ModType.Default, Identifier = "123213"};
+        IModReference a = new ModReference { Type = ModType.Workshops, Identifier = "123213" };
+        IModReference b = new ModReference { Type = ModType.Workshops, Identifier = "123213" };
+        IModReference c = new ModReference { Type = ModType.Default, Identifier = "123213" };
+        IModReference d = new ModReference { Type = ModType.Default, Identifier = "123213" };
 
         Assert.Equal(a, b);
         Assert.NotEqual(a, c);

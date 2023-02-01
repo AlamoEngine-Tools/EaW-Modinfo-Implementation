@@ -45,13 +45,6 @@ internal static class ModinfoDataUtils
 
     internal static IFileInfo CreateModifnoFile(MockFileSystem fs, string path)
     {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        Requires.NotNull(fs, nameof(fs));
->>>>>>> to c# 10 namespaces
-=======
->>>>>>> b7dafff0b6609730c7665be9f05a50996f5a0bbd
         const string name = "modinfo.json";
         return CreateFile(fs, path, name, MainModinfoData);
     }
@@ -70,13 +63,6 @@ internal static class ModinfoDataUtils
 
     internal static IFileInfo CreateFile(MockFileSystem fs, string path, string name, string data)
     {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        Requires.NotNull(fs, nameof(fs));
->>>>>>> to c# 10 namespaces
-=======
->>>>>>> b7dafff0b6609730c7665be9f05a50996f5a0bbd
         var fullPath = fs.Path.Combine(path, name);
         fs.AddFile(fullPath, new MockFileData(data));
         return fs.FileInfo.FromFileName(fullPath);

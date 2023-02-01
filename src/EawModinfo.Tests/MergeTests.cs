@@ -32,19 +32,8 @@ public class MergeTests
             {
                 new ModReference {Identifier = "bla"}, new ModReference {Identifier = "blub"}
             }, DependencyResolveLayout.FullResolved),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
             Version = SemVersion.Parse("1.2.2")
-=======
-            Version = Version.Parse("1.2.2")
->>>>>>> to c# 10 namespaces
-=======
-            Version = SemVersion.Parse("1.2.2")
->>>>>>> System text json (#134)
-=======
-            Version = SemVersion.Parse("1.2.2")
->>>>>>> b7dafff0b6609730c7665be9f05a50996f5a0bbd
         };
 
         var newData = variantData.MergeInto(mainData);
@@ -59,19 +48,7 @@ public class MergeTests
         Assert.Equal(variantData.SteamData!.Id, newData.SteamData?.Id);
         Assert.Equal(variantData.SteamData!.Title, newData.SteamData?.Title);
         Assert.Equal(2, newData.Custom.Count);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         Assert.Equal(new SemVersion(1,2,2), newData.Version);
-=======
-        Assert.Equal(new Version(1,2,2), newData.Version);
->>>>>>> to c# 10 namespaces
-=======
-        Assert.Equal(new SemVersion(1,2,2), newData.Version);
->>>>>>> System text json (#134)
-=======
-        Assert.Equal(new SemVersion(1,2,2), newData.Version);
->>>>>>> b7dafff0b6609730c7665be9f05a50996f5a0bbd
         Assert.Equal(variantData.Version, newData.Version);
 
 
@@ -88,19 +65,9 @@ public class MergeTests
         }
 
         public string Name { get; }
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
         public SemVersion? Version { get; }
-=======
-        public Version? Version { get; }
->>>>>>> to c# 10 namespaces
-=======
-        public SemVersion? Version { get; }
->>>>>>> System text json (#134)
-=======
-        public SemVersion? Version { get; }
->>>>>>> b7dafff0b6609730c7665be9f05a50996f5a0bbd
+
         public IModDependencyList Dependencies { get; }
         public string ToJson(bool validate)
         {

@@ -16,7 +16,7 @@ public class ModinfoFileTests
         var fileInfo = ModinfoDataUtils.CreateModifnoFile(new MockFileSystem(), "mods/A");
         IModinfoFile modinfoFile = new MainModinfoFile(fileInfo);
 
-        Assert.Equal(ModinfoFileKind.MainFile,modinfoFile.FileKind);
+        Assert.Equal(ModinfoFileKind.MainFile, modinfoFile.FileKind);
 
         Assert.Null(Record.Exception(modinfoFile.ValidateFile));
         Assert.Null(Record.Exception(modinfoFile.GetModinfo));
@@ -46,7 +46,7 @@ public class ModinfoFileTests
 
         var variantFileInfo = ModinfoDataUtils.CreateVariantFile(fs, "mods/A");
         IModinfoFile variantFile = new ModinfoVariantFile(variantFileInfo, mainFile);
-            
+
         Assert.Equal(ModinfoFileKind.VariantFile, variantFile.FileKind);
 
         Assert.Null(Record.Exception(variantFile.ValidateFile));
@@ -55,19 +55,7 @@ public class ModinfoFileTests
 
         var data = variantFile.GetModinfo();
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         Assert.Equal(new SemVersion(1, 1, 1, "BETA"), data.Version);
-=======
-        Assert.Equal(new Version(1, 1, 1, "BETA"), data.Version);
->>>>>>> to c# 10 namespaces
-=======
-        Assert.Equal(new SemVersion(1, 1, 1, "BETA"), data.Version);
->>>>>>> System text json (#134)
-=======
-        Assert.Equal(new SemVersion(1, 1, 1, "BETA"), data.Version);
->>>>>>> b7dafff0b6609730c7665be9f05a50996f5a0bbd
         Assert.Single(data.Custom);
         Assert.Single(data.Languages);
     }
@@ -77,19 +65,7 @@ public class ModinfoFileTests
     {
         var main = new ModinfoData("Main")
         {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
             Version = new SemVersion(1, 1, 1),
-=======
-            Version = new Version(1, 1, 1),
->>>>>>> to c# 10 namespaces
-=======
-            Version = new SemVersion(1, 1, 1),
->>>>>>> System text json (#134)
-=======
-            Version = new SemVersion(1, 1, 1),
->>>>>>> b7dafff0b6609730c7665be9f05a50996f5a0bbd
             Dependencies = new DependencyList(new IModReference[] { new ModReference { Identifier = "123", Type = ModType.Workshops } }, DependencyResolveLayout.FullResolved)
         };
 
@@ -105,19 +81,7 @@ public class ModinfoFileTests
 
         var data = modinfoFile.GetModinfo();
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         Assert.Equal(new SemVersion(1, 1, 1), data.Version);
-=======
-        Assert.Equal(new Version(1, 1, 1), data.Version);
->>>>>>> to c# 10 namespaces
-=======
-        Assert.Equal(new SemVersion(1, 1, 1), data.Version);
->>>>>>> System text json (#134)
-=======
-        Assert.Equal(new SemVersion(1, 1, 1), data.Version);
->>>>>>> b7dafff0b6609730c7665be9f05a50996f5a0bbd
         Assert.Single(data.Dependencies);
     }
 
