@@ -1,50 +1,25 @@
-﻿using System.Reflection;
-using EawModinfo.Model;
-using EawModinfo.Model.Json;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+﻿using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace EawModinfo.Utilities
+namespace EawModinfo.Utilities;
+
+internal class NullToEmptyStringSerializerConverter : JsonConverter<string?>
 {
-    internal class SteamDataResolver : DefaultContractResolver
+    public override bool HandleNull => true;
+
+    public override bool CanConvert(Type typeToConvert)
     {
-        public static SteamDataResolver Instance = new();
-        protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
-        {
-            var property = base.CreateProperty(member, memberSerialization);
+        return typeToConvert == typeof(string);
+    }
 
-            if (property.DeclaringType == typeof(JsonSteamData) && property.PropertyType == typeof(string))
-            {
-                switch (member.Name)
-                {
-                    case nameof(JsonSteamData.Metadata):
-                    case nameof(JsonSteamData.PreviewFile):
-                    case nameof(JsonSteamData.Description):
-                        property.ValueProvider = new NullToEmptyStringValueProvider(property.ValueProvider);
-                        break;
-                }
-            }
+    public override string? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        return reader.GetString();
+    }
 
-            return property;
-        }
-
-        private class NullToEmptyStringValueProvider : IValueProvider
-        {
-            private readonly IValueProvider? _provider;
-            public NullToEmptyStringValueProvider(IValueProvider? provider)
-            {
-                _provider = provider;
-            }
-
-            public object GetValue(object target)
-            {
-                return _provider?.GetValue(target) ?? string.Empty;
-            }
-
-            public void SetValue(object target, object? value)
-            {
-                _provider?.SetValue(target, value);
-            }
-        }
+    public override void Write(Utf8JsonWriter writer, string? value, JsonSerializerOptions options)
+    {
+        writer.WriteStringValue(value ?? "");
     }
 }

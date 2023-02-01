@@ -1,60 +1,67 @@
-﻿using EawModinfo.Spec;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using EawModinfo.Spec;
 using Validation;
 
-namespace EawModinfo.Model.Json
+namespace EawModinfo.Model.Json;
+
+/// <inheritdoc/>
+internal class JsonLanguageInfo : ILanguageInfo
 {
     /// <inheritdoc/>
-    internal class JsonLanguageInfo : ILanguageInfo
-    {
-        /// <inheritdoc/>
-        [JsonProperty("code")] public string Code { get; private set; } = string.Empty;
+    [JsonPropertyName("code")]
+    public string Code { get; }
 
-        /// <inheritdoc/>
-        [JsonProperty("support", DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
-        public LanguageSupportLevel Support { get; private set; }
+    /// <inheritdoc/>
+    [JsonPropertyName("support")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public LanguageSupportLevel Support { get; }
+
+    [JsonConstructor]
+    public JsonLanguageInfo(string code, LanguageSupportLevel support)
+    {
+        Code = code;
+        if (support == 0)
+            support = LanguageSupportLevel.Default;
+        Support = support;
+    }
 
        
-        [JsonConstructor]
-        internal JsonLanguageInfo()
-        {
-        }
-
-        /// <summary>
-        /// Creates a new instance from a given <see cref="ILanguageInfo"/> instance.
-        /// </summary>
-        /// <param name="languageInfo">The instance that will copied.</param>
-        public JsonLanguageInfo(ILanguageInfo languageInfo)
-        {
-            Requires.NotNull(languageInfo, nameof(languageInfo));
-            Code = languageInfo.Code;
-            Support = languageInfo.Support;
-        }
+    /// <summary>
+    /// Creates a new instance from a given <see cref="ILanguageInfo"/> instance.
+    /// </summary>
+    /// <param name="languageInfo">The instance that will copied.</param>
+    public JsonLanguageInfo(ILanguageInfo languageInfo)
+    {
+        Requires.NotNull(languageInfo, nameof(languageInfo));
+        Code = languageInfo.Code;
+        Support = languageInfo.Support;
+    }
         
-        /// <inheritdoc/>
-        public bool Equals(ILanguageInfo? other)
-        {
-            if (other is null) 
-                return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Code == other.Code;
-        }
-
-        /// <inheritdoc/>
-        public override bool Equals(object? obj)
-        {
-            if (obj is null) 
-                return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj is ILanguageInfo info) return Equals(info);
+    /// <inheritdoc/>
+    public bool Equals(ILanguageInfo? other)
+    {
+        if (other is null) 
             return false;
+        if (ReferenceEquals(this, other)) return true;
+        return Code == other.Code;
+    }
 
-        }
+    /// <inheritdoc/>
+    public override bool Equals(object? obj)
+    {
+        if (obj is null) 
+            return false;
+        if (ReferenceEquals(this, obj)) 
+            return true;
+        if (obj is ILanguageInfo info) 
+            return Equals(info);
+        return false;
 
-        /// <inheritdoc/>
-        public override int GetHashCode()
-        {
-            return Code.ToLower().GetHashCode();
-        }
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode()
+    {
+        return Code.ToLower().GetHashCode();
     }
 }

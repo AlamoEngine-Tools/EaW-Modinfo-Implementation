@@ -1,7 +1,6 @@
-﻿namespace EawModinfo.File
+﻿namespace EawModinfo.File;
+
+internal interface IModFileNameValidator
 {
-    internal interface IModFileNameValidator
-    {
-        public bool Validate(string fileName, out string error);
-    }
+    public bool Validate(string fileName, out string error);
 }
