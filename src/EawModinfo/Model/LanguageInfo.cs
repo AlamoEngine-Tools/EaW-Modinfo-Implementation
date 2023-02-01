@@ -74,8 +74,10 @@ namespace EawModinfo.Model
         {
             if (other is null)
                 return false;
-            if (ReferenceEquals(this, other)) return true;
-            if (other is ILanguageInfo info) return Equals(info);
+            if (ReferenceEquals(this, other)) 
+                return true;
+            if (other is ILanguageInfo info) 
+                return Equals(info);
             return false;
         }
 

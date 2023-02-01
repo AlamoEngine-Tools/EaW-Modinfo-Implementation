@@ -1,5 +1,5 @@
-﻿using EawModinfo.Spec;
-using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
+using EawModinfo.Spec;
 using Validation;
 
 namespace EawModinfo.Model.Json;
@@ -8,18 +8,24 @@ namespace EawModinfo.Model.Json;
 internal class JsonLanguageInfo : ILanguageInfo
 {
     /// <inheritdoc/>
-    [JsonProperty("code")] public string Code { get; private set; } = string.Empty;
+    [JsonPropertyName("code")]
+    public string Code { get; }
 
     /// <inheritdoc/>
-    [JsonProperty("support", DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
-    public LanguageSupportLevel Support { get; private set; }
+    [JsonPropertyName("support")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public LanguageSupportLevel Support { get; }
 
-       
     [JsonConstructor]
-    internal JsonLanguageInfo()
+    public JsonLanguageInfo(string code, LanguageSupportLevel support)
     {
+        Code = code;
+        if (support == 0)
+            support = LanguageSupportLevel.Default;
+        Support = support;
     }
 
+       
     /// <summary>
     /// Creates a new instance from a given <see cref="ILanguageInfo"/> instance.
     /// </summary>
@@ -45,8 +51,10 @@ internal class JsonLanguageInfo : ILanguageInfo
     {
         if (obj is null) 
             return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj is ILanguageInfo info) return Equals(info);
+        if (ReferenceEquals(this, obj)) 
+            return true;
+        if (obj is ILanguageInfo info) 
+            return Equals(info);
         return false;
 
     }

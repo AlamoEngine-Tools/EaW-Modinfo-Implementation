@@ -5,7 +5,7 @@ using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
-using SemanticVersioning;
+using Semver;
 using Xunit;
 
 namespace EawModinfo.Tests;
@@ -32,7 +32,7 @@ public class MergeTests
             {
                 new ModReference {Identifier = "bla"}, new ModReference {Identifier = "blub"}
             }, DependencyResolveLayout.FullResolved),
-            Version = Version.Parse("1.2.2")
+            Version = SemVersion.Parse("1.2.2")
         };
 
         var newData = variantData.MergeInto(mainData);
@@ -47,7 +47,7 @@ public class MergeTests
         Assert.Equal(variantData.SteamData!.Id, newData.SteamData?.Id);
         Assert.Equal(variantData.SteamData!.Title, newData.SteamData?.Title);
         Assert.Equal(2, newData.Custom.Count);
-        Assert.Equal(new Version(1,2,2), newData.Version);
+        Assert.Equal(new SemVersion(1,2,2), newData.Version);
         Assert.Equal(variantData.Version, newData.Version);
 
 
@@ -64,7 +64,7 @@ public class MergeTests
         }
 
         public string Name { get; }
-        public Version? Version { get; }
+        public SemVersion? Version { get; }
         public IModDependencyList Dependencies { get; }
         public string ToJson(bool validate)
         {

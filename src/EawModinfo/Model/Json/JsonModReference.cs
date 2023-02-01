@@ -1,33 +1,31 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using EawModinfo.Spec;
-using Newtonsoft.Json;
+using Semver.Ranges;
 using Validation;
-
-#if NET || NETSTANDARD2_1
-using Range = SemanticVersioning.Range;
-#else
-using SemanticVersioning;
-#endif
 
 
 namespace EawModinfo.Model.Json
 {
     internal class JsonModReference : IModReference
     {
-        [JsonProperty("identifier", Required = Required.Always)]
-        public string Identifier { get; internal set; } = string.Empty;
+        [JsonPropertyName("identifier")]
+        [JsonRequired]
+        public string Identifier { get; set; } = string.Empty;
 
-        [JsonProperty("modtype", Required = Required.Always)]
-        public ModType Type { get; internal set; }
+        [JsonPropertyName("modtype")]
+        [JsonRequired]
+        public ModType Type { get; set; }
 
-        [JsonProperty("version-range", NullValueHandling = NullValueHandling.Ignore)]
-        public string? VersionRangeString { get; internal set; }
+        [JsonPropertyName("version-range")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+        public string? VersionRangeString { get; set; }
 
         [JsonIgnore]
-        public Range? VersionRange => !Range.TryParse(VersionRangeString, out var range) ? null : range;
+        public SemVersionRange? VersionRange => !SemVersionRange.TryParse(VersionRangeString, out var range) ? null : range;
 
         [JsonConstructor]
-        internal JsonModReference()
+        public JsonModReference()
         {
         }
 

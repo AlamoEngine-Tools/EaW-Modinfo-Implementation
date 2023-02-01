@@ -3,8 +3,8 @@ using System.IO.Abstractions.TestingHelpers;
 using EawModinfo.File;
 using EawModinfo.Model;
 using EawModinfo.Spec;
+using Semver;
 using Xunit;
-using Version = SemanticVersioning.Version;
 
 namespace EawModinfo.Tests;
 
@@ -55,7 +55,7 @@ public class ModinfoFileTests
 
         var data = variantFile.GetModinfo();
 
-        Assert.Equal(new Version(1, 1, 1, "BETA"), data.Version);
+        Assert.Equal(new SemVersion(1, 1, 1, "BETA"), data.Version);
         Assert.Single(data.Custom);
         Assert.Single(data.Languages);
     }
@@ -65,7 +65,7 @@ public class ModinfoFileTests
     {
         var main = new ModinfoData("Main")
         {
-            Version = new Version(1, 1, 1),
+            Version = new SemVersion(1, 1, 1),
             Dependencies = new DependencyList(new IModReference[] { new ModReference { Identifier = "123", Type = ModType.Workshops } }, DependencyResolveLayout.FullResolved)
         };
 
@@ -81,7 +81,7 @@ public class ModinfoFileTests
 
         var data = modinfoFile.GetModinfo();
 
-        Assert.Equal(new Version(1, 1, 1), data.Version);
+        Assert.Equal(new SemVersion(1, 1, 1), data.Version);
         Assert.Single(data.Dependencies);
     }
 

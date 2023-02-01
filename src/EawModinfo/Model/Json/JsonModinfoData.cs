@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
-using Newtonsoft.Json;
+using Semver;
 using Validation;
-using Version = SemanticVersioning.Version;
 
 namespace EawModinfo.Model.Json;
 
 /// <inheritdoc/>
-[JsonObject(MemberSerialization.OptIn)]
 internal class JsonModinfoData : IModinfo
 {
     [JsonIgnore] private readonly HashSet<ILanguageInfo> _languages = new();
     [JsonIgnore] private readonly HashSet<JsonLanguageInfo> _jsonLanguages = new();
-    [JsonIgnore] private Version? _modVersion;
+    [JsonIgnore] private SemVersion? _modVersion;
     [JsonIgnore] private bool _versionDetermined;
     [JsonIgnore] private bool _languagesDetermined;
 
@@ -36,22 +36,26 @@ internal class JsonModinfoData : IModinfo
     [JsonIgnore] public bool HasDependencies => Dependencies.Count > 0;
 
     /// <inheritdoc/>
-    [JsonProperty("name", Required = Required.Always)]
+    [JsonPropertyName("name")]
+    [JsonRequired]
+    [JsonInclude]
     public string Name { get; internal set; } = string.Empty;
 
     /// <inheritdoc/>
-    [JsonProperty("summary")] 
+    [JsonPropertyName("summary")] 
     public string? Summary { get; internal set; }
 
     /// <inheritdoc/>
-    [JsonProperty("icon")] 
+    [JsonPropertyName("icon")] 
     public string? Icon { get; internal set; }
 
-    [JsonProperty("version")] 
-    private string? StringVersion { get; set; }
+    [JsonPropertyName("version")]
+    [JsonInclude]
+    public string? StringVersion { get; set; }
 
     /// <inheritdoc/>
-    public Version? Version
+    [JsonIgnore]
+    public SemVersion? Version
     {
         get
         {
@@ -71,17 +75,17 @@ internal class JsonModinfoData : IModinfo
     }
 
     /// <inheritdoc/>
-    [JsonProperty("custom")] 
-    public IDictionary<string, object> Custom { get; internal set; }
+    [JsonPropertyName("custom")] 
+    public IDictionary<string, object> Custom { get; set; }
 
     /// <inheritdoc/>
-    [JsonProperty("steamdata")]
+    [JsonPropertyName("steamdata")]
     [JsonConverter(typeof(SteamDataTypeConverter))]
-    public ISteamData? SteamData { get; internal set; }
+    public ISteamData? SteamData { get; set; }
 
 
-    [JsonProperty("languages")]
-    internal IEnumerable<JsonLanguageInfo> InternalLanguages
+    [JsonPropertyName("languages")]
+    public IEnumerable<JsonLanguageInfo> InternalLanguages
     {
         get => _jsonLanguages;
         set
@@ -93,6 +97,7 @@ internal class JsonModinfoData : IModinfo
     }
 
     /// <inheritdoc/>
+    [JsonIgnore]
     public IEnumerable<ILanguageInfo> Languages
     {
         get
@@ -119,12 +124,12 @@ internal class JsonModinfoData : IModinfo
     }
 
     /// <inheritdoc/>
-    [JsonProperty("dependencies")]
+    [JsonPropertyName("dependencies")]
     [JsonConverter(typeof(DependencyListTypeConverter))]
-    public IModDependencyList Dependencies { get; internal set; }
+    public IModDependencyList Dependencies { get; set; }
 
     [JsonConstructor]
-    internal JsonModinfoData()
+    public JsonModinfoData()
     {
         Dependencies = new JsonDependencyList();
         Custom = new Dictionary<string, object>();
@@ -154,11 +159,7 @@ internal class JsonModinfoData : IModinfo
     {
         if (validate)
             this.Validate();
-        return JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
-        {
-            NullValueHandling = NullValueHandling.Ignore,
-            ContractResolver = ModInfoContractResolver.Instance
-        });
+        return JsonSerializer.Serialize(this, ParseUtility.SerializerOptions);
     }
         
     bool IEquatable<IModIdentity>.Equals(IModIdentity? other)

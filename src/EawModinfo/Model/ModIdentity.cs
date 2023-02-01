@@ -1,6 +1,6 @@
 ﻿using EawModinfo.Spec;
 using EawModinfo.Utilities;
-using SemanticVersioning;
+using Semver;
 using Validation;
 
 namespace EawModinfo.Model;
@@ -12,7 +12,7 @@ public sealed record ModIdentity : IModIdentity
     public string Name { get; }
 
     /// <inheritdoc />
-    public Version? Version { get; init; }
+    public SemVersion? Version { get; init; }
 
     /// <inheritdoc />
     public IModDependencyList Dependencies { get; init; } = DependencyList.EmptyDependencyList;

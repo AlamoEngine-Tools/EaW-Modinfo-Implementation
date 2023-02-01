@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Xml;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
-using Newtonsoft.Json;
 using Validation;
 
 namespace EawModinfo.Model.Json;
@@ -12,39 +14,47 @@ internal class JsonSteamData : ISteamData
     internal static readonly string[] GameTags = {"FOC", "EAW"};
 
     /// <inheritdoc/>
-    [JsonProperty("publishedfileid", Required = Required.Always)]
-    public string Id { get; internal set; } = string.Empty;
+    [JsonPropertyName("publishedfileid")]
+    [JsonRequired]
+    public string Id { get; set; } = string.Empty;
 
     /// <inheritdoc/>
-    [JsonProperty("contentfolder", Required = Required.Always)]
-    public string ContentFolder { get; internal set; } = string.Empty;
+    [JsonPropertyName("contentfolder")]
+    [JsonRequired]
+    public string ContentFolder { get; set; } = string.Empty;
 
     /// <inheritdoc/>
-    [JsonProperty("visibility", Required = Required.Always)]
-    public SteamWorkshopVisibility Visibility { get; internal set; }
+    [JsonPropertyName("visibility")]
+    [JsonRequired]
+    public SteamWorkshopVisibility Visibility { get; set; }
 
     /// <inheritdoc/>
-    [JsonProperty("metadata")]
-    public string? Metadata { get; internal set; }
+    [JsonPropertyName("metadata")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+    public string? Metadata { get; set; }
 
     /// <inheritdoc/>
-    [JsonProperty("tags", Required = Required.Always)]
-    public IEnumerable<string> Tags { get; internal set; }
+    [JsonPropertyName("tags")]
+    [JsonRequired]
+    public IEnumerable<string> Tags { get; set; }
 
     /// <inheritdoc/>
-    [JsonProperty("description")]
-    public string? Description { get; internal set; }
+    [JsonPropertyName("description")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+    public string? Description { get; set; }
 
     /// <inheritdoc/>
-    [JsonProperty("previewfile")] 
-    public string? PreviewFile { get; internal set; }
+    [JsonPropertyName("previewfile")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+    public string? PreviewFile { get; set; }
 
     /// <inheritdoc/>
-    [JsonProperty("title", Required = Required.Always)]
-    public string Title { get; internal set; } = string.Empty;
+    [JsonPropertyName("title")]
+    [JsonRequired]
+    public string Title { get; set; } = string.Empty;
 
     [JsonConstructor]
-    internal JsonSteamData()
+    public JsonSteamData()
     {
         Tags = new List<string>();
     }
@@ -75,10 +85,7 @@ internal class JsonSteamData : ISteamData
     {
         if (validate)
             this.Validate();
-        return JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
-        {
-            NullValueHandling = NullValueHandling.Include,
-            ContractResolver = SteamDataResolver.Instance
-        });
+
+        return JsonSerializer.Serialize(this, ParseUtility.SerializerOptions);
     }
 }
