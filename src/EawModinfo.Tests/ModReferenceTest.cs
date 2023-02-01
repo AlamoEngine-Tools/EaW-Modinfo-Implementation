@@ -30,6 +30,7 @@ public class ModReferenceTests
 }",
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             SemVersionRange.Parse("*")
 =======
             new Range("*")
@@ -37,6 +38,9 @@ public class ModReferenceTests
 =======
             SemVersionRange.Parse("*")
 >>>>>>> System text json (#134)
+=======
+            SemVersionRange.Parse("*")
+>>>>>>> b7dafff0b6609730c7665be9f05a50996f5a0bbd
         };
 
         yield return new object[]
@@ -55,6 +59,7 @@ public class ModReferenceTests
     [MemberData(nameof(VersionRangeData))]
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     public void VersionRangeTest(string data, SemVersionRange? range)
 =======
     public void VersionRangeTest(string data, Range? range)
@@ -62,6 +67,9 @@ public class ModReferenceTests
 =======
     public void VersionRangeTest(string data, SemVersionRange? range)
 >>>>>>> System text json (#134)
+=======
+    public void VersionRangeTest(string data, SemVersionRange? range)
+>>>>>>> b7dafff0b6609730c7665be9f05a50996f5a0bbd
     {
         var modReference = ModReference.Parse(data);
         Assert.Equal(range, modReference.VersionRange);

@@ -9,6 +9,9 @@ namespace EawModinfo.Utilities;
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b7dafff0b6609730c7665be9f05a50996f5a0bbd
 internal class SteamDataTypeConverter : JsonConverter<ISteamData>
 {
     public override bool CanConvert(Type objectType)
@@ -24,6 +27,7 @@ internal class SteamDataTypeConverter : JsonConverter<ISteamData>
     public override void Write(Utf8JsonWriter writer, ISteamData value, JsonSerializerOptions options)
     {
         JsonSerializer.Serialize(writer, new JsonSteamData(value), options);
+<<<<<<< HEAD
 =======
 internal class SteamDataTypeConverter : JsonConverter
 =======
@@ -48,5 +52,7 @@ internal class SteamDataTypeConverter : JsonConverter<ISteamData>
 =======
         JsonSerializer.Serialize(writer, new JsonSteamData(value), options);
 >>>>>>> System text json (#134)
+=======
+>>>>>>> b7dafff0b6609730c7665be9f05a50996f5a0bbd
     }
 }

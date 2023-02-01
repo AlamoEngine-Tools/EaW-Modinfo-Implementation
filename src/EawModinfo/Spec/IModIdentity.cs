@@ -20,6 +20,7 @@ public interface IModIdentity : IEquatable<IModIdentity>
     /// </summary>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     SemVersion? Version { get; }
 =======
     Version? Version { get; }
@@ -27,6 +28,9 @@ public interface IModIdentity : IEquatable<IModIdentity>
 =======
     SemVersion? Version { get; }
 >>>>>>> System text json (#134)
+=======
+    SemVersion? Version { get; }
+>>>>>>> b7dafff0b6609730c7665be9f05a50996f5a0bbd
 
     /// <summary>
     /// Ordered list of <see cref="IModReference"/>s which this mod is dependent on.

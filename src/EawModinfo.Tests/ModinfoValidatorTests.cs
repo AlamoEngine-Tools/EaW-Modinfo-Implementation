@@ -20,6 +20,7 @@ public class ModinfoValidatorTests
             {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 Version = new SemVersion(1, 1, 1, "BETA"), Icon = "path/icon.ico",
 =======
                 Version = new Version(1, 1, 1, "BETA"), Icon = "path/icon.ico",
@@ -27,6 +28,9 @@ public class ModinfoValidatorTests
 =======
                 Version = new SemVersion(1, 1, 1, "BETA"), Icon = "path/icon.ico",
 >>>>>>> System text json (#134)
+=======
+                Version = new SemVersion(1, 1, 1, "BETA"), Icon = "path/icon.ico",
+>>>>>>> b7dafff0b6609730c7665be9f05a50996f5a0bbd
                 Summary = "Who reads this?"
             }
         };

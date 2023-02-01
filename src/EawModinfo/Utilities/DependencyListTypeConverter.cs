@@ -11,6 +11,9 @@ internal class DependencyListTypeConverter : JsonConverter<IModDependencyList>
 {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b7dafff0b6609730c7665be9f05a50996f5a0bbd
     public override IModDependencyList? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType != JsonTokenType.StartArray)
@@ -72,6 +75,7 @@ internal class DependencyListTypeConverter : JsonConverter<IModDependencyList>
             JsonSerializer.Serialize(writer, new JsonModReference(modRef), options);
 
         writer.WriteEndArray();
+<<<<<<< HEAD
 =======
     public override void WriteJson(JsonWriter writer, IModDependencyList? value, JsonSerializer serializer)
 =======
@@ -138,5 +142,7 @@ internal class DependencyListTypeConverter : JsonConverter<IModDependencyList>
             JsonSerializer.Serialize(writer, new JsonModReference(modRef), options);
 
         writer.WriteEndArray();
+=======
+>>>>>>> b7dafff0b6609730c7665be9f05a50996f5a0bbd
     }
 }
