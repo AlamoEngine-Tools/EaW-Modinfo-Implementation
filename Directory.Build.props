@@ -11,7 +11,7 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly Condition="'$(Configuration)' == 'Release'">True</SignAssembly>
+    <SignAssembly Condition="'$(Configuration)' == 'Release'">False</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)AlamoEngineTools.snk</AssemblyOriginatorKeyFile>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
