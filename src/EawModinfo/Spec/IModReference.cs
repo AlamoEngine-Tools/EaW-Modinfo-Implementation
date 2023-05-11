@@ -1,5 +1,5 @@
 ﻿using System;
-using Semver.Ranges;
+using Semver;
 
 namespace EawModinfo.Spec;
 

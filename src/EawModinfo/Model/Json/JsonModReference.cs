@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 using EawModinfo.Spec;
-using Semver.Ranges;
+using Semver;
 using Validation;
 
 

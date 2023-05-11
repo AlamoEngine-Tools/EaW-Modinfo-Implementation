@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using EawModinfo.Model;
 using EawModinfo.Spec;
-using Semver.Ranges;
+using Semver;
 using Xunit;
 
 namespace EawModinfo.Tests;
