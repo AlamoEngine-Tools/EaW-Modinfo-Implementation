@@ -1,8 +1,8 @@
-﻿namespace EawModinfo.Utilities
+﻿namespace EawModinfo.Utilities;
+
+internal static class ModinfoJsonSchema
 {
-    internal static class ModinfoJsonSchema
-    {
-        public const string Schema = @"{
+    public const string Schema = @"{
   ""$id"":""https://AlamoEngine-Tools.github.com/eaw.modinfo.json"",
   ""$schema"":""https://json-schema.org/draft/2020-12/schema"",
   ""description"":""A standard definition for Star Wars: Empire at War mod info files."",
@@ -157,5 +157,4 @@
     ""name""
   ]
 }";
-    }
 }

@@ -1,24 +1,26 @@
 ﻿using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using EawModinfo.Model;
 using EawModinfo.Model.Json;
-using Newtonsoft.Json;
+using EawModinfo.Spec.Steam;
 
-namespace EawModinfo.Utilities
+namespace EawModinfo.Utilities;
+
+internal class SteamDataTypeConverter : JsonConverter<ISteamData>
 {
-    internal class SteamDataTypeConverter : JsonConverter
+    public override bool CanConvert(Type objectType)
     {
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
-        {
-            serializer.Serialize(writer, value);
-        }
+        return true;
+    }
 
-        public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
-        {
-            return serializer.Deserialize<JsonSteamData>(reader);
-        }
+    public override ISteamData? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        return new SteamData(JsonSerializer.Deserialize<JsonSteamData>(ref reader, options)!);
+    }
 
-        public override bool CanConvert(Type objectType)
-        {
-            return true;
-        }
+    public override void Write(Utf8JsonWriter writer, ISteamData value, JsonSerializerOptions options)
+    {
+        JsonSerializer.Serialize(writer, new JsonSteamData(value), options);
     }
 }
