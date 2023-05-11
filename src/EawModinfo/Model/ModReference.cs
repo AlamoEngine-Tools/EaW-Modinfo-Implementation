@@ -2,7 +2,7 @@
 using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using EawModinfo.Utilities;
-using Semver.Ranges;
+using Semver;
 using Validation;
 
 namespace EawModinfo.Model;
