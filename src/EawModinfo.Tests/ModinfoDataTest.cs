@@ -5,27 +5,19 @@ using EawModinfo.Model;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 using Semver;
-using Semver.Ranges;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace EawModinfo.Tests;
 
-public class ModinfoDataTest
+public class ModinfoDataTest(ITestOutputHelper output)
 {
-    private readonly ITestOutputHelper _output;
-
     private const string InvalidJsonData = @"{
   ""version"": ""1.0.0"",
 }";
 
-    public ModinfoDataTest(ITestOutputHelper output)
-    {
-        _output = output;
-    }
-
     [Fact]
-    public void MinimalParseTest()
+    public void Test_Parse_Minimal()
     {
         var data = @"
 {
@@ -39,7 +31,7 @@ public class ModinfoDataTest
     }
 
     [Fact]
-    public void VersionParseTest()
+    public void Test_Parse_Version()
     {
         var data = @"
 {
@@ -49,11 +41,11 @@ public class ModinfoDataTest
 
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
-        Assert.Equal(new SemVersion(1, 1, 1, "BETA"), modinfo.Version);
+        Assert.Equal(SemVersion.ParsedFrom(1, 1, 1, "BETA"), modinfo.Version);
     }
 
     [Fact]
-    public void LangParseTest1()
+    public void Test_Parse_WithOneLanguage()
     {
         var data = @"
 {
@@ -70,7 +62,7 @@ public class ModinfoDataTest
     }
 
     [Fact]
-    public void LangParseTest2()
+    public void Test_Parse_WithManyLanguages()
     {
         var data = @"
 {
@@ -90,7 +82,7 @@ public class ModinfoDataTest
     }
 
     [Fact]
-    public void LangParseTest3()
+    public void Test_Parse_WithDuplicateLanguage()
     {
         var data = @"
 {
@@ -110,7 +102,7 @@ public class ModinfoDataTest
     }
 
     [Fact]
-    public void LangParseTest4()
+    public void Test_Parse_WithDuplicateLanguage2()
     {
         var data = @"
 {
@@ -131,7 +123,7 @@ public class ModinfoDataTest
     }
 
     [Fact]
-    public void LangParseTest5()
+    public void Test_Parse_WithoutLanguage()
     {
         var data = @"
 {
@@ -145,7 +137,7 @@ public class ModinfoDataTest
     }
 
     [Fact]
-    public void ModRefParseTest1()
+    public void Test_Parse_WithoutDeps()
     {
         var data = @"
 {
@@ -153,13 +145,13 @@ public class ModinfoDataTest
 }";
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
-        Assert.Equal(0, modinfo.Dependencies.Count);
+        Assert.Empty(modinfo.Dependencies);
         Assert.Equal(DependencyResolveLayout.ResolveRecursive, modinfo.Dependencies.ResolveLayout);
     }
 
 
     [Fact]
-    public void ModRefParseTest2()
+    public void Test_Parse_WithManyDeps()
     {
         var data = @"
 {
@@ -184,7 +176,7 @@ public class ModinfoDataTest
     }
 
     [Fact]
-    public void ModRefParseTestWithLayout()
+    public void Test_Parse_WithDepsLayout()
     {
         var data = @"
 {
@@ -210,7 +202,7 @@ public class ModinfoDataTest
     }
 
     [Fact]
-    public void ModRefParseTestFailure()
+    public void Test_Parse_WithDepsLayout_ThrowsModinfoParseException()
     {
         var data = @"
 {
@@ -231,7 +223,7 @@ public class ModinfoDataTest
     }
 
     [Fact]
-    public void ModRefParseTestFailure2()
+    public void Test_Parse_WithUnknownDepsLayout_ThrowsModinfoParseException()
     {
         var data = @"
 {
@@ -252,7 +244,7 @@ public class ModinfoDataTest
     }
 
     [Fact]
-    public void ModRefParseTestFailure_EmptyDependencies()
+    public void Test_Parse_WithEmptyDeps_ThrowsModinfoParseException()
     {
         var data = @"
 {
@@ -263,7 +255,7 @@ public class ModinfoDataTest
     }
 
     [Fact]
-    public void ModRefParseTestFailure_EmptyDependenciesOnlyLayout()
+    public void Test_Parse_WithEmptyDeps_ThrowsModinfoParseException2()
     {
         var data = @"
 {
@@ -275,7 +267,7 @@ public class ModinfoDataTest
 
 
     [Fact]
-    public void CustomParseTest()
+    public void Test_Parse_Custom_Empty()
     {
         var data = @"
 {
@@ -286,11 +278,11 @@ public class ModinfoDataTest
 }";
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
-        Assert.Equal(0, modinfo.Custom.Count);
+        Assert.Empty(modinfo.Custom);
     }
 
     [Fact]
-    public void CustomParseTest1()
+    public void Test_Parse_Custom_TwoPairs()
     {
         var data = @"
 {
@@ -310,7 +302,7 @@ public class ModinfoDataTest
 
 
     [Fact]
-    public void SteamDataParse()
+    public void Test_Parse_SteamData()
     {
         var data = @"
 {
@@ -341,66 +333,66 @@ public class ModinfoDataTest
 
     public static IEnumerable<object[]> GetInvalidData()
     {
-        yield return new object[]
-        {
+        yield return
+        [
             string.Empty
-        };
-        yield return new object[]
-        {
+        ];
+        yield return
+        [
             @"
 {
 }"
-        };
-        yield return new object[]
-        {
+        ];
+        yield return
+        [
             InvalidJsonData
-        };
+        ];
     }
 
     [Theory]
     [MemberData(nameof(GetInvalidData))]
-    public void FailingParseTest(string data)
+    public void Test_Parse_FailingParseTest(string data)
     {
         Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(data));
     }
 
     [Fact]
-    public void WriterTest()
+    public void Test_ToJson()
     {
-        var modinfo = new ModinfoData("Test") { Version = new SemVersion(1, 1, 1, "BETA") };
+        var modinfo = new ModinfoData("Test") { Version = SemVersion.ParsedFrom(1, 1, 1, "BETA") };
         var data = modinfo.ToJson(false);
-        _output.WriteLine(data);
+        output.WriteLine(data);
         Assert.Contains(@"""version"": ""1.1.1-BETA""", data);
         Assert.DoesNotContain(@"""custom"":", data);
     }
 
     [Fact]
-    public void WriterTestDependencyList()
+    public void Test_ToJson_DependencyList()
     {
         var modinfo = new ModinfoData("Test")
         {
             Dependencies = new DependencyList(new List<IModReference> { new ModReference("123", ModType.Default) }, DependencyResolveLayout.FullResolved)
         };
         var data = modinfo.ToJson(false);
-        _output.WriteLine(data);
+        output.WriteLine(data);
         Assert.Contains(@"""FullResolved"",", data);
     }
 
     [Fact]
-    public void WriterTestModRefRange()
+    public void Test_ToJson_ModRefRange()
     {
         var modinfo = new ModinfoData("Test")
         {
             Dependencies = new DependencyList(new List<IModReference> { new ModReference("123", ModType.Default, SemVersionRange.Parse("1.*")) }, DependencyResolveLayout.ResolveRecursive)
         };
         var data = modinfo.ToJson(false);
-        _output.WriteLine(data);
+        output.WriteLine(data);
         Assert.DoesNotContain(@"""ResolveRecursive"",", data);
         Assert.Contains(@"""version-range"": ""1.*""", data);
     }
 
     [Fact]
-    public void TolerantVersionParseTest()
+    public void Test_Parse_TolerantVersion()
     {
         var data = @"
 {

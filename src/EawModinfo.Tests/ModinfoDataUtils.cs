@@ -65,6 +65,6 @@ internal static class ModinfoDataUtils
     {
         var fullPath = fs.Path.Combine(path, name);
         fs.AddFile(fullPath, new MockFileData(data));
-        return fs.FileInfo.FromFileName(fullPath);
+        return fs.FileInfo.New(fullPath);
     }
 }

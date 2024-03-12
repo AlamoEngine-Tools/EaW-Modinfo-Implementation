@@ -1,6 +1,6 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Text.Json.Serialization;
 using EawModinfo.Spec;
-using Validation;
 
 namespace EawModinfo.Model.Json;
 
@@ -32,7 +32,8 @@ internal class JsonLanguageInfo : ILanguageInfo
     /// <param name="languageInfo">The instance that will copied.</param>
     public JsonLanguageInfo(ILanguageInfo languageInfo)
     {
-        Requires.NotNull(languageInfo, nameof(languageInfo));
+        if (languageInfo == null)
+            throw new ArgumentNullException(nameof(languageInfo));
         Code = languageInfo.Code;
         Support = languageInfo.Support;
     }

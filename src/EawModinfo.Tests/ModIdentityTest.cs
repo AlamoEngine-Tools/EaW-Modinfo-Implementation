@@ -8,7 +8,7 @@ namespace EawModinfo.Tests;
 public class ModIdentityTest
 {
     [Fact]
-    public void ModIdentityEqualCheck()
+    public void Test_Equal()
     {
         IModIdentity i1 = new ModinfoData("A");
         IModIdentity i2 = new ModIdentity("A");

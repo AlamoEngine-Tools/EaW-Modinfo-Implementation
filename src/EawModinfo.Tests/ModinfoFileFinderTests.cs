@@ -33,7 +33,7 @@ public class ModinfoFileFinderTests
 
         fs.AddFile(filePath, new MockFileData(fileData));
 
-        Scenarios[0] = fs.DirectoryInfo.FromDirectoryName(path);
+        Scenarios[0] = fs.DirectoryInfo.New(path);
     }
 
     private static void CreateScenario2(MockFileSystem fs)
@@ -47,7 +47,7 @@ public class ModinfoFileFinderTests
 
         fs.AddFile(filePath, new MockFileData(fileData));
 
-        Scenarios[1] = fs.DirectoryInfo.FromDirectoryName(path);
+        Scenarios[1] = fs.DirectoryInfo.New(path);
     }
 
     private static void CreateScenario3(MockFileSystem fs)
@@ -58,7 +58,7 @@ public class ModinfoFileFinderTests
 
         fs.AddFile(filePath, new MockFileData(string.Empty));
 
-        Scenarios[2] = fs.DirectoryInfo.FromDirectoryName(path);
+        Scenarios[2] = fs.DirectoryInfo.New(path);
     }
 
 
@@ -82,7 +82,7 @@ public class ModinfoFileFinderTests
         fs.AddFile(mainFilePath, new MockFileData(mainFileData));
         fs.AddFile(variantFilePath, new MockFileData(variantFileData));
 
-        Scenarios[3] = fs.DirectoryInfo.FromDirectoryName(path);
+        Scenarios[3] = fs.DirectoryInfo.New(path);
     }
 
 
@@ -105,7 +105,7 @@ public class ModinfoFileFinderTests
         fs.AddFile(filePath1, new MockFileData(data1));
         fs.AddFile(filePath2, new MockFileData(data2));
 
-        Scenarios[4] = fs.DirectoryInfo.FromDirectoryName(path);
+        Scenarios[4] = fs.DirectoryInfo.New(path);
     }
 
     [Theory]
@@ -168,7 +168,7 @@ public class ModinfoFileFinderTests
     }
 
     [Fact]
-    public void TestThrow()
+    public void TestFindThrow_ThrowsModinfoException()
     {
         var finder = new ModinfoFileFinder(Scenarios[2]);
         Assert.Throws<ModinfoException>(() => finder.FindThrow(FindOptions.FindAny));

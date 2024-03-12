@@ -119,7 +119,7 @@ internal static class ModinfoJsonSchema
       ""contains"":{
         ""$ref"":""#/$defs/modref""
       },
-      ""items"":[
+      ""prefixItems"":[
         {
           ""oneOf"":[
             {

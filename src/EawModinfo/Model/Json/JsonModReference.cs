@@ -2,7 +2,6 @@
 using System.Text.Json.Serialization;
 using EawModinfo.Spec;
 using Semver;
-using Validation;
 
 
 namespace EawModinfo.Model.Json
@@ -31,7 +30,8 @@ namespace EawModinfo.Model.Json
 
         public JsonModReference(IModReference modReference)
         {
-            Requires.NotNull(modReference, nameof(modReference));
+            if (modReference == null) 
+                throw new ArgumentNullException(nameof(modReference));
             Identifier = modReference.Identifier;
             Type = modReference.Type;
             VersionRangeString = modReference.VersionRange?.ToString();

@@ -3,7 +3,6 @@ using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using EawModinfo.Utilities;
 using Semver;
-using Validation;
 
 namespace EawModinfo.Model;
 
@@ -24,7 +23,7 @@ public struct ModReference : IModReference
     /// </summary>
     public ModReference(string id, ModType modType, SemVersionRange? range = null)
     {
-        Requires.NotNullOrEmpty(id, nameof(id));
+        ThrowHelper.ThrowIfNullOrEmpty(id);
         Identifier = id;
         Type = modType;
         VersionRange = range;
