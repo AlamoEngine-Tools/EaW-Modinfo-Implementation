@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using EawModinfo.Model.Json;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
-using Humanizer;
 
 namespace EawModinfo.Model;
 
