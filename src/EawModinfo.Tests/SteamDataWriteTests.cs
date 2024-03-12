@@ -7,7 +7,7 @@ namespace EawModinfo.Tests;
 public class SteamDataWriteTests
 {
     [Fact]
-    public static void WriteTest()
+    public static void Test_ToJson()
     {
         var steamData = new JsonSteamData
         {

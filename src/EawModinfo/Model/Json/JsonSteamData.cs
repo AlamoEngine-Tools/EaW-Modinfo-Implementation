@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Xml;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
-using Validation;
 
 namespace EawModinfo.Model.Json;
 
@@ -65,7 +64,8 @@ internal class JsonSteamData : ISteamData
     /// <param name="steamData">The instance that will copied.</param>
     public JsonSteamData(ISteamData steamData)
     {
-        Requires.NotNull(steamData, nameof(steamData));
+        if (steamData == null)
+            throw new ArgumentNullException(nameof(steamData));
         Id = steamData.Id;
         ContentFolder = steamData.ContentFolder;
         Visibility = steamData.Visibility;

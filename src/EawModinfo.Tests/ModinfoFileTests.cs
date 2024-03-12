@@ -1,5 +1,6 @@
 using System;
 using System.IO.Abstractions.TestingHelpers;
+using System.Threading.Tasks;
 using EawModinfo.File;
 using EawModinfo.Model;
 using EawModinfo.Spec;
@@ -11,33 +12,40 @@ namespace EawModinfo.Tests;
 public class ModinfoFileTests
 {
     [Fact]
-    public void TestMainFile()
+    public async Task TestMainFile()
     {
         var fileInfo = ModinfoDataUtils.CreateModifnoFile(new MockFileSystem(), "mods/A");
         IModinfoFile modinfoFile = new MainModinfoFile(fileInfo);
 
         Assert.Equal(ModinfoFileKind.MainFile, modinfoFile.FileKind);
 
-        Assert.Null(Record.Exception(modinfoFile.ValidateFile));
-        Assert.Null(Record.Exception(modinfoFile.GetModinfo));
-        Assert.Null(Record.ExceptionAsync(modinfoFile.GetModinfoAsync).Result);
+        await Task.Run(() =>
+        {
+            Assert.Null(Record.Exception(modinfoFile.ValidateFile));
+            Assert.Null(Record.Exception(modinfoFile.GetModinfo));
+        });
+        Assert.Null(await Record.ExceptionAsync(modinfoFile.GetModinfoAsync));
     }
 
     [Fact]
-    public void TestVariantFile1()
+    public async Task TestVariantFile1()
     {
         var fileInfo = ModinfoDataUtils.CreateVariantMainFile(new MockFileSystem(), "mods/A");
         IModinfoFile modinfoFile = new ModinfoVariantFile(fileInfo);
 
         Assert.Equal(ModinfoFileKind.VariantFile, modinfoFile.FileKind);
 
-        Assert.Null(Record.Exception(modinfoFile.ValidateFile));
-        Assert.Null(Record.Exception(modinfoFile.GetModinfo));
-        Assert.Null(Record.ExceptionAsync(modinfoFile.GetModinfoAsync).Result);
+        await Task.Run(() =>
+        {
+            Assert.Null(Record.Exception(modinfoFile.ValidateFile));
+            Assert.Null(Record.Exception(modinfoFile.GetModinfo));
+        });
+        
+        Assert.Null(await Record.ExceptionAsync(modinfoFile.GetModinfoAsync));
     }
 
     [Fact]
-    public void TestVariantFile2()
+    public async Task TestVariantFile2()
     {
         var fs = new MockFileSystem();
 
@@ -49,19 +57,29 @@ public class ModinfoFileTests
 
         Assert.Equal(ModinfoFileKind.VariantFile, variantFile.FileKind);
 
-        Assert.Null(Record.Exception(variantFile.ValidateFile));
-        Assert.Null(Record.Exception(variantFile.GetModinfo));
-        Assert.Null(Record.ExceptionAsync(variantFile.GetModinfoAsync).Result);
+        await Task.Run(() =>
+        {
+            Assert.Null(Record.Exception(variantFile.ValidateFile));
+            Assert.Null(Record.Exception(variantFile.GetModinfo));
+        });
+        Assert.Null(await Record.ExceptionAsync(variantFile.GetModinfoAsync));
 
-        var data = variantFile.GetModinfo();
-
-        Assert.Equal(new SemVersion(1, 1, 1, "BETA"), data.Version);
+        var data = await variantFile.GetModinfoAsync();
+        Assert.Equal(SemVersion.ParsedFrom(1, 1, 1, "BETA"), data.Version);
         Assert.Single(data.Custom);
         Assert.Single(data.Languages);
+
+        await Task.Run(() =>
+        {
+            var syncData = variantFile.GetModinfo();
+            Assert.Equal(SemVersion.ParsedFrom(1, 1, 1, "BETA"), data.Version);
+            Assert.Single(syncData.Custom);
+            Assert.Single(syncData.Languages);
+        });
     }
 
     [Fact]
-    public void TestVariantFile3()
+    public async Task TestVariantFile3()
     {
         var main = new ModinfoData("Main")
         {
@@ -75,14 +93,25 @@ public class ModinfoFileTests
 
         Assert.Equal(ModinfoFileKind.VariantFile, modinfoFile.FileKind);
 
-        Assert.Null(Record.Exception(modinfoFile.ValidateFile));
-        Assert.Null(Record.Exception(modinfoFile.GetModinfo));
-        Assert.Null(Record.ExceptionAsync(modinfoFile.GetModinfoAsync).Result);
 
-        var data = modinfoFile.GetModinfo();
+        await Task.Run(() =>
+        {
+            Assert.Null(Record.Exception(modinfoFile.ValidateFile));
+            Assert.Null(Record.Exception(modinfoFile.GetModinfo));
+        });
+       
+        Assert.Null(await Record.ExceptionAsync(modinfoFile.GetModinfoAsync));
 
+        var data = await modinfoFile.GetModinfoAsync();
         Assert.Equal(new SemVersion(1, 1, 1), data.Version);
         Assert.Single(data.Dependencies);
+
+        await Task.Run(() =>
+        {
+            var syncData = modinfoFile.GetModinfo();
+            Assert.Equal(new SemVersion(1, 1, 1), syncData.Version);
+            Assert.Single(syncData.Dependencies);
+        });
     }
 
     [Fact]

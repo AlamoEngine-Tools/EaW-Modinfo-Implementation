@@ -6,41 +6,34 @@ using Xunit.Abstractions;
 
 namespace EawModinfo.Tests;
 
-public class SemVerHelperTests
+public class SemVerHelperTests(ITestOutputHelper output)
 {
-    private readonly ITestOutputHelper _output;
-
-    public SemVerHelperTests(ITestOutputHelper output)
-    {
-        _output = output;
-    }
-
     public static IEnumerable<object?[]> GetTestData()
     {
-        yield return new object?[] { null, null };
-        yield return new object[] { "1", new SemVersion(1, 0, 0) };
-        yield return new object[] { "1.0", new SemVersion(1, 0, 0) };
-        yield return new object[] { "1.0.0", new SemVersion(1, 0, 0) };
-        yield return new object[] { "1.0.0.0", new SemVersion(1, 0, 0) };
+        yield return [null, null];
+        yield return ["1", new SemVersion(1, 0, 0)];
+        yield return ["1.0", new SemVersion(1, 0, 0)];
+        yield return ["1.0.0", new SemVersion(1, 0, 0)];
+        yield return ["1.0.0.0", new SemVersion(1, 0, 0)];
 
-        yield return new object[] { "1.0.0.1", new SemVersion(1, 0, 0) };
-        yield return new object[] { "1.0.0.1-pre1", new SemVersion(1, 0, 0, "pre1") };
+        yield return ["1.2.3.4", new SemVersion(1, 2, 3)];
+        yield return ["1.2.3.4-pre1", SemVersion.ParsedFrom(1,2,3, "pre1")];
 
-        yield return new object[] { "1.0.0.1+2", new SemVersion(1, 0, 0, null, "2") };
+        yield return ["1.2.3.4+2", SemVersion.ParsedFrom(1, 2, 3, string.Empty, "2")];
 
-        yield return new object[] { "1-pre1", new SemVersion(1, 0, 0, "pre1") };
-        yield return new object[] { "1-pre1+1", new SemVersion(1, 0, 0, "pre1", "1") };
+        yield return ["1-pre1", SemVersion.ParsedFrom(1, 0, 0, "pre1")];
+        yield return ["1-pre1+1", SemVersion.ParsedFrom(1, 0, 0, "pre1", "1")];
     }
 
 
 
     [Theory]
     [MemberData(nameof(GetTestData))]
-    public void TestSanitized(string? inputData, SemVersion? semanticVersion)
+    public void Test_CreateSanitizedVersion(string? inputData, SemVersion? semanticVersion)
     {
         var newVersion = SemVerHelper.CreateSanitizedVersion(inputData);
         if (semanticVersion is not null)
-            _output.WriteLine(semanticVersion.ToString());
+            output.WriteLine(semanticVersion.ToString());
         Assert.Equal(semanticVersion, newVersion);
     }
 }

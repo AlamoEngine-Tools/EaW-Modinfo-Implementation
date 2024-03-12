@@ -24,43 +24,43 @@ public class LanguageInfoTests
 
     public static IEnumerable<object[]> GetData()
     {
-        yield return new object[]
-        {
+        yield return
+        [
             @"
 {
     ""code"":""en""
 }",
             "en", LanguageSupportLevel.FullLocalized
-        };
-        yield return new object[]
-        {
+        ];
+        yield return
+        [
             @"
 {
     ""code"":""en"",
     ""support"": 7
 }",
             "en", LanguageSupportLevel.FullLocalized
-        };
+        ];
 
-        yield return new object[]
-        {
+        yield return
+        [
             @"
 {
     ""code"":""en"",
     ""support"": 1
 }",
             "en", LanguageSupportLevel.Text
-        };
+        ];
 
-        yield return new object[]
-        {
+        yield return
+        [
             @"
 {
     ""code"":""en"",
     ""support"": 3
 }",
             "en", LanguageSupportLevel.Text | LanguageSupportLevel.Speech
-        };
+        ];
     }
 
     [Theory]

@@ -1,7 +1,7 @@
-﻿using EawModinfo.Spec;
+﻿using System;
+using EawModinfo.Spec;
 using EawModinfo.Utilities;
 using Semver;
-using Validation;
 
 namespace EawModinfo.Model;
 
@@ -23,7 +23,7 @@ public sealed record ModIdentity : IModIdentity
     /// <param name="name"></param>
     public ModIdentity(string name)
     {
-        Requires.NotNullOrEmpty(name, nameof(name));
+        ThrowHelper.ThrowIfNullOrEmpty(name);
         Name = name;
     }
 
@@ -33,7 +33,8 @@ public sealed record ModIdentity : IModIdentity
     /// <param name="modIdentity">The instance that will copied.</param>
     public ModIdentity(IModIdentity modIdentity)
     {
-        Requires.NotNull(modIdentity, nameof(modIdentity));
+        if (modIdentity == null) 
+            throw new ArgumentNullException(nameof(modIdentity));
         Name = modIdentity.Name;
         Version = modIdentity.Version;
         Dependencies = modIdentity.Dependencies;

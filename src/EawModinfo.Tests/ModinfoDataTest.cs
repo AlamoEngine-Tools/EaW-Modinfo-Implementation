@@ -5,7 +5,6 @@ using EawModinfo.Model;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 using Semver;
-using Semver.Ranges;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -49,7 +48,7 @@ public class ModinfoDataTest
 
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
-        Assert.Equal(new SemVersion(1, 1, 1, "BETA"), modinfo.Version);
+        Assert.Equal(SemVersion.ParsedFrom(1, 1, 1, "BETA"), modinfo.Version);
     }
 
     [Fact]
@@ -153,7 +152,7 @@ public class ModinfoDataTest
 }";
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
-        Assert.Equal(0, modinfo.Dependencies.Count);
+        Assert.Empty(modinfo.Dependencies);
         Assert.Equal(DependencyResolveLayout.ResolveRecursive, modinfo.Dependencies.ResolveLayout);
     }
 
@@ -286,7 +285,7 @@ public class ModinfoDataTest
 }";
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
-        Assert.Equal(0, modinfo.Custom.Count);
+        Assert.Empty(modinfo.Custom);
     }
 
     [Fact]
@@ -341,20 +340,20 @@ public class ModinfoDataTest
 
     public static IEnumerable<object[]> GetInvalidData()
     {
-        yield return new object[]
-        {
+        yield return
+        [
             string.Empty
-        };
-        yield return new object[]
-        {
+        ];
+        yield return
+        [
             @"
 {
 }"
-        };
-        yield return new object[]
-        {
+        ];
+        yield return
+        [
             InvalidJsonData
-        };
+        ];
     }
 
     [Theory]
@@ -367,7 +366,7 @@ public class ModinfoDataTest
     [Fact]
     public void WriterTest()
     {
-        var modinfo = new ModinfoData("Test") { Version = new SemVersion(1, 1, 1, "BETA") };
+        var modinfo = new ModinfoData("Test") { Version = SemVersion.ParsedFrom(1, 1, 1, "BETA") };
         var data = modinfo.ToJson(false);
         _output.WriteLine(data);
         Assert.Contains(@"""version"": ""1.1.1-BETA""", data);
