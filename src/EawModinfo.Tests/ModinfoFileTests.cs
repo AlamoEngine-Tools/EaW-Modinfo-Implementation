@@ -12,7 +12,7 @@ namespace EawModinfo.Tests;
 public class ModinfoFileTests
 {
     [Fact]
-    public async Task TestMainFile()
+    public async Task Test_GetModinfo_MainFile()
     {
         var fileInfo = ModinfoDataUtils.CreateModifnoFile(new MockFileSystem(), "mods/A");
         IModinfoFile modinfoFile = new MainModinfoFile(fileInfo);
@@ -28,7 +28,7 @@ public class ModinfoFileTests
     }
 
     [Fact]
-    public async Task TestVariantFile1()
+    public async Task Test_GetModinfo_VariantFile1()
     {
         var fileInfo = ModinfoDataUtils.CreateVariantMainFile(new MockFileSystem(), "mods/A");
         IModinfoFile modinfoFile = new ModinfoVariantFile(fileInfo);
@@ -45,7 +45,7 @@ public class ModinfoFileTests
     }
 
     [Fact]
-    public async Task TestVariantFile2()
+    public async Task Test_GetModinfo_VariantFile2()
     {
         var fs = new MockFileSystem();
 
@@ -79,7 +79,7 @@ public class ModinfoFileTests
     }
 
     [Fact]
-    public async Task TestVariantFile3()
+    public async Task Test_GetModinfo_VariantFile3()
     {
         var main = new ModinfoData("Main")
         {
@@ -115,7 +115,7 @@ public class ModinfoFileTests
     }
 
     [Fact]
-    public void TestVariantFile4()
+    public void Test_GetModinfo_VariantFile4()
     {
         var fs = new MockFileSystem();
         var variantMain = new ModinfoVariantFile(ModinfoDataUtils.CreateVariantMainFile(fs, "mods/A"));
@@ -124,7 +124,7 @@ public class ModinfoFileTests
     }
 
     [Fact]
-    public void TestCtorNull()
+    public void Test_Ctor_ThrowsArgumentNullException()
     {
         Assert.Throws<ArgumentNullException>(() => new MainModinfoFile(null!));
         Assert.Throws<ArgumentNullException>(() => new ModinfoVariantFile(null!));

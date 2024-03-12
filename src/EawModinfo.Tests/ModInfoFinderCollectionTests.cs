@@ -10,7 +10,7 @@ namespace EawModinfo.Tests;
 public class ModinfoFinderCollectionTests
 {
     [Fact]
-    public void Test1()
+    public void Test_Enumerate_Main()
     {
         var fs = new MockFileSystem(new Dictionary<string, MockFileData>());
 
@@ -22,7 +22,7 @@ public class ModinfoFinderCollectionTests
     }
 
     [Fact]
-    public void Test2()
+    public void Test_Enumerate_OnlyVariants()
     {
         var fs = new MockFileSystem(new Dictionary<string, MockFileData>());
 
@@ -35,7 +35,7 @@ public class ModinfoFinderCollectionTests
     }
 
     [Fact]
-    public void Test3()
+    public void Test_Enumerate_MainPlusSingleVariants()
     {
         var fs = new MockFileSystem(new Dictionary<string, MockFileData>());
 
@@ -49,7 +49,7 @@ public class ModinfoFinderCollectionTests
     }
 
     [Fact]
-    public void Test4()
+    public void Test_Enumerate_MainPlusMultipleVariants()
     {
         var fs = new MockFileSystem(new Dictionary<string, MockFileData>());
 
@@ -65,7 +65,7 @@ public class ModinfoFinderCollectionTests
     }
 
     [Fact]
-    public void Test5()
+    public void Test_Ctor_VariantAsMain_ThrowsModinfoException()
     {
         var fs = new MockFileSystem(new Dictionary<string, MockFileData>());
 
@@ -76,7 +76,7 @@ public class ModinfoFinderCollectionTests
     }
 
     [Fact]
-    public void Test6()
+    public void Test_Ctor_MainAsVariant_ThrowsModinfoException()
     {
         var fs = new MockFileSystem(new Dictionary<string, MockFileData>());
         var mainFile = new MainModinfoFile(ModinfoDataUtils.CreateModifnoFile(fs, "mods/A"));
@@ -85,7 +85,7 @@ public class ModinfoFinderCollectionTests
     }
 
     [Fact]
-    public void Test7()
+    public void Test_Ctor_MainAsVariant_ThrowsModinfoException2()
     {
         var fs = new MockFileSystem(new Dictionary<string, MockFileData>());
 
@@ -97,7 +97,7 @@ public class ModinfoFinderCollectionTests
     }
 
     [Fact]
-    public void Test8()
+    public void Test_Enumerate_Empty()
     {
         var fs = new MockFileSystem(new Dictionary<string, MockFileData>());
         var collection = new ModinfoFinderCollection(fs.DirectoryInfo.New("mods/A"));

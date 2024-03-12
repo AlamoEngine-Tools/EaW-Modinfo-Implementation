@@ -13,7 +13,7 @@ namespace EawModinfo.Tests;
 public class MergeTests
 {
     [Fact]
-    public void Merge()
+    public void Test_MergeInto()
     {
         var mainData = new ModinfoData("Mod")
         {

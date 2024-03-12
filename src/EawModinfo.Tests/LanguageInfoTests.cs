@@ -9,7 +9,7 @@ namespace EawModinfo.Tests;
 public class LanguageInfoTests
 {
     [Fact]
-    public void EqualsCheck()
+    public void Test_Equal()
     {
         ILanguageInfo a = new LanguageInfo {Code = "en", Support = LanguageSupportLevel.FullLocalized};
         ILanguageInfo b = new JsonLanguageInfo(new LanguageInfo { Code = "en", Support = LanguageSupportLevel.SFX });
@@ -65,7 +65,7 @@ public class LanguageInfoTests
 
     [Theory]
     [MemberData(nameof(GetData))]
-    public void ParseTests(string data, string expectedCode, LanguageSupportLevel expectedLevel)
+    public void Test_Parse(string data, string expectedCode, LanguageSupportLevel expectedLevel)
     {
         var languageInfo = LanguageInfo.Parse(data);
         Assert.Equal(expectedCode, languageInfo.Code);

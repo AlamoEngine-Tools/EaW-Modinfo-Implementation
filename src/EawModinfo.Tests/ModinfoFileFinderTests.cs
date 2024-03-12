@@ -168,7 +168,7 @@ public class ModinfoFileFinderTests
     }
 
     [Fact]
-    public void TestThrow()
+    public void TestFindThrow_ThrowsModinfoException()
     {
         var finder = new ModinfoFileFinder(Scenarios[2]);
         Assert.Throws<ModinfoException>(() => finder.FindThrow(FindOptions.FindAny));
