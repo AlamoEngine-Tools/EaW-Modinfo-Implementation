@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using EawModinfo.Model.Json;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
-using Validation;
 
 namespace EawModinfo.Model;
 
@@ -38,10 +38,9 @@ public sealed class SteamData : ISteamData
     /// </summary>
     public SteamData(string id, string contentFolder, SteamWorkshopVisibility visibility, string title, IEnumerable<string> tags)
     {
-        Requires.NotNullOrEmpty(id, nameof(id));
-        Requires.NotNullOrEmpty(id, nameof(contentFolder));
-        Requires.NotNullOrEmpty(id, nameof(title));
-        Requires.NotNullOrEmpty(id, nameof(tags));
+        ThrowHelper.ThrowIfNullOrEmpty(id);
+        ThrowHelper.ThrowIfNullOrEmpty(contentFolder);
+        ThrowHelper.ThrowIfNullOrEmpty(title);
         Id = id;
         ContentFolder = contentFolder;
         Visibility = visibility;
@@ -55,7 +54,8 @@ public sealed class SteamData : ISteamData
     /// <param name="steamData">The instance that will copied.</param>
     public SteamData(ISteamData steamData)
     {
-        Requires.NotNull(steamData, nameof(steamData));
+        if (steamData == null)
+            throw new ArgumentNullException(nameof(steamData));
         Id = steamData.Id;
         ContentFolder = steamData.ContentFolder;
         Visibility = steamData.Visibility;

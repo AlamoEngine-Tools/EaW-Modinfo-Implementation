@@ -1,9 +1,9 @@
-﻿using System.IO.Abstractions;
+﻿using System;
+using System.IO.Abstractions;
 using System.Threading.Tasks;
 using EawModinfo.Model;
 using EawModinfo.Spec;
 using EawModinfo.Utilities;
-using Validation;
 
 namespace EawModinfo.File;
 
@@ -31,8 +31,7 @@ public abstract class ModinfoFile : IModinfoFile
     /// <param name="file">The file representation</param>
     protected ModinfoFile(IFileInfo file)
     {
-        Requires.NotNull(file, nameof(file));
-        File = file;
+        File = file ?? throw new ArgumentNullException(nameof(file));
     }
 
     /// <inheritdoc/>

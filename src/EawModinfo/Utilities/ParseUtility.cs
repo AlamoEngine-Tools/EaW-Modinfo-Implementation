@@ -46,6 +46,7 @@ internal static class ParseUtility
             throw new ModinfoParseException("No input data.");
 
         var schema = JsonSchema.FromText(ModinfoJsonSchema.Schema);
+
         var validationErrors = schema.Evaluate(data, new EvaluationOptions
         {
             EvaluateAs = SpecVersion.Draft202012

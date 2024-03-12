@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
 using Semver;
-using Validation;
 
 namespace EawModinfo.Model;
 
@@ -41,7 +41,7 @@ public sealed record ModinfoData : IModinfo
     /// <param name="name"></param>
     public ModinfoData(string name)
     {
-        Requires.NotNullOrEmpty(name, nameof(name));
+        ThrowHelper.ThrowIfNullOrEmpty(name);
         Name = name;
     }
 
@@ -51,7 +51,8 @@ public sealed record ModinfoData : IModinfo
     /// <param name="modIdentity">The instance that will used as a base.</param>
     public ModinfoData(IModIdentity modIdentity)
     {
-        Requires.NotNull(modIdentity, nameof(modIdentity));
+        if (modIdentity == null) 
+            throw new ArgumentNullException(nameof(modIdentity));
         Name = modIdentity.Name;
         Dependencies = modIdentity.Dependencies;
         Version = modIdentity.Version;
@@ -63,7 +64,8 @@ public sealed record ModinfoData : IModinfo
     /// <param name="modinfo">The instance that will copied.</param>
     public ModinfoData(IModinfo modinfo)
     {
-        Requires.NotNull(modinfo, nameof(modinfo));
+        if (modinfo == null) 
+            throw new ArgumentNullException(nameof(modinfo));
         Name = modinfo.Name;
         Version = modinfo.Version;
         Dependencies = modinfo.Dependencies;

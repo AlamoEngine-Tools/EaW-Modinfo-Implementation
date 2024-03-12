@@ -13,7 +13,7 @@ namespace EawModinfo.Tests;
 public class MergeTests
 {
     [Fact]
-    public void Merge()
+    public void Test_MergeInto()
     {
         var mainData = new ModinfoData("Mod")
         {
@@ -33,7 +33,7 @@ public class MergeTests
                 new ModReference {Identifier = "bla"}, new ModReference {Identifier = "blub"}
             }, DependencyResolveLayout.FullResolved),
 
-            Version = SemVersion.Parse("1.2.2")
+            Version = SemVersion.Parse("1.2.2", SemVersionStyles.Any)
         };
 
         var newData = variantData.MergeInto(mainData);
@@ -64,20 +64,20 @@ public class MergeTests
             return false;
         }
 
-        public string Name { get; }
+        public string Name { get; } = null!;
 
-        public SemVersion? Version { get; }
+        public SemVersion? Version { get; } = null!;
 
-        public IModDependencyList Dependencies { get; }
+        public IModDependencyList Dependencies { get; } = null!;
         public string ToJson(bool validate)
         {
             return string.Empty;
         }
 
-        public string? Summary { get; }
-        public string? Icon { get; }
-        public IDictionary<string, object> Custom { get; }
-        public ISteamData? SteamData { get; }
-        public IEnumerable<ILanguageInfo> Languages { get; }
+        public string? Summary { get; } = null!;
+        public string? Icon { get; } = null!;
+        public IDictionary<string, object> Custom { get; } = null!;
+        public ISteamData? SteamData { get; } = null!;
+        public IEnumerable<ILanguageInfo> Languages { get; } = null!;
     }
 }

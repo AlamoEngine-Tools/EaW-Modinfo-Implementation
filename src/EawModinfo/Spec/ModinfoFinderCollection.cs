@@ -1,8 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
-using Validation;
 
 namespace EawModinfo.Spec;
 
@@ -49,9 +49,9 @@ public sealed class ModinfoFinderCollection : IEnumerable<IModinfoFile>
     /// <exception cref="ModinfoException">When illegal data was passed.</exception>
     public ModinfoFinderCollection(IDirectoryInfo directory, IModinfoFile? mainModinfo, IEnumerable<IModinfoFile> variants)
     {
-        Requires.NotNull(directory, nameof(directory));
-        Requires.NotNull(variants, nameof(variants));
-        Directory = directory;
+        if (variants == null)
+            throw new ArgumentNullException(nameof(variants));
+        Directory = directory ?? throw new ArgumentNullException(nameof(directory));
         if (mainModinfo != null && mainModinfo.FileKind != ModinfoFileKind.MainFile)
             throw new ModinfoException($"A main modinfo file must be of kind {ModinfoFileKind.MainFile}");
         if (variants.Any(file => file.FileKind != ModinfoFileKind.VariantFile))

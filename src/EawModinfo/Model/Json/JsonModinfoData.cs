@@ -7,7 +7,6 @@ using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
 using Semver;
-using Validation;
 
 namespace EawModinfo.Model.Json;
 
@@ -142,7 +141,8 @@ internal class JsonModinfoData : IModinfo
     /// <param name="modinfo">The instance that will copied.</param>
     public JsonModinfoData(IModinfo modinfo) : this()
     {
-        Requires.NotNull(modinfo, nameof(modinfo));
+        if (modinfo == null) 
+            throw new ArgumentNullException(nameof(modinfo));
         Name = modinfo.Name;
         Version = modinfo.Version;
         Dependencies = modinfo.Dependencies;
