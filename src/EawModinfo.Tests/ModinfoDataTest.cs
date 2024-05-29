@@ -392,6 +392,96 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
+    public void Test_ToJson_SummaryIcon()
+    {
+        var modinfo = new ModinfoData("Test")
+        {
+            Summary = "Summary",
+            Icon = "icon.ico"
+        };
+        var data = modinfo.ToJson(false);
+        output.WriteLine(data);
+        Assert.Contains(@"""summary"": ""Summary""", data);
+        Assert.Contains(@"""icon"": ""icon.ico""", data);
+    }
+
+    [Fact]
+    public void Test_ToJson_Full()
+    {
+        var modinfo = new ModinfoData("Test")
+        {
+            Summary = "Summary",
+            Icon = "icon.ico",
+            Languages = new List<ILanguageInfo>
+            {
+                new LanguageInfo("en", 0),
+                new LanguageInfo("de", LanguageSupportLevel.Text),
+                new LanguageInfo("fr", LanguageSupportLevel.FullLocalized),
+            },
+            Custom = new Dictionary<string, object>
+            {
+                { "key", "value" }
+            }
+        };
+        var data = modinfo.ToJson(false);
+        output.WriteLine(data);
+
+        var expected = @"{
+  ""name"": ""Test"",
+  ""summary"": ""Summary"",
+  ""icon"": ""icon.ico"",
+  ""custom"": {
+    ""key"": ""value""
+  },
+  ""languages"": [
+    {
+      ""code"": ""en""
+    },
+    {
+      ""code"": ""de"",
+      ""support"": 1
+    },
+    {
+      ""code"": ""fr"",
+      ""support"": 7
+    }
+  ]
+}";
+
+        Assert.Equal(expected, data);
+    }
+
+    [Fact]
+    public void Test_ToJson_CustomDefaultLanguageOnly()
+    {
+        var modinfo = new ModinfoData("Test")
+        {
+            Languages = new List<ILanguageInfo>
+            {
+                new LanguageInfo("en", 0),
+            }
+        };
+        var data = modinfo.ToJson(false);
+        Assert.DoesNotContain(@"""languages""", data);
+        output.WriteLine(data);
+    }
+
+    [Fact]
+    public void Test_ToJson_DefaultOnlyLanguage()
+    {
+        var modinfo = new ModinfoData("Test")
+        {
+            Languages = new List<ILanguageInfo>
+            {
+                LanguageInfo.Default
+            }
+        };
+        var data = modinfo.ToJson(false);
+        Assert.DoesNotContain(@"""languages""", data);
+        output.WriteLine(data);
+    }
+
+    [Fact]
     public void Test_Parse_TolerantVersion()
     {
         var data = @"

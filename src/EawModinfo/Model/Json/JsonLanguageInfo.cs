@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using EawModinfo.Spec;
+using EawModinfo.Utilities;
 
 namespace EawModinfo.Model.Json;
 
@@ -64,5 +66,12 @@ internal class JsonLanguageInfo : ILanguageInfo
     public override int GetHashCode()
     {
         return Code.ToLower().GetHashCode();
+    }
+
+    public string ToJson(bool validate)
+    {
+        if (validate)
+            this.Validate();
+        return JsonSerializer.Serialize(this, ParseUtility.SerializerOptions);
     }
 }

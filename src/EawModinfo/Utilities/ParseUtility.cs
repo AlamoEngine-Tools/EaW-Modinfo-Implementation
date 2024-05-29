@@ -1,9 +1,11 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using EawModinfo.Model.Json;
+using EawModinfo.Spec;
 using Json.Schema;
 
 namespace EawModinfo.Utilities;
@@ -29,7 +31,20 @@ internal static class ParseUtility
             var propsToIgnoreWhenEmpty = obj.Properties.Where(p =>
                 p.Name is "custom" or "languages" or "dependencies");
             foreach (var propertyInfo in propsToIgnoreWhenEmpty)
-                propertyInfo.ShouldSerialize = (_, value) => value is ICollection { Count: > 0 };
+            {
+                bool ShouldSerializeModinfoData(object _, object? value)
+                {
+                    if (value is IModDependencyList dependencyList)
+                        return dependencyList.Count > 0;
+                    if (value is HashSet<JsonLanguageInfo> languages)
+                        return languages.Count > 0;
+                    if (value is IDictionary<string, object> custom)
+                        return custom.Count > 0;
+                    return false;
+                }
+
+                propertyInfo.ShouldSerialize = ShouldSerializeModinfoData;
+            }
         }
         else if (typeof(JsonSteamData).IsAssignableFrom(obj.Type))
         {
