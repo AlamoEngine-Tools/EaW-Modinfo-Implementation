@@ -41,4 +41,38 @@ public class SteamDataWriteTests
         Assert.Contains(@"""metadata"": ""test""", data2);
         Assert.Contains(@"""visibility"": 2", data2);
     }
+
+    [Fact]
+    public static void Test_ToJson_DefaultData()
+    {
+        var steamData = new JsonSteamData
+        {
+            ContentFolder = "Test Folder",
+            Id = "123",
+            Tags = new[] { "FOC", "SinglePlayer" },
+            Title = "Title",
+            Metadata = "some metadata",
+            Visibility = SteamWorkshopVisibility.Public,
+            Description = "test123",
+            PreviewFile = "preview"
+        };
+
+
+        var data = steamData.ToJson(false);
+
+        var expected = @"{
+  ""publishedfileid"": ""123"",
+  ""contentfolder"": ""Test Folder"",
+  ""metadata"": ""some metadata"",
+  ""tags"": [
+    ""FOC"",
+    ""SinglePlayer""
+  ],
+  ""description"": ""test123"",
+  ""previewfile"": ""preview"",
+  ""title"": ""Title"",
+  ""visibility"": 0
+}";
+        Assert.Equal(expected, data);
+    }
 }

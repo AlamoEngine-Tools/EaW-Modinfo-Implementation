@@ -8,7 +8,7 @@ namespace EawModinfo.Spec;
 /// <br></br>
 /// Implements <see cref="IEquatable{T}"/>. For equality, only <see cref="Code"/> is relevant.
 /// </summary>
-public interface ILanguageInfo : IEquatable<ILanguageInfo>
+public interface ILanguageInfo : IEquatable<ILanguageInfo>, IConvertibleToJson
 {
     /// <summary>
     /// The ISO 639-1 two letter language code.

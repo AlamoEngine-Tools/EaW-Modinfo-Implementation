@@ -72,4 +72,42 @@ public class LanguageInfoTests
         Assert.Equal(expectedLevel, languageInfo.Support);
         Assert.NotNull(languageInfo.Culture);
     }
+
+    [Fact]
+    public void Test_ToJson_Languages_Default()
+    {
+        var languageInfo = LanguageInfo.Default;
+        var json = languageInfo.ToJson(false);
+        
+        Assert.Contains(@"""code"": ""en""", json);
+        Assert.Contains(@"""support"": 7", json);
+    }
+
+    [Fact]
+    public void Test_ToJson_Languages_CustomDefault()
+    {
+        var languageInfo = new LanguageInfo("en", 0);
+        var json = languageInfo.ToJson(false);
+        Assert.Contains(@"""code"": ""en""", json);
+        Assert.DoesNotContain(@"""support""", json);
+    }
+
+    [Fact]
+    public void Test_ToJson_Languages_Full()
+    {
+        var languageInfo = new LanguageInfo("en", LanguageSupportLevel.FullLocalized);
+        var json = languageInfo.ToJson(false);
+        Assert.Contains(@"""code"": ""en""", json);
+        Assert.Contains(@"""support"": 7", json);
+    }
+
+    [Fact]
+    public void Test_ToJson_Languages_NonEnglish()
+    {
+        var languageInfo = new LanguageInfo("de", LanguageSupportLevel.FullLocalized);
+        var json = languageInfo.ToJson(false);
+
+        Assert.Contains(@"""code"": ""de""", json);
+        Assert.Contains(@"""support"": 7", json);
+    }
 }

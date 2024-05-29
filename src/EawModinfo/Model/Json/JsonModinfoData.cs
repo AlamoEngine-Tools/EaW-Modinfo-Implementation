@@ -13,8 +13,7 @@ namespace EawModinfo.Model.Json;
 /// <inheritdoc/>
 internal class JsonModinfoData : IModinfo
 {
-    [JsonIgnore] private readonly HashSet<ILanguageInfo> _languages = new();
-    [JsonIgnore] private readonly HashSet<JsonLanguageInfo> _jsonLanguages = new();
+    [JsonIgnore] private HashSet<ILanguageInfo>? _languages;
     [JsonIgnore] private SemVersion? _modVersion;
     [JsonIgnore] private bool _versionDetermined;
     [JsonIgnore] private bool _languagesDetermined;
@@ -82,18 +81,9 @@ internal class JsonModinfoData : IModinfo
     [JsonConverter(typeof(SteamDataTypeConverter))]
     public ISteamData? SteamData { get; set; }
 
-
     [JsonPropertyName("languages")]
-    public IEnumerable<JsonLanguageInfo> InternalLanguages
-    {
-        get => _jsonLanguages;
-        set
-        {
-            _jsonLanguages.Clear();
-            foreach (var languageInfo in value)
-                _jsonLanguages.Add(languageInfo);
-        }
-    }
+    [JsonInclude]
+    public HashSet<JsonLanguageInfo> InternalLanguages { get; set; }
 
     /// <inheritdoc/>
     [JsonIgnore]
@@ -101,24 +91,22 @@ internal class JsonModinfoData : IModinfo
     {
         get
         {
-            if (!_languagesDetermined)
+            if (_languages is null && !_languagesDetermined)
             {
-                if (!InternalLanguages.Any())
-                    _languages.Add(new LanguageInfo(LanguageInfo.Default));
-                else
-                    foreach (var languageInfo in InternalLanguages)
-                        _languages.Add(languageInfo);
-
+                var languages = new HashSet<ILanguageInfo>(InternalLanguages.Select(x => new LanguageInfo(x)));
+                if (!languages.Any())
+                    languages.Add(LanguageInfo.Default);
+                _languages = languages;
                 _languagesDetermined = true;
             }
-
-            return _languages;
+            return _languages!;
         }
-        internal set
+        set
         {
-            _languages.Clear();
-            foreach (var languageInfo in value) 
-                _languages.Add(new LanguageInfo(languageInfo));
+            var languages = new HashSet<JsonLanguageInfo>(value.Select(x => new JsonLanguageInfo(x)));
+            if (languages.Count == 1 && languages.First().Equals(LanguageInfo.Default))
+                languages.Clear();
+            InternalLanguages = languages;
         }
     }
 

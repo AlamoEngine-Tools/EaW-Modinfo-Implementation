@@ -86,5 +86,11 @@ namespace EawModinfo.Model
         {
             return Code.ToLower().GetHashCode();
         }
+
+        /// <inheritdoc/>
+        public string ToJson(bool validate)
+        {
+            return new JsonLanguageInfo(this).ToJson(validate);
+        }
     }
 }

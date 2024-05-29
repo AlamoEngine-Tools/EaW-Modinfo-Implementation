@@ -23,11 +23,6 @@ internal class JsonSteamData : ISteamData
     public string ContentFolder { get; set; } = string.Empty;
 
     /// <inheritdoc/>
-    [JsonPropertyName("visibility")]
-    [JsonRequired]
-    public SteamWorkshopVisibility Visibility { get; set; }
-
-    /// <inheritdoc/>
     [JsonPropertyName("metadata")]
     [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
     public string? Metadata { get; set; }
@@ -52,6 +47,12 @@ internal class JsonSteamData : ISteamData
     [JsonRequired]
     public string Title { get; set; } = string.Empty;
 
+    /// <inheritdoc/>
+    [JsonPropertyName("visibility")]
+    [JsonRequired]
+    [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+    public SteamWorkshopVisibility Visibility { get; set; }
+
     [JsonConstructor]
     public JsonSteamData()
     {
@@ -68,12 +69,12 @@ internal class JsonSteamData : ISteamData
             throw new ArgumentNullException(nameof(steamData));
         Id = steamData.Id;
         ContentFolder = steamData.ContentFolder;
-        Visibility = steamData.Visibility;
         Metadata = steamData.Metadata;
         Tags = steamData.Tags;
         Description = steamData.Description;
         PreviewFile = steamData.PreviewFile;
         Title = steamData.Title;
+        Visibility = steamData.Visibility;
     }
 
     /// <summary>
