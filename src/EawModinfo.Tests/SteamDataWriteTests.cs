@@ -63,15 +63,15 @@ public class SteamDataWriteTests
         var expected = @"{
   ""publishedfileid"": ""123"",
   ""contentfolder"": ""Test Folder"",
+  ""previewfile"": ""preview"",
+  ""visibility"": 0,
+  ""title"": ""Title"",
+  ""description"": ""test123"",
   ""metadata"": ""some metadata"",
   ""tags"": [
     ""FOC"",
     ""SinglePlayer""
-  ],
-  ""description"": ""test123"",
-  ""previewfile"": ""preview"",
-  ""title"": ""Title"",
-  ""visibility"": 0
+  ]
 }";
         Assert.Equal(expected, data);
     }

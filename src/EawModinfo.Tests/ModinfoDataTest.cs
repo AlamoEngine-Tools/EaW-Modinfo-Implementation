@@ -45,6 +45,22 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
+    public void Test_Parse_SummaryIcon()
+    {
+        var data = @"
+{
+    ""name"":""My Mod Name"",
+    ""summary"":""Some Text"",
+    ""icon"":""icon.ico"",
+}";
+
+        var modinfo = ModinfoData.Parse(data);
+        Assert.Equal("My Mod Name", modinfo.Name);
+        Assert.Equal("Some Text", modinfo.Summary);
+        Assert.Equal("icon.ico", modinfo.Icon);
+    }
+
+    [Fact]
     public void Test_Parse_WithOneLanguage()
     {
         var data = @"
@@ -421,7 +437,8 @@ public class ModinfoDataTest(ITestOutputHelper output)
             Custom = new Dictionary<string, object>
             {
                 { "key", "value" }
-            }
+            },
+            SteamData = new SteamData("123", "folder", SteamWorkshopVisibility.Public, "Test", ["FOC"])
         };
         var data = modinfo.ToJson(false);
         output.WriteLine(data);
@@ -430,9 +447,6 @@ public class ModinfoDataTest(ITestOutputHelper output)
   ""name"": ""Test"",
   ""summary"": ""Summary"",
   ""icon"": ""icon.ico"",
-  ""custom"": {
-    ""key"": ""value""
-  },
   ""languages"": [
     {
       ""code"": ""en""
@@ -445,7 +459,22 @@ public class ModinfoDataTest(ITestOutputHelper output)
       ""code"": ""fr"",
       ""support"": 7
     }
-  ]
+  ],
+  ""custom"": {
+    ""key"": ""value""
+  },
+  ""steamdata"": {
+    ""publishedfileid"": ""123"",
+    ""contentfolder"": ""folder"",
+    ""previewfile"": """",
+    ""visibility"": 0,
+    ""title"": ""Test"",
+    ""description"": """",
+    ""metadata"": """",
+    ""tags"": [
+      ""FOC""
+    ]
+  }
 }";
 
         Assert.Equal(expected, data);
