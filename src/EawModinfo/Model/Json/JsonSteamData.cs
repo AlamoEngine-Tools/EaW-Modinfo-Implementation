@@ -23,6 +23,28 @@ internal class JsonSteamData : ISteamData
     public string ContentFolder { get; set; } = string.Empty;
 
     /// <inheritdoc/>
+    [JsonPropertyName("previewfile")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+    public string? PreviewFile { get; set; }
+
+    /// <inheritdoc/>
+    [JsonPropertyName("visibility")]
+    [JsonRequired]
+    [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+    public SteamWorkshopVisibility Visibility { get; set; }
+
+    /// <inheritdoc/>
+    [JsonPropertyName("title")]
+    [JsonRequired]
+    public string Title { get; set; } = string.Empty;
+
+    /// <inheritdoc/>
+    [JsonPropertyName("description")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+    public string? Description { get; set; }
+
+
+    /// <inheritdoc/>
     [JsonPropertyName("metadata")]
     [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
     public string? Metadata { get; set; }
@@ -31,28 +53,7 @@ internal class JsonSteamData : ISteamData
     [JsonPropertyName("tags")]
     [JsonRequired]
     public IEnumerable<string> Tags { get; set; }
-
-    /// <inheritdoc/>
-    [JsonPropertyName("description")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
-    public string? Description { get; set; }
-
-    /// <inheritdoc/>
-    [JsonPropertyName("previewfile")]
-    [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
-    public string? PreviewFile { get; set; }
-
-    /// <inheritdoc/>
-    [JsonPropertyName("title")]
-    [JsonRequired]
-    public string Title { get; set; } = string.Empty;
-
-    /// <inheritdoc/>
-    [JsonPropertyName("visibility")]
-    [JsonRequired]
-    [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
-    public SteamWorkshopVisibility Visibility { get; set; }
-
+    
     [JsonConstructor]
     public JsonSteamData()
     {
@@ -69,12 +70,12 @@ internal class JsonSteamData : ISteamData
             throw new ArgumentNullException(nameof(steamData));
         Id = steamData.Id;
         ContentFolder = steamData.ContentFolder;
+        PreviewFile = steamData.PreviewFile;
+        Visibility = steamData.Visibility;
+        Title = steamData.Title;
+        Description = steamData.Description;
         Metadata = steamData.Metadata;
         Tags = steamData.Tags;
-        Description = steamData.Description;
-        PreviewFile = steamData.PreviewFile;
-        Title = steamData.Title;
-        Visibility = steamData.Visibility;
     }
 
     /// <summary>

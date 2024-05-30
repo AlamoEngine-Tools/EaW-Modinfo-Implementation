@@ -40,12 +40,9 @@ internal class JsonModinfoData : IModinfo
     public string Name { get; internal set; } = string.Empty;
 
     /// <inheritdoc/>
-    [JsonPropertyName("summary")] 
+    [JsonPropertyName("summary")]
+    [JsonInclude]
     public string? Summary { get; internal set; }
-
-    /// <inheritdoc/>
-    [JsonPropertyName("icon")] 
-    public string? Icon { get; internal set; }
 
     [JsonPropertyName("version")]
     [JsonInclude]
@@ -59,7 +56,7 @@ internal class JsonModinfoData : IModinfo
         {
             if (_modVersion is null && !_versionDetermined)
             {
-                _modVersion =  SemVerHelper.CreateSanitizedVersion(StringVersion);
+                _modVersion = SemVerHelper.CreateSanitizedVersion(StringVersion);
                 _versionDetermined = true;
             }
 
@@ -73,16 +70,16 @@ internal class JsonModinfoData : IModinfo
     }
 
     /// <inheritdoc/>
-    [JsonPropertyName("custom")] 
-    public IDictionary<string, object> Custom { get; set; }
+    [JsonPropertyName("icon")]
+    [JsonInclude]
+    public string? Icon { get; internal set; }
 
     /// <inheritdoc/>
-    [JsonPropertyName("steamdata")]
-    [JsonConverter(typeof(SteamDataTypeConverter))]
-    public ISteamData? SteamData { get; set; }
+    [JsonPropertyName("dependencies")]
+    [JsonConverter(typeof(DependencyListTypeConverter))]
+    public IModDependencyList Dependencies { get; set; }
 
     [JsonPropertyName("languages")]
-    [JsonInclude]
     public HashSet<JsonLanguageInfo> InternalLanguages { get; set; }
 
     /// <inheritdoc/>
@@ -111,9 +108,13 @@ internal class JsonModinfoData : IModinfo
     }
 
     /// <inheritdoc/>
-    [JsonPropertyName("dependencies")]
-    [JsonConverter(typeof(DependencyListTypeConverter))]
-    public IModDependencyList Dependencies { get; set; }
+    [JsonPropertyName("custom")]
+    public IDictionary<string, object> Custom { get; set; }
+
+    /// <inheritdoc/>
+    [JsonPropertyName("steamdata")]
+    [JsonConverter(typeof(SteamDataTypeConverter))]
+    public ISteamData? SteamData { get; set; }
 
     [JsonConstructor]
     public JsonModinfoData()
@@ -132,13 +133,13 @@ internal class JsonModinfoData : IModinfo
         if (modinfo == null) 
             throw new ArgumentNullException(nameof(modinfo));
         Name = modinfo.Name;
-        Version = modinfo.Version;
-        Dependencies = modinfo.Dependencies;
         Summary = modinfo.Summary;
+        Version = modinfo.Version;
         Icon = modinfo.Icon;
-        SteamData = modinfo.SteamData;
+        Dependencies = modinfo.Dependencies;
         Languages = modinfo.Languages;
         Custom = modinfo.Custom;
+        SteamData = modinfo.SteamData;
     }
 
 
