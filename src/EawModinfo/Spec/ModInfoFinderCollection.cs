@@ -67,7 +67,7 @@ public sealed class ModinfoFinderCollection : IEnumerable<IModinfoFile>
     /// <param name="mainModinfo">The main modinfo file. Can be <see langword="null"/></param>
     /// <exception cref="ModinfoException">When illegal data was passed.</exception>
     public ModinfoFinderCollection(IDirectoryInfo directory, IModinfoFile? mainModinfo) : 
-        this(directory, mainModinfo, Enumerable.Empty<IModinfoFile>())
+        this(directory, mainModinfo, [])
     {
     }
 

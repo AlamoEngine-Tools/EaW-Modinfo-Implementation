@@ -28,11 +28,11 @@ public class ModinfoValidatorTests
         [
             new ModinfoData("ModName")
             {
-                Languages = new[]
-                {
+                Languages =
+                [
                     (ILanguageInfo) GetLanguageInfos().ElementAt(0)[0],
                     (ILanguageInfo) GetLanguageInfos().ElementAt(1)[0]
-                }
+                ]
             }
         ];
         yield return
@@ -64,14 +64,14 @@ public class ModinfoValidatorTests
         [
             new ModinfoData("ModName")
             {
-                Languages = new []{ (ILanguageInfo) GetInvalidLanguageInfos().ElementAt(0)[0]}
+                Languages = [(ILanguageInfo) GetInvalidLanguageInfos().ElementAt(0)[0]]
             }
         ];
         yield return
         [
             new ModinfoData("ModName")
             {
-                Dependencies = new DependencyList(new []{ (IModReference) GetInvalidModReferences().ElementAt(0)[0]}, DependencyResolveLayout.FullResolved)
+                Dependencies = new DependencyList([(IModReference) GetInvalidModReferences().ElementAt(0)[0]], DependencyResolveLayout.FullResolved)
             }
         ];
     }
@@ -97,7 +97,7 @@ public class ModinfoValidatorTests
         [
             new JsonSteamData
             {
-                Id = "1234312", Tags = new[] {"EAW"}, Metadata = "bla", ContentFolder = "testFolder",
+                Id = "1234312", Tags = ["EAW"], Metadata = "bla", ContentFolder = "testFolder",
                 Visibility = SteamWorkshopVisibility.FriendsOnly, Title = "MyTitle"
             },
             false
@@ -106,21 +106,21 @@ public class ModinfoValidatorTests
         [
             new JsonSteamData
             {
-                Id = "1234312", Tags = new[] {"EAW"}, Metadata = "bla", ContentFolder = "testFolder",
+                Id = "1234312", Tags = ["EAW"], Metadata = "bla", ContentFolder = "testFolder",
                 Title = "MyTitle"
             },
             false
         ];
         yield return
         [
-            new JsonSteamData {Id = "1234312", Tags = new[] {"EAW"}, ContentFolder = "testFolder", Title = "MyTitle"},
+            new JsonSteamData {Id = "1234312", Tags = ["EAW"], ContentFolder = "testFolder", Title = "MyTitle"},
             false
         ];
         yield return
         [
             new JsonSteamData
             {
-                Id = "1234312", Tags = new[] {"EAW"}, ContentFolder = "testFolder",
+                Id = "1234312", Tags = ["EAW"], ContentFolder = "testFolder",
                 Description = "Some description", Title = "MyTitle"
             },
             false
@@ -130,19 +130,19 @@ public class ModinfoValidatorTests
     public static IEnumerable<object[]> GetInvalidSteamData()
     {
         yield return [new JsonSteamData(), true];
-        yield return [new JsonSteamData {Id = "asd", Tags = new[] {"EAW"}, ContentFolder = "testFolder"}, true];
-        yield return [new JsonSteamData {Id = "0", Tags = new[] {"EAW"}, ContentFolder = "testFolder"}, true];
-        yield return [new JsonSteamData {Id = "-123", Tags = new[] {"EAW"}, ContentFolder = "testFolder"}, true];
+        yield return [new JsonSteamData {Id = "asd", Tags = ["EAW"], ContentFolder = "testFolder"}, true];
+        yield return [new JsonSteamData {Id = "0", Tags = ["EAW"], ContentFolder = "testFolder"}, true];
+        yield return [new JsonSteamData {Id = "-123", Tags = ["EAW"], ContentFolder = "testFolder"}, true];
         yield return
         [
-            new JsonSteamData {Id = "129381209812430981329048", Tags = new[] {"EAW"}, ContentFolder = "testFolder"},
+            new JsonSteamData {Id = "129381209812430981329048", Tags = ["EAW"], ContentFolder = "testFolder"},
             true
         ];
         yield return [new JsonSteamData {Id = "1234", Tags = Array.Empty<string>(), ContentFolder = "testFolder"}, true];
         yield return [new JsonSteamData { Id = "1234", Tags = null!, ContentFolder = "testFolder" }, true];
-        yield return [new JsonSteamData { Id = "1234", Tags = new[] { "EAW" }, ContentFolder = "" }, true];
-        yield return [new JsonSteamData { Id = "1234", Tags = new[] { "EAW" }, ContentFolder = null! }, true];
-        yield return [new JsonSteamData { Id = "1234312", Tags = new[] { "test" }, Metadata = "bla", ContentFolder = "testFolder" }, true
+        yield return [new JsonSteamData { Id = "1234", Tags = ["EAW"], ContentFolder = "" }, true];
+        yield return [new JsonSteamData { Id = "1234", Tags = ["EAW"], ContentFolder = null! }, true];
+        yield return [new JsonSteamData { Id = "1234312", Tags = ["test"], Metadata = "bla", ContentFolder = "testFolder" }, true
         ];
     }
 

@@ -16,7 +16,7 @@ public enum ModType
     /// </summary>
     Workshops,
     /// <summary>
-    /// A mod which does not exists on disk but may exist during a tool's runtime.
+    /// A mod which does not exist on disk but may exist during a tool's runtime.
     /// </summary>
     Virtual
 }

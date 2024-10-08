@@ -32,7 +32,7 @@ public struct ModReference : IModReference
     /// <summary>
     /// Creates a new instance from a given <see cref="IModReference"/> instance.
     /// </summary>
-    /// <param name="modReference">The instance that will copied.</param>
+    /// <param name="modReference">The instance that will be copied.</param>
     public ModReference(IModReference modReference)
     {
         Identifier = modReference.Identifier;

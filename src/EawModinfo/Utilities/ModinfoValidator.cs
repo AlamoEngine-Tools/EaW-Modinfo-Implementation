@@ -101,7 +101,7 @@ public static class ModinfoValidator
             throw new ModinfoException($"Language-Info data is invalid: Code must not be an invariant culture '{languageInfo.Code}'");
         try
         {
-            var _ = new CultureInfo(languageInfo.Code);
+            _ = new CultureInfo(languageInfo.Code);
         }
         catch (CultureNotFoundException)
         {

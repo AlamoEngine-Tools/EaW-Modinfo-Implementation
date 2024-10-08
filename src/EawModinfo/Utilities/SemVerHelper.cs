@@ -12,7 +12,7 @@ internal static class SemVerHelper
         if (string.IsNullOrEmpty(version))
             return null;
 
-        string[] strArray = version!.Split('.');
+        var strArray = version!.Split('.');
         if (strArray.Length == 3)
             return SemVersion.Parse(version, SemVersionStyles.Any);
         if (strArray.Length >= 5)
@@ -33,7 +33,7 @@ internal static class SemVerHelper
             }
         }
 
-        string newSemVerString = string.Join(".", versionDigits) + releaseAndBuild;
+        var newSemVerString = string.Join(".", versionDigits) + releaseAndBuild;
         return SemVersion.Parse(newSemVerString, SemVersionStyles.Any);
     }
 

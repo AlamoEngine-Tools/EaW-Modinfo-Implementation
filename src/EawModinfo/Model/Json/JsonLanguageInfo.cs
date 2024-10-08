@@ -31,7 +31,7 @@ internal class JsonLanguageInfo : ILanguageInfo
     /// <summary>
     /// Creates a new instance from a given <see cref="ILanguageInfo"/> instance.
     /// </summary>
-    /// <param name="languageInfo">The instance that will copied.</param>
+    /// <param name="languageInfo">The instance that will be copied.</param>
     public JsonLanguageInfo(ILanguageInfo languageInfo)
     {
         if (languageInfo == null)

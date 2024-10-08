@@ -12,7 +12,7 @@ public interface IModinfoFile : IEquatable<IModinfoFile>
     /// <summary>
     /// Distinguishes the contained file between a "main" or "variant" modinfo file.
     /// </summary>
-    public ModinfoFileKind FileKind { get; }
+    ModinfoFileKind FileKind { get; }
         
     /// <summary>
     /// The file handle.

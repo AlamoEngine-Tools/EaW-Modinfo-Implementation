@@ -16,7 +16,7 @@ public static class ModinfoDataUtilities
     /// If <paramref name="baseModinfo"/> is <see langword="null"/> this method will return <paramref name="target"/>.
     /// </summary>
     /// <remarks>Subsequent data such as <see cref="IModinfo.Languages"/> will be replaced entirely and not merged by property.
-    /// Exceptions is made for <see cref="IModinfo.Custom"/>, where items will get merged individually.
+    /// Exception is <see cref="IModinfo.Custom"/>, where items will get merged individually.
     /// <br></br>
     /// Subsequent data get replaced by creating a new copy of that element. This means the new and the merged property are not equal by reference.
     /// </remarks>
@@ -34,7 +34,7 @@ public static class ModinfoDataUtilities
         return MergeFrom(baseModinfo, target);
     }
         
-    private static IModinfo MergeFrom(IModinfo current, IModinfo target)
+    private static ModinfoData MergeFrom(IModinfo current, IModinfo target)
     { 
         var name = target.Name;
 

@@ -61,7 +61,7 @@ public sealed record ModinfoData : IModinfo
     /// <summary>
     /// Creates a new instance from a given <see cref="IModinfo"/> instance.
     /// </summary>
-    /// <param name="modinfo">The instance that will copied.</param>
+    /// <param name="modinfo">The instance that will be copied.</param>
     public ModinfoData(IModinfo modinfo)
     {
         if (modinfo == null) 
