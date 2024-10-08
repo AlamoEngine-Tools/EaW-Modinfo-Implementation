@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using System.Linq;
 
@@ -15,6 +16,7 @@ public sealed class ModinfoFinderCollection : IEnumerable<IModinfoFile>
     /// <summary>
     /// Returns <see langword="true"/> if this collection does contain a main modinfo file; <see langword="false"/> otherwise.
     /// </summary>
+    [MemberNotNullWhen(true, nameof(MainModinfo))]
     public bool HasMainModinfoFile => MainModinfo != null;
 
     /// <summary>
@@ -54,10 +56,10 @@ public sealed class ModinfoFinderCollection : IEnumerable<IModinfoFile>
         Directory = directory ?? throw new ArgumentNullException(nameof(directory));
         if (mainModinfo != null && mainModinfo.FileKind != ModinfoFileKind.MainFile)
             throw new ModinfoException($"A main modinfo file must be of kind {ModinfoFileKind.MainFile}");
-        if (variants.Any(file => file.FileKind != ModinfoFileKind.VariantFile))
-            throw new ModinfoException($"All variant modinfo files must be of kind {ModinfoFileKind.VariantFile}");
         MainModinfo = mainModinfo;
         Variants = variants.ToList();
+        if (Variants.Any(file => file.FileKind != ModinfoFileKind.VariantFile))
+            throw new ModinfoException($"All variant modinfo files must be of kind {ModinfoFileKind.VariantFile}");
     }
 
     /// <summary>
@@ -67,7 +69,7 @@ public sealed class ModinfoFinderCollection : IEnumerable<IModinfoFile>
     /// <param name="mainModinfo">The main modinfo file. Can be <see langword="null"/></param>
     /// <exception cref="ModinfoException">When illegal data was passed.</exception>
     public ModinfoFinderCollection(IDirectoryInfo directory, IModinfoFile? mainModinfo) : 
-        this(directory, mainModinfo, Enumerable.Empty<IModinfoFile>())
+        this(directory, mainModinfo, [])
     {
     }
 

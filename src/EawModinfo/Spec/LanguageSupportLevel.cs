@@ -9,7 +9,7 @@ namespace EawModinfo.Spec;
 public enum LanguageSupportLevel
 {
     /// <summary>
-    /// There exists an dedicated "MasterTextFile" for this language
+    /// There exists a dedicated "MasterTextFile" for this language
     /// </summary>
     Text = 1,
     /// <summary>

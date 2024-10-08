@@ -18,20 +18,19 @@ public class MergeTests
         var mainData = new ModinfoData("Mod")
         {
             Icon = "icon.ico",
-            Languages = new[] {new LanguageInfo { Code = "en"}},
-            Dependencies = new DependencyList(new IModReference[] { new ModReference { Identifier = "bla" } }, DependencyResolveLayout.FullResolved),
+            Languages = [new LanguageInfo { Code = "en"}],
+            Dependencies = new DependencyList([new ModReference { Identifier = "bla" }], DependencyResolveLayout.FullResolved),
             Custom = new Dictionary<string, object> { { "testKey1", "value" } }
         };
 
         var variantData = new ModinfoData("Variant of Mod")
         {
-            Languages = new[] {new LanguageInfo { Code = "en"}, new LanguageInfo { Code = "de"}},
-            SteamData = new JsonSteamData {Id = "123", Tags = new[] {"FOC"}, ContentFolder = "bla", Title = "Title"},
+            Languages = [new LanguageInfo { Code = "en"}, new LanguageInfo { Code = "de"}],
+            SteamData = new JsonSteamData {Id = "123", Tags = ["FOC"], ContentFolder = "bla", Title = "Title"},
             Custom = new Dictionary<string, object> { { "testKey2", "value" } },
-            Dependencies = new DependencyList(new IModReference[]
-            {
+            Dependencies = new DependencyList([
                 new ModReference {Identifier = "bla"}, new ModReference {Identifier = "blub"}
-            }, DependencyResolveLayout.FullResolved),
+            ], DependencyResolveLayout.FullResolved),
 
             Version = SemVersion.Parse("1.2.2", SemVersionStyles.Any)
         };
@@ -64,20 +63,18 @@ public class MergeTests
             return false;
         }
 
-        public string Name { get; } = null!;
+        public string Name => null!;
 
-        public SemVersion? Version { get; } = null!;
+        public SemVersion? Version => null!;
 
-        public IModDependencyList Dependencies { get; } = null!;
-        public string ToJson(bool validate)
-        {
-            return string.Empty;
-        }
+        public IModDependencyList Dependencies => null!;
 
-        public string? Summary { get; } = null!;
-        public string? Icon { get; } = null!;
-        public IDictionary<string, object> Custom { get; } = null!;
-        public ISteamData? SteamData { get; } = null!;
-        public IEnumerable<ILanguageInfo> Languages { get; } = null!;
+        public string ToJson(bool validate) => string.Empty;
+
+        public string? Summary => null!;
+        public string? Icon => null!;
+        public IDictionary<string, object> Custom => null!;
+        public ISteamData? SteamData => null!;
+        public IEnumerable<ILanguageInfo> Languages => null!;
     }
 }

@@ -84,7 +84,7 @@ public class ModinfoFileTests
         var main = new ModinfoData("Main")
         {
             Version = new SemVersion(1, 1, 1),
-            Dependencies = new DependencyList(new IModReference[] { new ModReference { Identifier = "123", Type = ModType.Workshops } }, DependencyResolveLayout.FullResolved)
+            Dependencies = new DependencyList([new ModReference { Identifier = "123", Type = ModType.Workshops }], DependencyResolveLayout.FullResolved)
         };
 
         var file = ModinfoDataUtils.CreateVariantFile(new MockFileSystem(), "mods/A");

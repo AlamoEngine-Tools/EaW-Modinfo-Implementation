@@ -51,7 +51,7 @@ public sealed class SteamData : ISteamData
     /// <summary>
     /// Creates a new instance from a given <see cref="ISteamData"/> instance.
     /// </summary>
-    /// <param name="steamData">The instance that will copied.</param>
+    /// <param name="steamData">The instance that will be copied.</param>
     public SteamData(ISteamData steamData)
     {
         if (steamData == null)

@@ -109,15 +109,15 @@ public abstract class ModinfoFile : IModinfoFile
         return ModinfoData.Parse(text);
     }
 
-    private Task<string> ReadTextAsync()
+    private async Task<string> ReadTextAsync()
     {
         var fs = File.FileSystem;
 
 #if NETSTANDARD2_1
-            return fs.File.ReadAllTextAsync(File.FullName);
+        return await fs.File.ReadAllTextAsync(File.FullName);
 #else
         using var reader = fs.File.OpenText(File.FullName);
-        return reader.ReadToEndAsync();
+        return await reader.ReadToEndAsync();
 #endif
     }
 

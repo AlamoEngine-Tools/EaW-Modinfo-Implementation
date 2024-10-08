@@ -63,7 +63,7 @@ internal class JsonSteamData : ISteamData
     /// <summary>
     /// Creates a new instance from a given <see cref="ISteamData"/> instance.
     /// </summary>
-    /// <param name="steamData">The instance that will copied.</param>
+    /// <param name="steamData">The instance that will be copied.</param>
     public JsonSteamData(ISteamData steamData)
     {
         if (steamData == null)
@@ -81,7 +81,7 @@ internal class JsonSteamData : ISteamData
     /// <summary>
     /// Converts this instance to a json string.
     /// </summary>
-    /// <param name="validate">If set to <see langword="true"/> this object get's validated first.</param>
+    /// <param name="validate">If set to <see langword="true"/> this object gets validated first.</param>
     /// <returns>The converted json string data</returns>
     public string ToJson(bool validate = true)
     {

@@ -13,7 +13,7 @@ public class SteamDataWriteTests
         {
             ContentFolder = "Test",
             Id = "123",
-            Tags = new[] {"FOC"},
+            Tags = ["FOC"],
             Title = "Title",
             Visibility = SteamWorkshopVisibility.Private,
         };
@@ -30,7 +30,7 @@ public class SteamDataWriteTests
         {
             ContentFolder = "Test",
             Id = "123",
-            Tags = new[] {"FOC"},
+            Tags = ["FOC"],
             Visibility = SteamWorkshopVisibility.Private,
             Title = "Title",
             Metadata = "test"
@@ -49,7 +49,7 @@ public class SteamDataWriteTests
         {
             ContentFolder = "Test Folder",
             Id = "123",
-            Tags = new[] { "FOC", "SinglePlayer" },
+            Tags = ["FOC", "SinglePlayer"],
             Title = "Title",
             Metadata = "some metadata",
             Visibility = SteamWorkshopVisibility.Public,
