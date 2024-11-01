@@ -45,7 +45,7 @@ public sealed class SteamData : ISteamData
         ContentFolder = contentFolder;
         Visibility = visibility;
         Title = title;
-        Tags = tags;
+        Tags = new HashSet<string>(tags);
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ public sealed class SteamData : ISteamData
         ContentFolder = steamData.ContentFolder;
         Visibility = steamData.Visibility;
         Metadata = steamData.Metadata;
-        Tags = steamData.Tags;
+        Tags = new HashSet<string>(steamData.Tags);
         Description = steamData.Description;
         PreviewFile = steamData.PreviewFile;
         Title = steamData.Title;

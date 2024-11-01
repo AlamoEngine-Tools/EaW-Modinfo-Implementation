@@ -1,17 +1,20 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using EawModinfo.Model.Json;
 using EawModinfo.Spec;
+using EawModinfo.Spec.Equality;
 using EawModinfo.Utilities;
 
 namespace EawModinfo.Model;
 
 /// <inheritdoc cref="ILanguageInfo"/>
-public sealed record LanguageInfo : ILanguageInfo
+public sealed class LanguageInfo : ILanguageInfo, IEquatable<LanguageInfo>
 {
     /// <summary>
     /// Returns an <see cref="ILanguageInfo"/> which represents ENGLISH (en) where <see cref="ILanguageInfo.Support"/> is set to <see cref="LanguageSupportLevel.Default"/>
     /// </summary>
-    public static readonly ILanguageInfo Default = new LanguageInfo { Code = "en", Support = LanguageSupportLevel.FullLocalized };
+    public static readonly LanguageInfo Default = new() { Code = "en", Support = LanguageSupportLevel.FullLocalized };
 
     private CultureInfo? _culture;
 
@@ -26,7 +29,9 @@ public sealed record LanguageInfo : ILanguageInfo
     /// <inheritdoc/>
     public LanguageSupportLevel Support { get; init; }
 
-    internal LanguageInfo() { }
+    internal LanguageInfo()
+    {
+    }
 
     /// <summary>
     /// Creates a new instance.
@@ -40,7 +45,7 @@ public sealed record LanguageInfo : ILanguageInfo
     /// <summary>
     /// Creates a new instance from a given <see cref="ILanguageInfo"/> instance.
     /// </summary>
-    /// <param name="languageInfo">The instance that will copied.</param>
+    /// <param name="languageInfo">The instance that will be copied.</param>
     public LanguageInfo(ILanguageInfo languageInfo)
     {
         Code = languageInfo.Code;
@@ -62,11 +67,9 @@ public sealed record LanguageInfo : ILanguageInfo
     /// <inheritdoc/>
     public bool Equals(ILanguageInfo? other)
     {
-        if (other is null)
-            return false;
-        if (ReferenceEquals(this, other)) return true;
-        return Code == other.Code;
+        return LanguageInfoEqualityComparer.Default.Equals(this, other);
     }
+
 
     /// <inheritdoc />
     public bool Equals(LanguageInfo? other)
@@ -75,20 +78,33 @@ public sealed record LanguageInfo : ILanguageInfo
             return false;
         if (ReferenceEquals(this, other)) 
             return true;
-        if (other is ILanguageInfo info) 
-            return Equals(info);
-        return false;
+        return Equals((ILanguageInfo)other);
+    }
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(this, obj))
+            return true;
+        return obj is LanguageInfo other && Equals(other);
     }
 
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        return Code.ToLower().GetHashCode();
+        return LanguageInfoEqualityComparer.Default.GetHashCode(this);
     }
 
     /// <inheritdoc/>
     public string ToJson(bool validate)
     {
         return new JsonLanguageInfo(this).ToJson(validate);
+    }
+
+    /// <inheritdoc />
+    [ExcludeFromCodeCoverage]
+    public override string ToString()
+    {
+        return $"[Code:{Code}, Support:{Support}]";
     }
 }

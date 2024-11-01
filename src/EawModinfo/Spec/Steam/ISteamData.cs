@@ -30,6 +30,9 @@ public interface ISteamData : IConvertibleToJson
     /// <summary>
     /// Steam Tags as specified by the Steam Uploader.
     /// </summary>
+    /// <remarks>
+    /// Tags must be unique, are case-sensitive, limited to 255 characters and must not contain the comma ',' character.
+    /// </remarks>
     public IEnumerable<string> Tags { get; }
 
     /// <summary>

@@ -57,7 +57,7 @@ internal class JsonSteamData : ISteamData
     [JsonConstructor]
     public JsonSteamData()
     {
-        Tags = new List<string>();
+        Tags = new HashSet<string>();
     }
 
     /// <summary>

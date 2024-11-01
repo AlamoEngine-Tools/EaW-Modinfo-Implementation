@@ -11,10 +11,10 @@ namespace EawModinfo.File;
 public sealed class ModinfoFileFinder : IModinfoFileFinder
 {
     /// <inheritdoc/>
-    public IDirectoryInfo Directory { get; set; }
+    public IDirectoryInfo Directory { get; }
 
     /// <inheritdoc/>
-    public IModinfo? BaseModinfo { get; set; }
+    public IModinfo? BaseModinfo { get; }
 
     /// <summary>
     /// Creates a new <see cref="ModinfoFileFinder"/> instance
@@ -94,30 +94,6 @@ public sealed class ModinfoFileFinder : IModinfoFileFinder
         return FindCore(findOptions);
     }
 
-    /// <inheritdoc/>
-    public ModinfoFinderCollection FindThrow(FindOptions findOptions)
-    {
-        var result = Find(findOptions);
-        switch (findOptions)
-        {
-            case FindOptions.FindMain:
-                if (!result.HasMainModinfoFile)
-                    throw new ModinfoException($"Unable to find a main modinfo file in: '{Directory.FullName}'");
-                break;
-            case FindOptions.FindVariants:
-                if (!result.HasVariantModinfoFiles)
-                    throw new ModinfoException($"Unable to find a variant modinfo files in: '{Directory.FullName}'");
-                break;
-            case FindOptions.FindAny:
-                if (!result.HasMainModinfoFile && !result.HasVariantModinfoFiles)
-                    throw new ModinfoException($"Unable to find a any modinfo file in: '{Directory.FullName}'");
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(findOptions), findOptions, null);
-        }
-        return result;
-    }
-        
     private ModinfoFinderCollection FindCore(FindOptions options)
     {
         if (Directory is null)

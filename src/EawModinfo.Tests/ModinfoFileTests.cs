@@ -11,11 +11,13 @@ namespace EawModinfo.Tests;
 
 public class ModinfoFileTests
 {
+    private readonly MockFileSystem _fileSystem = new();
+
     [Fact]
     public async Task Test_GetModinfo_MainFile()
     {
-        var fileInfo = ModinfoDataUtils.CreateModifnoFile(new MockFileSystem(), "mods/A");
-        IModinfoFile modinfoFile = new MainModinfoFile(fileInfo);
+        var fileInfo = ModinfoDataUtils.CreateModifnoFile(_fileSystem, "mods/A");
+        var modinfoFile = new MainModinfoFile(fileInfo);
 
         Assert.Equal(ModinfoFileKind.MainFile, modinfoFile.FileKind);
 
@@ -30,8 +32,8 @@ public class ModinfoFileTests
     [Fact]
     public async Task Test_GetModinfo_VariantFile1()
     {
-        var fileInfo = ModinfoDataUtils.CreateVariantMainFile(new MockFileSystem(), "mods/A");
-        IModinfoFile modinfoFile = new ModinfoVariantFile(fileInfo);
+        var fileInfo = ModinfoDataUtils.CreateVariantMainFile(_fileSystem, "mods/A");
+        var modinfoFile = new ModinfoVariantFile(fileInfo);
 
         Assert.Equal(ModinfoFileKind.VariantFile, modinfoFile.FileKind);
 
@@ -47,13 +49,11 @@ public class ModinfoFileTests
     [Fact]
     public async Task Test_GetModinfo_VariantFile2()
     {
-        var fs = new MockFileSystem();
+        var mainFileInfo = ModinfoDataUtils.CreateModifnoFile(_fileSystem, "mods/A");
+        var mainFile = new MainModinfoFile(mainFileInfo);
 
-        var mainFileInfo = ModinfoDataUtils.CreateModifnoFile(fs, "mods/A");
-        IModinfoFile mainFile = new MainModinfoFile(mainFileInfo);
-
-        var variantFileInfo = ModinfoDataUtils.CreateVariantFile(fs, "mods/A");
-        IModinfoFile variantFile = new ModinfoVariantFile(variantFileInfo, mainFile);
+        var variantFileInfo = ModinfoDataUtils.CreateVariantFile(_fileSystem, "mods/A");
+        var variantFile = new ModinfoVariantFile(variantFileInfo, mainFile);
 
         Assert.Equal(ModinfoFileKind.VariantFile, variantFile.FileKind);
 
@@ -87,9 +87,9 @@ public class ModinfoFileTests
             Dependencies = new DependencyList([new ModReference { Identifier = "123", Type = ModType.Workshops }], DependencyResolveLayout.FullResolved)
         };
 
-        var file = ModinfoDataUtils.CreateVariantFile(new MockFileSystem(), "mods/A");
+        var file = ModinfoDataUtils.CreateVariantFile(_fileSystem, "mods/A");
 
-        IModinfoFile modinfoFile = new ModinfoVariantFile(file, main);
+        var modinfoFile = new ModinfoVariantFile(file, main);
 
         Assert.Equal(ModinfoFileKind.VariantFile, modinfoFile.FileKind);
 
@@ -117,9 +117,8 @@ public class ModinfoFileTests
     [Fact]
     public void Test_GetModinfo_VariantFile4()
     {
-        var fs = new MockFileSystem();
-        var variantMain = new ModinfoVariantFile(ModinfoDataUtils.CreateVariantMainFile(fs, "mods/A"));
-        var variant = ModinfoDataUtils.CreateVariantFile(fs, "mods/A");
+        var variantMain = new ModinfoVariantFile(ModinfoDataUtils.CreateVariantMainFile(_fileSystem, "mods/A"));
+        var variant = ModinfoDataUtils.CreateVariantFile(_fileSystem, "mods/A");
         Assert.Throws<ModinfoException>(() => new ModinfoVariantFile(variant, variantMain));
     }
 
@@ -128,5 +127,35 @@ public class ModinfoFileTests
     {
         Assert.Throws<ArgumentNullException>(() => new MainModinfoFile(null!));
         Assert.Throws<ArgumentNullException>(() => new ModinfoVariantFile(null!));
+    }
+
+    [Fact]
+    public void Test_ValidateFile_FileNotFound_ThenFileIsFound()
+    {
+        var main = new MainModinfoFile(_fileSystem.FileInfo.New("modinfo.json"));
+        var variant = new ModinfoVariantFile(_fileSystem.FileInfo.New("variant-modinfo.json"));
+
+        Assert.Throws<ModinfoException>(() => main.ValidateFile());
+        Assert.Throws<ModinfoException>(() => variant.ValidateFile());
+
+        using var _ = _fileSystem.File.Create("modinfo.json");
+        using var __ = _fileSystem.File.Create("variant-modinfo.json");
+        main.ValidateFile();
+        variant.ValidateFile();
+    }
+
+    [Fact]
+    public void Test_ValidateFile_InvalidName()
+    {
+        using var _ = _fileSystem.File.Create("someName.json");
+        using var __ = _fileSystem.File.Create("variant.json");
+        var main = new MainModinfoFile(_fileSystem.FileInfo.New("someName.json"));
+        var variant = new ModinfoVariantFile(_fileSystem.FileInfo.New("variant.json"));
+
+        Assert.True(main.File.Exists);
+        Assert.True(variant.File.Exists);
+        
+        Assert.Throws<ModinfoException>(() => main.ValidateFile());
+        Assert.Throws<ModinfoException>(() => variant.ValidateFile());
     }
 }

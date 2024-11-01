@@ -1,18 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using EawModinfo.Model.Json;
 using EawModinfo.Spec;
+using EawModinfo.Spec.Equality;
+using EawModinfo.Utilities;
 
 namespace EawModinfo.Model;
 
 /// <inheritdoc cref="IModDependencyList"/>
-public class DependencyList : ReadOnlyCollection<IModReference>, IModDependencyList
+public class DependencyList : ReadOnlyCollection<IModReference>, IModDependencyList, IEquatable<DependencyList>
 {
     /// <summary>
     /// An empty dependency list singleton instance.
     /// </summary>
     public static readonly IModDependencyList EmptyDependencyList =
-        new DependencyList(new List<IModReference>(), DependencyResolveLayout.ResolveRecursive);
+        new DependencyList(new List<IModReference>(), DependencyResolveLayout.FullResolved);
 
     /// <inheritdoc/>
     public DependencyResolveLayout ResolveLayout { get; }
@@ -32,5 +36,48 @@ public class DependencyList : ReadOnlyCollection<IModReference>, IModDependencyL
         : base(dependencies)
     {
         ResolveLayout = resolveLayout;
+    }
+
+    /// <summary>
+    /// Parses and deserializes a json data into a <see cref="DependencyList"/>.
+    /// </summary>
+    /// <param name="data">The raw json data.</param>
+    /// <returns>The deserialized object.</returns>
+    /// <exception cref="ModinfoParseException">When parsing failed, e.g. due to missing required properties.</exception>
+    public static DependencyList Parse(string data)
+    {
+        return new DependencyList(ParseUtility.Parse<JsonDependencyList>(data));
+    }
+
+    /// <inheritdoc />
+    public bool Equals(DependencyList? other)
+    {
+        if (other is null)
+            return false;
+        if (ReferenceEquals(this, other))
+            return true;
+        return ((IModDependencyList)this).Equals(other);
+    }
+
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(this, obj))
+            return true;
+        if (obj is not DependencyList other)
+            return false;
+        return Equals(other);
+    }
+
+    /// <inheritdoc />
+    public override int GetHashCode()
+    {
+        return ModDependencyListEqualityComparer.Default.GetHashCode(this);
+    }
+
+    /// <inheritdoc />
+    public bool Equals(IModDependencyList? other)
+    {
+        return ModDependencyListEqualityComparer.Default.Equals(this, other);
     }
 }

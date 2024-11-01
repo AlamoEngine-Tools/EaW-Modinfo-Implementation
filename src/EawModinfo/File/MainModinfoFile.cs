@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions;
+﻿using System;
+using System.IO.Abstractions;
 using EawModinfo.Spec;
 
 namespace EawModinfo.File;
@@ -26,12 +27,11 @@ public sealed class MainModinfoFile : ModinfoFile
         public bool Validate(string fileName, out string error)
         {
             error = string.Empty;
-            if (!fileName.ToUpperInvariant().Equals(ModinfoFileName.ToUpperInvariant()))
+            if (!fileName.Equals(ModinfoFileName, StringComparison.OrdinalIgnoreCase))
             {
                 error = "The file's name must be 'modinfo.json'.";
                 return false;
             }
-
             return true;
         }
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using EawModinfo.Model.Json;
 using EawModinfo.Spec;
+using EawModinfo.Spec.Equality;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
 using Semver;
@@ -9,7 +10,7 @@ using Semver;
 namespace EawModinfo.Model;
 
 /// <inheritdoc cref="IModinfo"/>
-public sealed record ModinfoData : IModinfo
+public sealed class ModinfoData : IModinfo
 {
     /// <inheritdoc/>
     public string Name { get; }
@@ -54,7 +55,7 @@ public sealed record ModinfoData : IModinfo
         if (modIdentity == null) 
             throw new ArgumentNullException(nameof(modIdentity));
         Name = modIdentity.Name;
-        Dependencies = modIdentity.Dependencies;
+        Dependencies = new DependencyList(modIdentity.Dependencies);
         Version = modIdentity.Version;
     }
 
@@ -64,16 +65,16 @@ public sealed record ModinfoData : IModinfo
     /// <param name="modinfo">The instance that will be copied.</param>
     public ModinfoData(IModinfo modinfo)
     {
-        if (modinfo == null) 
+        if (modinfo == null)
             throw new ArgumentNullException(nameof(modinfo));
         Name = modinfo.Name;
         Version = modinfo.Version;
-        Dependencies = modinfo.Dependencies;
+        Dependencies = new DependencyList(modinfo.Dependencies);
         Summary = modinfo.Summary;
         Icon = modinfo.Icon;
-        SteamData = modinfo.SteamData;
-        Languages = modinfo.Languages;
-        Custom = modinfo.Custom;
+        SteamData = modinfo.SteamData != null ? new SteamData(modinfo.SteamData) : null;
+        Languages = new List<ILanguageInfo>(modinfo.Languages);
+        Custom = new Dictionary<string, object>(modinfo.Custom);
     }
 
     /// <summary>
@@ -94,7 +95,7 @@ public sealed record ModinfoData : IModinfo
     }
 
     /// <inheritdoc/>
-    public bool Equals(IModIdentity? other)
+    bool IEquatable<IModIdentity>.Equals(IModIdentity? other)
     {
         return ModIdentityEqualityComparer.Default.Equals(this, other);
     }

@@ -15,6 +15,7 @@ public class SemVerHelperTests(ITestOutputHelper output)
         yield return ["1.0", new SemVersion(1, 0, 0)];
         yield return ["1.0.0", new SemVersion(1, 0, 0)];
         yield return ["1.0.0.0", new SemVersion(1, 0, 0)];
+        yield return ["1.0.0.0.1-pre1", SemVersion.ParsedFrom(1, 0, 0, "pre1")];
 
         yield return ["1.2.3.4", new SemVersion(1, 2, 3)];
         yield return ["1.2.3.4-pre1", SemVersion.ParsedFrom(1,2,3, "pre1")];

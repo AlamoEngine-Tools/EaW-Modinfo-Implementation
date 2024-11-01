@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 using System.Threading.Tasks;
 
 namespace EawModinfo.Spec;
@@ -7,7 +6,7 @@ namespace EawModinfo.Spec;
 /// <summary>
 /// Container that represents a modinfo file on the filesystem.
 /// </summary>
-public interface IModinfoFile : IEquatable<IModinfoFile>
+public interface IModinfoFile
 {
     /// <summary>
     /// Distinguishes the contained file between a "main" or "variant" modinfo file.

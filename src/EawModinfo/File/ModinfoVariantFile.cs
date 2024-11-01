@@ -25,31 +25,31 @@ public sealed class ModinfoVariantFile : ModinfoFile
     internal override IModFileNameValidator FileNameValidator => new Validator();
 
     /// <summary>
-    /// Creates a variant modinfo file from on a handle.
+    /// Creates a file modinfo file from on a handle.
     /// </summary>
-    /// <param name="variant">The file handle.</param>
-    public ModinfoVariantFile(IFileInfo variant) : this(variant, (IModinfo?) null)
+    /// <param name="file">The file handle.</param>
+    public ModinfoVariantFile(IFileInfo file) : this(file, (IModinfo?) null)
     {
     }
 
     /// <summary>
-    /// Creates a variant modinfo file from on a handle with a main modinfo file 
+    /// Creates a file modinfo file from on a handle with a main modinfo file 
     /// </summary>
-    /// <param name="variant">The file handle.</param>
+    /// <param name="file">The file handle.</param>
     /// <param name="mainModinfoFile">The main modinfo file</param>
-    public ModinfoVariantFile(IFileInfo variant, IModinfoFile? mainModinfoFile) : base(variant)
+    public ModinfoVariantFile(IFileInfo file, IModinfoFile? mainModinfoFile) : base(file)
     {
         if (mainModinfoFile?.FileKind == ModinfoFileKind.VariantFile)
-            throw new ModinfoException("A ModinfoFile's base cannot also be a variant file.");
+            throw new ModinfoException("A ModinfoFile's base cannot also be a file file.");
         _mainModinfoFile = mainModinfoFile;
     }
 
     /// <summary>
-    /// Creates a variant modinfo file from on a handle with a main modinfo data 
+    /// Creates a file modinfo file from on a handle with a main modinfo data 
     /// </summary>
-    /// <param name="variant">The file handle.</param>
+    /// <param name="file">The file handle.</param>
     /// <param name="mainModinfoData">The main modinfo data</param>
-    public ModinfoVariantFile(IFileInfo variant, IModinfo? mainModinfoData) : base(variant)
+    public ModinfoVariantFile(IFileInfo file, IModinfo? mainModinfoData) : base(file)
     {
         _mainModinfoData = mainModinfoData;
     }
@@ -83,8 +83,7 @@ public sealed class ModinfoVariantFile : ModinfoFile
         public bool Validate(string fileName, out string error)
         {
             error = string.Empty;
-            if (!fileName.ToUpperInvariant().EndsWith(VariantModinfoFileEnding.ToUpperInvariant(),
-                    StringComparison.InvariantCultureIgnoreCase))
+            if (!fileName.EndsWith(VariantModinfoFileEnding, StringComparison.OrdinalIgnoreCase))
             {
                 error = "The file's name must end with '-modinfo.json'.";
                 return false;

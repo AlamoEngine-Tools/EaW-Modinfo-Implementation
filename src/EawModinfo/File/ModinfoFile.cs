@@ -37,6 +37,7 @@ public abstract class ModinfoFile : IModinfoFile
     /// <inheritdoc/>
     public void ValidateFile()
     {
+        File.Refresh();
         if (!File.Exists)
             throw new ModinfoException($"Modinfo variant file does not exists at '{File.FullName}'.");
         if (!FileNameValidator.Validate(File.Name, out var error))
@@ -77,7 +78,7 @@ public abstract class ModinfoFile : IModinfoFile
             return null;
         }
     }
-        
+
     /// <summary>
     /// Deserializes the file's content async.
     /// </summary>
@@ -119,27 +120,5 @@ public abstract class ModinfoFile : IModinfoFile
         using var reader = fs.File.OpenText(File.FullName);
         return await reader.ReadToEndAsync();
 #endif
-    }
-
-    /// <inheritdoc/>
-    public bool Equals(IModinfoFile? other)
-    {
-        return File.Equals(other?.File);
-    }
-
-    /// <inheritdoc/>
-    public override bool Equals(object? obj)
-    {
-        if (obj is null) 
-            return false;
-        if (ReferenceEquals(this, obj)) 
-            return true;
-        return obj.GetType() == GetType() && Equals((ModinfoFile) obj);
-    }
-
-    /// <inheritdoc/>
-    public override int GetHashCode()
-    {
-        return File.GetHashCode();
     }
 }

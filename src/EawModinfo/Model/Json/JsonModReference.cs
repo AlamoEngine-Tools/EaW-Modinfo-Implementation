@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 using EawModinfo.Spec;
+using EawModinfo.Spec.Equality;
 using Semver;
 
 
@@ -13,6 +14,7 @@ internal class JsonModReference : IModReference
     public string Identifier { get; set; } = string.Empty;
 
     [JsonPropertyName("modtype")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
     [JsonRequired]
     public ModType Type { get; set; }
 
@@ -37,9 +39,9 @@ internal class JsonModReference : IModReference
         VersionRangeString = modReference.VersionRange?.ToString();
     }
 
-    bool IEquatable<IModReference>.Equals(IModReference? other)
+    public bool Equals(IModReference? other)
     {
-        return Identifier == other?.Identifier && Type == other.Type;
+        return ModReferenceEqualityComparer.Default.Equals(this, other);
     }
 
     /// <inheritdoc/>
@@ -49,14 +51,14 @@ internal class JsonModReference : IModReference
             return false;
         if (ReferenceEquals(this, obj)) 
             return true;
-        if (obj is IModReference reference) 
-            return ((IModReference)this).Equals(reference);
-        return false;
+        if (obj is not JsonModReference jsonRef) 
+            return false;
+        return ((IModReference)this).Equals(jsonRef);
 
     }
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Identifier, (int) Type);
+        return ModReferenceEqualityComparer.Default.GetHashCode(this);
     }
 }

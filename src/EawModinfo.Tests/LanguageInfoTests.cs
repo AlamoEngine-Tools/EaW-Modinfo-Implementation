@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Text.Json.Nodes;
 using EawModinfo.Model;
 using EawModinfo.Model.Json;
 using EawModinfo.Spec;
+using EawModinfo.Spec.Equality;
 using Xunit;
 
 namespace EawModinfo.Tests;
@@ -9,20 +11,44 @@ namespace EawModinfo.Tests;
 public class LanguageInfoTests
 {
     [Fact]
-    public void Test_Equal()
+    public void Test_Equal_GetHashCode()
     {
-        ILanguageInfo a = new LanguageInfo {Code = "en", Support = LanguageSupportLevel.FullLocalized};
+        var a = new LanguageInfo {Code = "en", Support = LanguageSupportLevel.FullLocalized};
         ILanguageInfo b = new JsonLanguageInfo(new LanguageInfo { Code = "en", Support = LanguageSupportLevel.SFX });
-        ILanguageInfo c = new LanguageInfo { Code = "de", Support = LanguageSupportLevel.FullLocalized};
+        var c = new LanguageInfo { Code = "de", Support = LanguageSupportLevel.FullLocalized};
         var d = LanguageInfo.Default;
+        var f = new LanguageInfo { Code = "EN", Support = LanguageSupportLevel.FullLocalized };
 
-        Assert.Equal(a, b);
-        Assert.NotEqual(a, c);
-        Assert.Equal(a, d);
-        Assert.Equal(LanguageSupportLevel.FullLocalized, d.Support);
+        EqualityTestHelpers.AssertDefaultEquals(false, false, a, null);
+        EqualityTestHelpers.AssertDefaultEquals<ILanguageInfo>(false, false, a, null);
+        EqualityTestHelpers.AssertWithComparer(false, LanguageInfoEqualityComparer.Default, a, null);
+
+        EqualityTestHelpers.AssertDefaultEquals(true, true, a, a);
+        EqualityTestHelpers.AssertDefaultEquals<ILanguageInfo>(true, true, a, a);
+        EqualityTestHelpers.AssertWithComparer(true, LanguageInfoEqualityComparer.Default, a, a);
+        EqualityTestHelpers.AssertWithComparer(true, LanguageInfoEqualityComparer.WithSupportLevel, a, a);
+
+        EqualityTestHelpers.AssertDefaultEquals(false, true, a, b);
+        EqualityTestHelpers.AssertWithComparer(true, LanguageInfoEqualityComparer.Default, a, b);
+        EqualityTestHelpers.AssertWithComparer(false, LanguageInfoEqualityComparer.WithSupportLevel, a, b);
+
+        EqualityTestHelpers.AssertDefaultEquals(false, false, a, c);
+        EqualityTestHelpers.AssertDefaultEquals<ILanguageInfo>(false, false, a, c);
+        EqualityTestHelpers.AssertWithComparer(false, LanguageInfoEqualityComparer.Default, a, c);
+        EqualityTestHelpers.AssertWithComparer(false, LanguageInfoEqualityComparer.WithSupportLevel, a, c);
+
+        EqualityTestHelpers.AssertDefaultEquals(true, true, a, d);
+        EqualityTestHelpers.AssertDefaultEquals<ILanguageInfo>(true, true, a, d);
+        EqualityTestHelpers.AssertWithComparer(true, LanguageInfoEqualityComparer.Default, a, d);
+        EqualityTestHelpers.AssertWithComparer(true, LanguageInfoEqualityComparer.WithSupportLevel, a, d);
+
+        EqualityTestHelpers.AssertDefaultEquals(true, true, a, f);
+        EqualityTestHelpers.AssertDefaultEquals<ILanguageInfo>(true, true, a, f);
+        EqualityTestHelpers.AssertWithComparer(true, LanguageInfoEqualityComparer.Default, a, f);
+        EqualityTestHelpers.AssertWithComparer(true, LanguageInfoEqualityComparer.WithSupportLevel, a, f);
     }
 
-    public static IEnumerable<object[]> GetData()
+    public static IEnumerable<object[]> GetJsonData()
     {
         yield return
         [
@@ -64,13 +90,69 @@ public class LanguageInfoTests
     }
 
     [Theory]
-    [MemberData(nameof(GetData))]
+    [MemberData(nameof(GetJsonData))]
     public void Test_Parse(string data, string expectedCode, LanguageSupportLevel expectedLevel)
     {
+        ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModLanguageInfo);
         var languageInfo = LanguageInfo.Parse(data);
         Assert.Equal(expectedCode, languageInfo.Code);
         Assert.Equal(expectedLevel, languageInfo.Support);
         Assert.NotNull(languageInfo.Culture);
+    }
+
+    public static IEnumerable<object[]> GetInvalidData()
+    {
+        yield return
+        [
+            @"
+{
+    ""code"":""abc""
+}"
+        ];
+        yield return
+        [
+            @"
+{
+    ""code"":""en"",
+    ""support"": -1
+}",
+        ];
+
+        yield return
+        [
+            @"
+{
+    ""code"":""en"",
+    ""support"": 0
+}",
+        ];
+
+        yield return
+        [
+            @"
+{
+    ""code"":""en"",
+    ""support"": 8
+}",
+        ];
+
+        yield return
+        [
+            @"
+{
+    ""code"":""en"",
+    ""support"": 1,
+    ""other"":""value""
+}",
+        ];
+    }
+
+    [Theory]
+    [MemberData(nameof(GetInvalidData))]
+    public void Parse_InvalidDataThrows(string data)
+    {
+        Assert.Throws<ModinfoParseException>(() => ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModLanguageInfo));
+        Assert.Throws<ModinfoParseException>(() => LanguageInfo.Parse(data));
     }
 
     [Fact]

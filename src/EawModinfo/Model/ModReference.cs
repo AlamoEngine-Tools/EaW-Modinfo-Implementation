@@ -1,13 +1,14 @@
 ﻿using System;
 using EawModinfo.Model.Json;
 using EawModinfo.Spec;
+using EawModinfo.Spec.Equality;
 using EawModinfo.Utilities;
 using Semver;
 
 namespace EawModinfo.Model;
 
-/// <inheritdoc/>
-public struct ModReference : IModReference
+/// <inheritdoc cref="IModReference"/>
+public readonly struct ModReference : IModReference , IEquatable<ModReference>
 {
     /// <inheritdoc/>
     public string Identifier { get; init; }
@@ -51,22 +52,27 @@ public struct ModReference : IModReference
         return new ModReference(ParseUtility.Parse<JsonModReference>(data));
     }
 
-    bool IEquatable<IModReference>.Equals(IModReference? other)
+    /// <inheritdoc />
+    public bool Equals(IModReference? other)
     {
-        return Identifier == other?.Identifier && Type == other.Type;
+        return ModReferenceEqualityComparer.Default.Equals(this, other);
     }
 
     /// <inheritdoc/>
     public override bool Equals(object? obj)
     {
-        if (obj is IModReference reference)
-            return ((IModReference)this).Equals(reference);
-        return false;
+        return obj is ModReference other && Equals(other);
     }
 
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        return HashCode.Combine(Identifier, (int) Type);
+        return ModReferenceEqualityComparer.Default.GetHashCode(this);
+    }
+
+    /// <inheritdoc />
+    public bool Equals(ModReference other)
+    {
+        return ModReferenceEqualityComparer.Default.Equals(this, other);
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using EawModinfo.Spec;
+using EawModinfo.Spec.Equality;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
 using Semver;
@@ -17,21 +18,6 @@ internal class JsonModinfoData : IModinfo
     [JsonIgnore] private SemVersion? _modVersion;
     [JsonIgnore] private bool _versionDetermined;
     [JsonIgnore] private bool _languagesDetermined;
-
-    /// <summary>
-    /// Returns <see langword="true"/> whether <see cref="Custom"/> has any contents; <see langword="false"/> otherwise.
-    /// </summary>
-    [JsonIgnore] public bool HasCustomObjects => Custom.Count > 0;
-
-    /// <summary>
-    /// Returns <see langword="true"/> whether <see cref="SteamData"/> is present; <see langword="false"/> otherwise.
-    /// </summary>
-    [JsonIgnore] public bool HasSteamData => SteamData != null;
-
-    /// <summary>
-    /// Returns <see langword="true"/> whether this instance has any dependencies; <see langword="false"/> otherwise.
-    /// </summary>
-    [JsonIgnore] public bool HasDependencies => Dependencies.Count > 0;
 
     /// <inheritdoc/>
     [JsonPropertyName("name")]

@@ -9,7 +9,7 @@ namespace EawModinfo.Spec;
 public interface IModReference : IEquatable<IModReference>
 {
     /// <summary>
-    /// Unique identifier as a textual representation. The <see cref="Type"/> property indicates how the data shall get parsed. 
+    /// Unique identifier as a textual representation. The <see cref="Type"/> property my indicate how the data can be interpreted. 
     /// </summary>
     string Identifier { get; }
 

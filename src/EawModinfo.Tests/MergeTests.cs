@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using EawModinfo.Model;
@@ -51,30 +52,31 @@ public class MergeTests
         Assert.Equal(variantData.Version, newData.Version);
 
 
-        var invalid = new InvalidModinfoMock();
+        var invalid = new InvalidModinfo();
         Assert.Throws<ModinfoException>(() => invalid.MergeInto(newData));
         Assert.Throws<ModinfoException>(() => newData.MergeInto(invalid));
     }
 
-    internal class InvalidModinfoMock : IModinfo
+    [Fact]
+    public void Test_MergeInto_Throws()
     {
-        public bool Equals(IModIdentity? other)
-        {
-            return false;
-        }
+        var mainData = new ModinfoData("Mod");
+        Assert.Throws<ArgumentNullException>(() => ModinfoDataUtilities.MergeInto(null!, mainData));
+    }
 
+    internal class InvalidModinfo : IModinfo
+    {
         public string Name => null!;
-
-        public SemVersion? Version => null!;
-
+        public SemVersion? Version => null;
         public IModDependencyList Dependencies => null!;
+        public string? Summary => null;
+        public string? Icon => null;
+        public IDictionary<string, object> Custom => null!;
+        public ISteamData? SteamData => null;
+        public IEnumerable<ILanguageInfo> Languages => null!;
 
         public string ToJson(bool validate) => string.Empty;
 
-        public string? Summary => null!;
-        public string? Icon => null!;
-        public IDictionary<string, object> Custom => null!;
-        public ISteamData? SteamData => null!;
-        public IEnumerable<ILanguageInfo> Languages => null!;
+        public bool Equals(IModIdentity? other) => false;
     }
 }
