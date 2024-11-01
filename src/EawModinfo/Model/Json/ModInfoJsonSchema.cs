@@ -38,7 +38,7 @@ public static class ModInfoJsonSchema
     /// 
     /// </summary>
     public const string ModRefSchema = @"{
-  ""$id"": ""https://AlamoEngine-Tools.github.com/mod-ref"",
+  ""$id"": ""https://AlamoEngine-Tools.github.io/schemas/3.0.0/mod-ref"",
   ""$schema"": ""https://json-schema.org/draft/2020-12/schema"",
   ""description"": ""Represents a reference to a mod."",
   ""type"":""object"",
@@ -67,13 +67,13 @@ public static class ModInfoJsonSchema
     /// 
     /// </summary>
     public const string DependenciesSchema = @"{
-  ""$id"": ""https://AlamoEngine-Tools.github.com/mod-deps"",
+  ""$id"": ""https://AlamoEngine-Tools.github.io/schemas/3.0.0/mod-deps"",
   ""$schema"": ""https://json-schema.org/draft/2020-12/schema"",
   ""description"": ""Represents a mod's dependencies as an ordered array."",
   ""type"": ""array"",
   ""contains"": {
     ""type"":""object"",
-    ""$ref"": ""/mod-ref""
+    ""$ref"": ""/schemas/3.0.0/mod-ref""
   },
   ""additionalItems"": false,
   ""oneOf"": [
@@ -89,13 +89,13 @@ public static class ModInfoJsonSchema
       ],
       ""items"": {
         ""type"":""object"",
-        ""$ref"": ""/mod-ref""
+        ""$ref"": ""/schemas/3.0.0/mod-ref""
       }
     },
     {
       ""items"": {
         ""type"":""object"",
-        ""$ref"": ""/mod-ref""
+        ""$ref"": ""/schemas/3.0.0/mod-ref""
       }
     }
   ]
@@ -105,7 +105,7 @@ public static class ModInfoJsonSchema
     /// 
     /// </summary>
     public const string LanguageInfoSchema = @"{
-  ""$id"":""https://AlamoEngine-Tools.github.com/lang-info"",
+  ""$id"":""https://AlamoEngine-Tools.github.io/schemas/3.0.0/lang-info"",
   ""$schema"":""https://json-schema.org/draft/2020-12/schema"",
   ""description"":""Represents the level of localizatio support for a single language."",
   ""type"":""object"",
@@ -129,7 +129,7 @@ public static class ModInfoJsonSchema
     /// 
     /// </summary>
     public const string SteamDataSchema = @"{
-  ""$id"": ""https://AlamoEngine-Tools.github.com/steam-data"",
+  ""$id"": ""https://AlamoEngine-Tools.github.io/schemas/3.0.0/steam-data"",
   ""$schema"": ""https://json-schema.org/draft/2020-12/schema"",
   ""description"": ""Represents the steam information ."",
   ""type"": ""object"",
@@ -197,7 +197,7 @@ public static class ModInfoJsonSchema
     /// 
     /// </summary>
     public const string ModInfo = @"{
-  ""$id"":""https://AlamoEngine-Tools.github.com/modinfo"",
+  ""$id"":""https://AlamoEngine-Tools.github.io/schemas/3.0.0/modinfo"",
   ""$schema"":""https://json-schema.org/draft/2020-12/schema"",
   ""description"":""A standard definition for Star Wars: Empire at War mod info files."",
   ""title"":""EaW Modinfo"",
@@ -219,17 +219,17 @@ public static class ModInfoJsonSchema
     },
     ""dependencies"":{
       ""type"":""array"",
-	  ""$ref"":""/mod-deps""
+	  ""$ref"":""/schemas/3.0.0/mod-deps""
     },
     ""languages"":{
       ""type"":""array"",
       ""items"":{
-        ""$ref"":""/lang-info""
+        ""$ref"":""/schemas/3.0.0/lang-info""
       }
     },
     ""steamdata"":{
       ""type"":""object"",
-      ""$ref"":""/steam-data""
+      ""$ref"":""/schemas/3.0.0/steam-data""
     }
   },
   ""required"":[
@@ -289,15 +289,15 @@ public static class ModInfoJsonSchema
         return type switch
         {
             EvaluationType.ModReference => (JsonSchema)Registry.Get(
-                new Uri("https://AlamoEngine-Tools.github.com/mod-ref", UriKind.Absolute)),
+                new Uri("https://AlamoEngine-Tools.github.io/schemas/3.0.0/mod-ref", UriKind.Absolute)),
             EvaluationType.SteamData => (JsonSchema)Registry.Get(
-                new Uri("https://AlamoEngine-Tools.github.com/steam-data", UriKind.Absolute)),
+                new Uri("https://AlamoEngine-Tools.github.io/schemas/3.0.0/steam-data", UriKind.Absolute)),
             EvaluationType.ModLanguageInfo => (JsonSchema)Registry.Get(
-                new Uri("https://AlamoEngine-Tools.github.com/lang-info", UriKind.Absolute)),
+                new Uri("https://AlamoEngine-Tools.github.io/schemas/3.0.0/lang-info", UriKind.Absolute)),
             EvaluationType.ModDependencyList => (JsonSchema)Registry.Get(
-                new Uri("https://AlamoEngine-Tools.github.com/mod-deps", UriKind.Absolute)),
+                new Uri("https://AlamoEngine-Tools.github.io/schemas/3.0.0/mod-deps", UriKind.Absolute)),
             EvaluationType.ModInfo => (JsonSchema)Registry.Get(
-                new Uri("https://AlamoEngine-Tools.github.com/modinfo", UriKind.Absolute)),
+                new Uri("https://AlamoEngine-Tools.github.io/schemas/3.0.0/modinfo", UriKind.Absolute)),
             _ => throw new ArgumentOutOfRangeException(nameof(type))
         };
     }
