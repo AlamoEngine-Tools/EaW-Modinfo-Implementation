@@ -61,10 +61,9 @@ internal class JsonLanguageInfo : ILanguageInfo
         return LanguageInfoEqualityComparer.Default.GetHashCode(this);
     }
 
-    public string ToJson(bool validate)
+    public string ToJson()
     {
-        if (validate)
-            this.Validate();
+        this.Validate();
         return JsonSerializer.Serialize(this, ParseUtility.SerializerOptions);
     }
 }

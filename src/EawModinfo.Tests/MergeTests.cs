@@ -75,7 +75,7 @@ public class MergeTests
         public ISteamData? SteamData => null;
         public IEnumerable<ILanguageInfo> Languages => null!;
 
-        public string ToJson(bool validate) => string.Empty;
+        public string ToJson() => string.Empty;
 
         public bool Equals(IModIdentity? other) => false;
     }

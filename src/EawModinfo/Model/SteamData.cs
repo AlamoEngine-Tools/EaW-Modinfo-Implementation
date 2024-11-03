@@ -79,8 +79,8 @@ public sealed class SteamData : ISteamData
     }
 
     /// <inheritdoc/>
-    public string ToJson(bool validate)
+    public string ToJson()
     {
-        return new JsonSteamData(this).ToJson(validate);
+        return new JsonSteamData(this).ToJson();
     }
 }

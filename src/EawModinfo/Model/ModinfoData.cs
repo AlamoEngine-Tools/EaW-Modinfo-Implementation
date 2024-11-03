@@ -89,9 +89,9 @@ public sealed class ModinfoData : IModinfo
     }
 
     /// <inheritdoc/>
-    public string ToJson(bool validate)
+    public string ToJson()
     {
-        return new JsonModinfoData(this).ToJson(validate);
+        return new JsonModinfoData(this).ToJson();
     }
 
     /// <inheritdoc/>

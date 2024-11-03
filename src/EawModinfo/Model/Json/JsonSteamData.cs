@@ -78,16 +78,9 @@ internal class JsonSteamData : ISteamData
         Tags = steamData.Tags;
     }
 
-    /// <summary>
-    /// Converts this instance to a json string.
-    /// </summary>
-    /// <param name="validate">If set to <see langword="true"/> this object gets validated first.</param>
-    /// <returns>The converted json string data</returns>
-    public string ToJson(bool validate = true)
-    {
-        if (validate)
-            this.Validate();
-
+    public string ToJson()
+    { 
+        this.Validate();
         return JsonSerializer.Serialize(this, ParseUtility.SerializerOptions);
     }
 }

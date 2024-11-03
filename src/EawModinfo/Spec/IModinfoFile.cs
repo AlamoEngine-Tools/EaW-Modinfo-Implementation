@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO.Abstractions;
 using System.Threading.Tasks;
 
 namespace EawModinfo.Spec;
@@ -19,11 +20,12 @@ public interface IModinfoFile
     IFileInfo File { get; }
 
     /// <summary>
-    /// Validates whether the file exists and has a valid name. Throws <see cref="ModinfoException"/> on fail.
-    /// <remarks>This does not validate the correctness of the file's content.</remarks>
-    /// <exception cref="ModinfoException">Throws this exception when validation fails.</exception>
+    /// Checks whether the file exists and has a valid file name according to the modinfo specification.
     /// </summary>
-    void ValidateFile();
+    /// <remarks>The file's content is not validated.</remarks>
+    /// <param name="error">When this method returns an error message is stored to this variable, or <see langword="null"/> if this method returns <see langword="true"/>.</param>
+    /// <returns><see langword="true"/> if the file exists and its name is valid; otherwise, <see langword="false"/>.</returns>
+    bool IsFileValid([NotNullWhen(false)] out string? error);
 
     /// <summary>
     /// Gets the content of the <see cref="File"/> and deserializes it into an <see cref="IModinfo"/>.
@@ -42,7 +44,7 @@ public interface IModinfoFile
     /// <summary>
     /// Tries to get the content of the <see cref="File"/> and deserializes it into an <see cref="IModinfo"/>.
     /// </summary>
-    /// <returns>An <see cref="IModinfo"/> if operation was successful; <see langword="null"/> otherwise.</returns>
-    /// <exception cref="ModinfoException">Throws if it was not possible to get the<see cref="IModinfo"/> or the result was not valid.</exception>
-    IModinfo? TryGetModinfo();
+    /// <param name="modinfo">When this method returns, contains the deserialized modinfo or <see langword="null"/> if an error occurred.</param>
+    /// <returns><see langword="true"/> when the file could be successfully deserialized to a modinfo; otherwise, <see langword="false"/>.</returns>
+    bool TryGetModinfo([NotNullWhen(true)] out IModinfo? modinfo);
 }

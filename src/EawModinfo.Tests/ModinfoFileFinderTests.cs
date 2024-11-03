@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using EawModinfo.File;
-using EawModinfo.Spec;
 using Xunit;
 
 namespace EawModinfo.Tests;
@@ -13,82 +13,51 @@ public class ModinfoFileFinderTests
     private readonly Dictionary<int, string> _scenarioPaths = new();
     private readonly MockFileSystem _fileSystem = new();
 
+    [Fact]
+    public void TestInvalidArgs_Throws()
+    {
+        Assert.Throws<ArgumentNullException>(() => ModinfoFileFinder.FindModinfoFiles(null!));
+        var scenarioPath = _fileSystem.DirectoryInfo.New("notfound");
+        Assert.Throws<DirectoryNotFoundException>(() => ModinfoFileFinder.FindModinfoFiles(scenarioPath));
+    }
+
     public ModinfoFileFinderTests()
     {
-        CreateScenario1();
-        CreateScenario2();
-        CreateScenario3();
-        CreateScenario4();
-        CreateScenario5();
+        CreateScenario_MainModinfoOnly();
+        CreateScenario_MainModinfoOnly_WithCaseInsensitiveName();
+        CreateScenario_WithNoValidModinfoFiles();
+        CreateScenario_WithMainModinfoAndVariant();
+        CreateScenario_WithOnlyVariants();
+        CreateScenario_WithMainModinfoAndVariantAndInvalidFiles();
     }
 
     [Theory]
-    [InlineData(1, 1)]
-    [InlineData(2, 1)]
-    [InlineData(3, 0)]
-    [InlineData(4, 1)]
-    [InlineData(5, 0)]
-    public void TestMain(int scenario, int expectedFilesFound)
+    [InlineData(1, true, 0)]
+    [InlineData(2, true, 0)]
+    [InlineData(3, false, 0)]
+    [InlineData(4, true, 1)]
+    [InlineData(5, false, 2)]
+    [InlineData(6, true, 1)]
+    public void TestAll(int scenario, bool hasMain, int numberVariants)
     {
         var scenarioPath = _fileSystem.DirectoryInfo.New(_scenarioPaths[scenario]);
-        var finder = new ModinfoFileFinder(scenarioPath);
-        Assert.Equal(scenarioPath, finder.Directory);
+        var result = ModinfoFileFinder.FindModinfoFiles(scenarioPath);
 
-        var result = finder.Find(FindOptions.FindMain);
-
-        Assert.Equal(expectedFilesFound, result.Count());
-
+        Assert.Equal(hasMain, result.HasMainModinfoFile);
+        Assert.Equal(numberVariants, result.Variants.Count);
     }
 
     [Theory]
-    [InlineData(1, 0)]
-    [InlineData(2, 0)]
-    [InlineData(3, 0)]
-    [InlineData(4, 1)]
-    [InlineData(5, 2)]
-    public void TestVariants(int scenario, int expectedFilesFound)
+    [InlineData(4)]
+    [InlineData(6)]
+    public void TestMerge(int scenario)
     {
         var scenarioPath = _fileSystem.DirectoryInfo.New(_scenarioPaths[scenario]);
-        var finder = new ModinfoFileFinder(scenarioPath);
-        Assert.Equal(scenarioPath, finder.Directory);
-
-        var result = finder.Find(FindOptions.FindVariants);
-
-        Assert.Equal(expectedFilesFound, result.Count());
-
-    }
-
-    [Theory]
-    [InlineData(1, 1)]
-    [InlineData(2, 1)]
-    [InlineData(3, 0)]
-    [InlineData(4, 2)]
-    [InlineData(5, 2)]
-    public void TestAll(int scenario, int expectedFilesFound)
-    {
-        var scenarioPath = _fileSystem.DirectoryInfo.New(_scenarioPaths[scenario]);
-        var finder = new ModinfoFileFinder(scenarioPath);
-        Assert.Equal(scenarioPath, finder.Directory);
-
-        var result = finder.Find(FindOptions.FindAny);
-        Assert.Equal(expectedFilesFound, result.Count());
-    }
-
-    [Fact]
-    public void TestMerge()
-    {
-        var scenarioPath = _fileSystem.DirectoryInfo.New(_scenarioPaths[4]);
-        var finder = new ModinfoFileFinder(scenarioPath);
-        Assert.Equal(scenarioPath, finder.Directory);
-
-        var vars = finder.Find(FindOptions.FindVariants);
-        var all = finder.Find(FindOptions.FindAny);
-
+        var all = ModinfoFileFinder.FindModinfoFiles(scenarioPath);
         Assert.NotNull(all.Variants.ElementAt(0).GetModinfo().Version);
-        Assert.NotNull(vars.Variants.ElementAt(0).GetModinfo().Version);
     }
-    
-    private void CreateScenario1()
+
+    private void CreateScenario_MainModinfoOnly()
     {
         CreateScenario(1, () =>
         {
@@ -104,7 +73,7 @@ public class ModinfoFileFinderTests
         });
     }
 
-    private void CreateScenario2()
+    private void CreateScenario_MainModinfoOnly_WithCaseInsensitiveName()
     {
         CreateScenario(2, () =>
         {
@@ -120,20 +89,19 @@ public class ModinfoFileFinderTests
         });
     }
 
-    private void CreateScenario3()
+    private void CreateScenario_WithNoValidModinfoFiles()
     {
         CreateScenario(3, () =>
         {
             const string path = "scenario3";
-            const string fileName = "empty.txt";
-            var filePath = _fileSystem.Path.Combine(path, fileName);
 
-            _fileSystem.AddFile(filePath, new MockFileData(string.Empty));
+            foreach (var name in ModinfoDataUtils.GetInvalidModinfoFileNames()) 
+                _fileSystem.AddFile(_fileSystem.Path.Combine(path, name), new MockFileData(string.Empty));
             return path;
         });
     }
 
-    private void CreateScenario4()
+    private void CreateScenario_WithMainModinfoAndVariant()
     {
         CreateScenario(4, () =>
         {
@@ -158,8 +126,37 @@ public class ModinfoFileFinderTests
             return path;
         });
     }
-    
-    private void CreateScenario5()
+
+    private void CreateScenario_WithMainModinfoAndVariantAndInvalidFiles()
+    {
+        CreateScenario(6, () =>
+        {
+            const string path = "scenario6";
+            const string mainFileName = "modinfo.json";
+            const string variantFileName = "variant-modinfo.json";
+            var mainFilePath = _fileSystem.Path.Combine(path, mainFileName);
+            var variantFilePath = _fileSystem.Path.Combine(path, variantFileName);
+
+            const string mainFileData = @"{
+	""name"": ""testmod"",
+	""version"": ""1.0.0""
+}";
+
+            const string variantFileData = @"{
+	""name"": ""Addon""
+}";
+
+            _fileSystem.AddFile(mainFilePath, new MockFileData(mainFileData));
+            _fileSystem.AddFile(variantFilePath, new MockFileData(variantFileData));
+
+            foreach (var name in ModinfoDataUtils.GetInvalidModinfoFileNames())
+                _fileSystem.AddFile(_fileSystem.Path.Combine(path, name), new MockFileData(string.Empty));
+
+            return path;
+        });
+    }
+
+    private void CreateScenario_WithOnlyVariants()
     {
         CreateScenario(5, () =>
         {

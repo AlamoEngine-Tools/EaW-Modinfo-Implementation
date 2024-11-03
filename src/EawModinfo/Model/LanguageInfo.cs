@@ -96,9 +96,9 @@ public sealed class LanguageInfo : ILanguageInfo, IEquatable<LanguageInfo>
     }
 
     /// <inheritdoc/>
-    public string ToJson(bool validate)
+    public string ToJson()
     {
-        return new JsonLanguageInfo(this).ToJson(validate);
+        return new JsonLanguageInfo(this).ToJson();
     }
 
     /// <inheritdoc />

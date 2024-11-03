@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
 using EawModinfo.Model;
@@ -35,19 +36,10 @@ public abstract class ModinfoFile : IModinfoFile
     }
 
     /// <inheritdoc/>
-    public void ValidateFile()
-    {
-        File.Refresh();
-        if (!File.Exists)
-            throw new ModinfoException($"Modinfo variant file does not exists at '{File.FullName}'.");
-        if (!FileNameValidator.Validate(File.Name, out var error))
-            throw new ModinfoException(error);
-    }
-
-    /// <inheritdoc/>
     public async Task<IModinfo> GetModinfoAsync()
     {
-        ValidateFile();
+        if (!IsFileValid(out var error))
+            throw new ModinfoException(error);
         if (_data != null)
             return _data;
         _data = await GetModinfoCoreAsync().ConfigureAwait(false);
@@ -55,10 +47,24 @@ public abstract class ModinfoFile : IModinfoFile
         return _data;
     }
 
+
+    /// <inheritdoc />
+    public bool IsFileValid([NotNullWhen(false)]out string? error)
+    {
+        File.Refresh();
+        if (!File.Exists)
+        {
+            error = $"The file '{File.FullName}' does not exist.";
+            return false;
+        }
+        return FileNameValidator.Validate(File.Name, out error);
+    }
+
     /// <inheritdoc/>
     public IModinfo GetModinfo()
     {
-        ValidateFile();
+        if (!IsFileValid(out var error))
+            throw new ModinfoException(error);
         if (_data != null)
             return _data;
         _data = GetModinfoCore();
@@ -67,15 +73,17 @@ public abstract class ModinfoFile : IModinfoFile
     }
 
     /// <inheritdoc/>
-    public IModinfo? TryGetModinfo()
+    public bool TryGetModinfo([NotNullWhen(true)] out IModinfo? modinfo)
     {
         try
         {
-            return GetModinfo();
+            modinfo = GetModinfo();
+            return true;
         }
         catch
         {
-            return null;
+            modinfo = null;
+            return false;
         }
     }
 

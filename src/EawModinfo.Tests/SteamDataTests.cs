@@ -64,7 +64,7 @@ public class SteamDataTests
     {
         var steamData = new SteamData("123", "Test", SteamWorkshopVisibility.Private, "Title", ["FOC"]);
 
-        var data = steamData.ToJson(false);
+        var data = steamData.ToJson();
         Assert.Contains(@"""contentfolder"": ""Test""", data);
         Assert.Contains(@"""publishedfileid"": ""123""", data);
         Assert.Contains(@"""visibility"": 2", data);
@@ -75,7 +75,7 @@ public class SteamDataTests
         {
             Metadata = "test"
         };
-        var data2 = steamDat2.ToJson(false);
+        var data2 = steamDat2.ToJson();
         Assert.Contains(@"""contentfolder"": ""Test""", data2);
         Assert.Contains(@"""publishedfileid"": ""123""", data2);
         Assert.Contains(@"""metadata"": ""test""", data2);
@@ -93,7 +93,7 @@ public class SteamDataTests
         };
 
 
-        var data = steamData.ToJson(false);
+        var data = steamData.ToJson();
 
         var expected = @"{
   ""publishedfileid"": ""123"",
@@ -140,7 +140,7 @@ public class SteamDataTests
         Assert.Equal("preview.png", steamData.PreviewFile);
 
 
-        var json = steamData.ToJson(false);
+        var json = steamData.ToJson();
         var newSteamData = SteamData.Parse(json);
 
         Assert.Equal(steamData.ContentFolder, newSteamData.ContentFolder);

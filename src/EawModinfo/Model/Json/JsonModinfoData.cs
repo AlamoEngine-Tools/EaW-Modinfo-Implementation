@@ -130,10 +130,9 @@ internal class JsonModinfoData : IModinfo
 
 
     /// <inheritdoc/>
-    public string ToJson(bool validate = true)
+    public string ToJson()
     {
-        if (validate)
-            this.Validate();
+        this.Validate();
         return JsonSerializer.Serialize(this, ParseUtility.SerializerOptions);
     }
         

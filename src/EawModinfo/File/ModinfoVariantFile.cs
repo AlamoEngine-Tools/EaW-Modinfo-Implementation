@@ -16,7 +16,7 @@ public sealed class ModinfoVariantFile : ModinfoFile
     /// </summary>
     public const string VariantModinfoFileEnding = "-modinfo.json";
 
-    private readonly IModinfoFile? _mainModinfoFile;
+    private readonly MainModinfoFile? _mainModinfoFile;
     private IModinfo? _mainModinfoData;
 
     /// <inheritdoc/>
@@ -37,10 +37,8 @@ public sealed class ModinfoVariantFile : ModinfoFile
     /// </summary>
     /// <param name="file">The file handle.</param>
     /// <param name="mainModinfoFile">The main modinfo file</param>
-    public ModinfoVariantFile(IFileInfo file, IModinfoFile? mainModinfoFile) : base(file)
+    public ModinfoVariantFile(IFileInfo file, MainModinfoFile? mainModinfoFile) : base(file)
     {
-        if (mainModinfoFile?.FileKind == ModinfoFileKind.VariantFile)
-            throw new ModinfoException("A ModinfoFile's base cannot also be a file file.");
         _mainModinfoFile = mainModinfoFile;
     }
 
@@ -86,6 +84,12 @@ public sealed class ModinfoVariantFile : ModinfoFile
             if (!fileName.EndsWith(VariantModinfoFileEnding, StringComparison.OrdinalIgnoreCase))
             {
                 error = "The file's name must end with '-modinfo.json'.";
+                return false;
+            }
+
+            if (fileName.Length == VariantModinfoFileEnding.Length)
+            {
+                error = "The file's name cannot be just '-modinfo.json'";
                 return false;
             }
             return true;

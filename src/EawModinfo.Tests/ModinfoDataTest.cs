@@ -434,7 +434,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     public void Test_ToJson()
     {
         var modinfo = new ModinfoData("Test") { Version = SemVersion.ParsedFrom(1, 1, 1, "BETA") };
-        var data = modinfo.ToJson(false);
+        var data = modinfo.ToJson();
         output.WriteLine(data);
         Assert.Contains(@"""version"": ""1.1.1-BETA""", data);
         Assert.DoesNotContain(@"""custom"":", data);
@@ -447,7 +447,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
         {
             Dependencies = new DependencyList(new List<IModReference> { new ModReference("123", ModType.Default) }, DependencyResolveLayout.FullResolved)
         };
-        var data = modinfo.ToJson(false);
+        var data = modinfo.ToJson();
         output.WriteLine(data);
         Assert.Contains(@"""FullResolved"",", data);
         Assert.Contains(@"""identifier"": ""123""", data);
@@ -461,7 +461,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
         {
             Dependencies = DependencyList.EmptyDependencyList
         };
-        var data = modinfo.ToJson(false);
+        var data = modinfo.ToJson();
         output.WriteLine(data);
         Assert.DoesNotContain(@"""dependencies""", data);
     }
@@ -473,7 +473,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
         {
             Dependencies = new DependencyList(new List<IModReference> { new ModReference("123", ModType.Default, SemVersionRange.Parse("1.*")) }, DependencyResolveLayout.ResolveRecursive)
         };
-        var data = modinfo.ToJson(false);
+        var data = modinfo.ToJson();
         output.WriteLine(data);
         Assert.DoesNotContain(@"""ResolveRecursive"",", data);
         Assert.Contains(@"""version-range"": ""1.*""", data);
@@ -487,7 +487,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
             Summary = "Summary",
             Icon = "icon.ico"
         };
-        var data = modinfo.ToJson(false);
+        var data = modinfo.ToJson();
         output.WriteLine(data);
         Assert.Contains(@"""summary"": ""Summary""", data);
         Assert.Contains(@"""icon"": ""icon.ico""", data);
@@ -513,7 +513,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
             },
             SteamData = new SteamData("123", "folder", SteamWorkshopVisibility.Public, "Test", ["FOC"])
         };
-        var data = modinfo.ToJson(false);
+        var data = modinfo.ToJson();
         output.WriteLine(data);
 
         var expected = @"{
@@ -563,7 +563,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
                 new LanguageInfo("en", 0),
             }
         };
-        var data = modinfo.ToJson(false);
+        var data = modinfo.ToJson();
         Assert.DoesNotContain(@"""languages""", data);
         output.WriteLine(data);
     }
@@ -578,7 +578,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
                 LanguageInfo.Default
             }
         };
-        var data = modinfo.ToJson(false);
+        var data = modinfo.ToJson();
         Assert.DoesNotContain(@"""languages""", data);
         output.WriteLine(data);
     }

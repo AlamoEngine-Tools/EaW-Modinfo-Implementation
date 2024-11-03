@@ -159,7 +159,7 @@ public class LanguageInfoTests
     public void Test_ToJson_Languages_Default()
     {
         var languageInfo = LanguageInfo.Default;
-        var json = languageInfo.ToJson(false);
+        var json = languageInfo.ToJson();
         
         Assert.Contains(@"""code"": ""en""", json);
         Assert.Contains(@"""support"": 7", json);
@@ -169,7 +169,7 @@ public class LanguageInfoTests
     public void Test_ToJson_Languages_CustomDefault()
     {
         var languageInfo = new LanguageInfo("en", 0);
-        var json = languageInfo.ToJson(false);
+        var json = languageInfo.ToJson();
         Assert.Contains(@"""code"": ""en""", json);
         Assert.DoesNotContain(@"""support""", json);
     }
@@ -178,7 +178,7 @@ public class LanguageInfoTests
     public void Test_ToJson_Languages_Full()
     {
         var languageInfo = new LanguageInfo("en", LanguageSupportLevel.FullLocalized);
-        var json = languageInfo.ToJson(false);
+        var json = languageInfo.ToJson();
         Assert.Contains(@"""code"": ""en""", json);
         Assert.Contains(@"""support"": 7", json);
     }
@@ -187,7 +187,7 @@ public class LanguageInfoTests
     public void Test_ToJson_Languages_NonEnglish()
     {
         var languageInfo = new LanguageInfo("de", LanguageSupportLevel.FullLocalized);
-        var json = languageInfo.ToJson(false);
+        var json = languageInfo.ToJson();
 
         Assert.Contains(@"""code"": ""de""", json);
         Assert.Contains(@"""support"": 7", json);

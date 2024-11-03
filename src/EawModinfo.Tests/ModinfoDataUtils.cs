@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
+using System.Linq;
 
 namespace EawModinfo.Tests;
 
@@ -43,7 +45,7 @@ internal static class ModinfoDataUtils
 	""name"": ""Addon""
 }";
 
-    internal static IFileInfo CreateModifnoFile(MockFileSystem fs, string path)
+    internal static IFileInfo CreateModinfoFile(MockFileSystem fs, string path)
     {
         const string name = "modinfo.json";
         return CreateFile(fs, path, name, MainModinfoData);
@@ -66,5 +68,19 @@ internal static class ModinfoDataUtils
         var fullPath = fs.Path.Combine(path, name);
         fs.AddFile(fullPath, new MockFileData(data));
         return fs.FileInfo.New(fullPath);
+    }
+
+    public static IEnumerable<string> GetInvalidModinfoFileNames()
+    {
+        yield return "-modinfo.json";
+        yield return "file.json";
+        yield return "modinfo.txt";
+        yield return "modinf.json";
+        yield return "variant-modinf.json";
+    }
+
+    public static IEnumerable<object[]> InvalidModinfoFileNamesTestData()
+    {
+        return GetInvalidModinfoFileNames().Select(name => (object[])[name]);
     }
 }
