@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using EawModinfo.Spec.Steam;
@@ -79,8 +80,16 @@ internal class JsonSteamData : ISteamData
     }
 
     public string ToJson()
-    { 
+    {
         this.Validate();
         return JsonSerializer.Serialize(this, ParseUtility.SerializerOptions);
+    }
+
+    public void ToJson(Stream stream)
+    {
+        this.Validate();
+        if (stream == null)
+            throw new ArgumentNullException(nameof(stream));
+        JsonSerializer.Serialize(stream, this, ParseUtility.SerializerOptions);
     }
 }

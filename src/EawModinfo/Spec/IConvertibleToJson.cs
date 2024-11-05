@@ -1,6 +1,7 @@
-﻿namespace EawModinfo.Spec;
+﻿using System;
+using System.IO;
 
-// TODO: Support streams
+namespace EawModinfo.Spec;
 
 /// <summary>
 /// Indicates that an instance of the interface can be converted to JSON data
@@ -13,4 +14,12 @@ public interface IConvertibleToJson
     /// <returns>The serialized JSON data.</returns>
     /// <exception cref="ModinfoException">The instance to serialize is not valid again the modinfo specification.</exception>
     string ToJson();
+
+    /// <summary>
+    /// Converts the current instance to JSON and writes it to the stream.
+    /// </summary>
+    /// <param name="stream">The stream to write to.</param>
+    /// <exception cref="ModinfoException">The instance to serialize is not valid again the modinfo specification.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/>.</exception>
+    void ToJson(Stream stream);
 }

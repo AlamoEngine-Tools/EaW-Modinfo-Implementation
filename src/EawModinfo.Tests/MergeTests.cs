@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using EawModinfo.Model;
 using EawModinfo.Model.Json;
@@ -76,6 +77,9 @@ public class MergeTests
         public IEnumerable<ILanguageInfo> Languages => null!;
 
         public string ToJson() => string.Empty;
+        public void ToJson(Stream stream)
+        {
+        }
 
         public bool Equals(IModIdentity? other) => false;
     }

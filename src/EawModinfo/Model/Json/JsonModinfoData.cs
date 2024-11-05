@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -129,13 +130,20 @@ internal class JsonModinfoData : IModinfo
     }
 
 
-    /// <inheritdoc/>
     public string ToJson()
     {
         this.Validate();
         return JsonSerializer.Serialize(this, ParseUtility.SerializerOptions);
     }
-        
+
+    public void ToJson(Stream stream)
+    {
+        this.Validate();
+        if (stream == null)
+            throw new ArgumentNullException(nameof(stream));
+        JsonSerializer.Serialize(stream, this, ParseUtility.SerializerOptions);
+    }
+
     bool IEquatable<IModIdentity>.Equals(IModIdentity? other)
     {
         return ModIdentityEqualityComparer.Default.Equals(this, other);

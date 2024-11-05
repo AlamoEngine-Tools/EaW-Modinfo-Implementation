@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Equality;
@@ -81,13 +82,28 @@ public sealed class ModinfoData : IModinfo
     }
 
     /// <summary>
-    /// Parses and deserializes a json data into a <see cref="ModinfoData"/>
+    /// Parses and deserializes a json data into a <see cref="ModinfoData"/>.
     /// </summary>
     /// <param name="data">The raw json data.</param>
     /// <returns>The deserialized object.</returns>
     /// <exception cref="ModinfoParseException">Throws when parsing failed due to missing required properties.</exception>
     public static ModinfoData Parse(string data)
     {
+        if (data == null) 
+            throw new ArgumentNullException(nameof(data));
+        return new ModinfoData(ParseUtility.Parse<JsonModinfoData>(data));
+    }
+
+    /// <summary>
+    /// Parses and deserializes a json data into a <see cref="ModinfoData"/>.
+    /// </summary>
+    /// <param name="data">The json data stream.</param>
+    /// <returns>The deserialized object.</returns>
+    /// <exception cref="ModinfoParseException">Throws when parsing failed due to missing required properties.</exception>
+    public static ModinfoData Parse(Stream data)
+    {
+        if (data == null) 
+            throw new ArgumentNullException(nameof(data));
         return new ModinfoData(ParseUtility.Parse<JsonModinfoData>(data));
     }
 
@@ -95,6 +111,14 @@ public sealed class ModinfoData : IModinfo
     public string ToJson()
     {
         return new JsonModinfoData(this).ToJson();
+    }
+
+    /// <inheritdoc />
+    public void ToJson(Stream stream)
+    {
+        if (stream == null) 
+            throw new ArgumentNullException(nameof(stream));
+        new JsonModinfoData(this).ToJson(stream);
     }
 
     /// <inheritdoc/>

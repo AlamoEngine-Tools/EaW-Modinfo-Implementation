@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Text.Json.Nodes;
 using EawModinfo.Model;
 using EawModinfo.Model.Json.Schema;
@@ -42,27 +44,25 @@ public class SteamDataTests
         {
             Assert.Throws<ModinfoParseException>(() => ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.SteamData));
             Assert.Throws<ModinfoParseException>(() => SteamData.Parse(data));
+            Assert.Throws<ModinfoParseException>(() => SteamData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data))));
         }
         else
         {
             Assert.NotNull(expected);
             var steamData = SteamData.Parse(data);
 
-            Assert.Equal(expected.Title, steamData.Title);
-            Assert.Equal(expected.ContentFolder, steamData.ContentFolder);
-            Assert.Equal(expected.Description, steamData.Description);
-            Assert.Equal(expected.Id, steamData.Id);
-            Assert.Equal(expected.Metadata, steamData.Metadata);
-            Assert.Equal(expected.Tags, steamData.Tags);
-            Assert.Equal(expected.Visibility, steamData.Visibility);
-            Assert.Equal(expected.PreviewFile, steamData.PreviewFile);
+            AssertSteamDataEquals(expected, steamData);
+
+            steamData = SteamData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)));
+            AssertSteamDataEquals(expected, steamData);
         }
     }
 
     [Fact]
     public void Parse_Null_Throws()
     {
-        Assert.Throws<ArgumentNullException>(() => SteamData.Parse(null!));
+        Assert.Throws<ArgumentNullException>(() => SteamData.Parse((string)null!));
+        Assert.Throws<ArgumentNullException>(() => SteamData.Parse((Stream)null!));
     }
 
     [Fact]
@@ -99,8 +99,6 @@ public class SteamDataTests
         };
 
 
-        var data = steamData.ToJson();
-
         var expected = @"{
   ""publishedfileid"": ""123"",
   ""contentfolder"": ""Test Folder"",
@@ -114,7 +112,11 @@ public class SteamDataTests
     ""SinglePlayer""
   ]
 }";
-        Assert.Equal(expected, data);
+        Assert.Equal(expected, steamData.ToJson());
+
+        var ms = new MemoryStream();
+        steamData.ToJson(ms);
+        Assert.Equal(expected, Encoding.UTF8.GetString(ms.ToArray()));
     }
 
 
@@ -127,7 +129,7 @@ public class SteamDataTests
 
 
     [Fact]
-    public static void WriteReadEquals()
+    public void WriteReadEquals()
     {
         var steamData = new SteamData("123", "Test", SteamWorkshopVisibility.Private, "Title", ["FOC", "SinglePlayer"])
         {
@@ -147,16 +149,24 @@ public class SteamDataTests
 
 
         var json = steamData.ToJson();
-        var newSteamData = SteamData.Parse(json);
+        AssertSteamDataEquals(steamData, SteamData.Parse(json));
 
-        Assert.Equal(steamData.ContentFolder, newSteamData.ContentFolder);
-        Assert.Equal(steamData.Id, newSteamData.Id);
-        Assert.Equivalent(steamData.Tags, newSteamData.Tags, true);
-        Assert.Equal(steamData.Title, newSteamData.Title);
-        Assert.Equal(steamData.Visibility, newSteamData.Visibility);
-        Assert.Equal(steamData.Description, newSteamData.Description);
-        Assert.Equal(steamData.Metadata, newSteamData.Metadata);
-        Assert.Equal(steamData.PreviewFile, newSteamData.PreviewFile);
+        using var ms = new MemoryStream();
+        steamData.ToJson(ms);
+        ms.Position = 0;
+        AssertSteamDataEquals(steamData, SteamData.Parse(ms));
+    }
+
+    private static void AssertSteamDataEquals(ISteamData expected, ISteamData actual)
+    {
+        Assert.Equal(expected.ContentFolder, actual.ContentFolder);
+        Assert.Equal(expected.Id, actual.Id);
+        Assert.Equivalent(expected.Tags, actual.Tags, true);
+        Assert.Equal(expected.Title, actual.Title);
+        Assert.Equal(expected.Visibility, actual.Visibility);
+        Assert.Equal(expected.Description, actual.Description);
+        Assert.Equal(expected.Metadata, actual.Metadata);
+        Assert.Equal(expected.PreviewFile, actual.PreviewFile);
     }
 
     [Fact]

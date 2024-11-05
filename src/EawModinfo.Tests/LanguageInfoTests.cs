@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json.Nodes;
 using EawModinfo.Model;
 using EawModinfo.Model.Json;
@@ -129,6 +131,11 @@ public class LanguageInfoTests
         var languageInfo = LanguageInfo.Parse(data);
         Assert.Equal(expectedCode, languageInfo.Code);
         Assert.Equal(expectedLevel, languageInfo.Support);
+
+        var ms = new MemoryStream(Encoding.UTF8.GetBytes(data));
+        languageInfo = LanguageInfo.Parse(ms);
+        Assert.Equal(expectedCode, languageInfo.Code);
+        Assert.Equal(expectedLevel, languageInfo.Support);
     }
 
     public static IEnumerable<object[]> GetInvalidData()
@@ -184,14 +191,16 @@ public class LanguageInfoTests
     {
         Assert.Throws<ModinfoParseException>(() => ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModLanguageInfo));
         Assert.False(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModLanguageInfo, out var errors));
-        Assert.Equivalent(expectedErrorKeys, errors.Select(x => x.Key), true);
+        Assert.Equivalent(expectedErrorKeys, errors.Select(x => x.Key), true); 
         Assert.Throws<ModinfoParseException>(() => LanguageInfo.Parse(data));
+        Assert.Throws<ModinfoParseException>(() => LanguageInfo.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data))));
     }
 
     [Fact]
     public void Parse_Null_Throws()
     {
-        Assert.Throws<ArgumentNullException>(() => LanguageInfo.Parse(null!));
+        Assert.Throws<ArgumentNullException>(() => LanguageInfo.Parse((string)null!));
+        Assert.Throws<ArgumentNullException>(() => LanguageInfo.Parse((Stream)null!));
     }
 
     [Fact]
@@ -199,6 +208,12 @@ public class LanguageInfoTests
     {
         var languageInfo = LanguageInfo.Default;
         var json = languageInfo.ToJson();
+        Assert.Contains(@"""code"": ""en""", json);
+        Assert.DoesNotContain(@"""support"": 7", json);
+
+        var ms = new MemoryStream();
+        languageInfo.ToJson(ms);
+        json = Encoding.UTF8.GetString(ms.ToArray());
         Assert.Contains(@"""code"": ""en""", json);
         Assert.DoesNotContain(@"""support"": 7", json);
     }
@@ -210,6 +225,12 @@ public class LanguageInfoTests
         var json = languageInfo.ToJson();
         Assert.Contains(@"""code"": ""en""", json);
         Assert.DoesNotContain(@"""support""", json);
+
+        var ms = new MemoryStream();
+        languageInfo.ToJson(ms);
+        json = Encoding.UTF8.GetString(ms.ToArray());
+        Assert.Contains(@"""code"": ""en""", json);
+        Assert.DoesNotContain(@"""support""", json);
     }
 
     [Fact]
@@ -219,6 +240,12 @@ public class LanguageInfoTests
         var json = languageInfo.ToJson();
         Assert.Contains(@"""code"": ""en""", json);
         Assert.DoesNotContain(@"""support"": 7", json);
+
+        var ms = new MemoryStream();
+        languageInfo.ToJson(ms);
+        json = Encoding.UTF8.GetString(ms.ToArray());
+        Assert.Contains(@"""code"": ""en""", json);
+        Assert.DoesNotContain(@"""support""", json);
     }
 
     [Fact]
@@ -227,6 +254,12 @@ public class LanguageInfoTests
         var languageInfo = new LanguageInfo("de", LanguageSupportLevel.FullLocalized);
         var json = languageInfo.ToJson();
 
+        Assert.Contains(@"""code"": ""de""", json);
+        Assert.DoesNotContain(@"""support"": 7", json);
+
+        var ms = new MemoryStream();
+        languageInfo.ToJson(ms);
+        json = Encoding.UTF8.GetString(ms.ToArray());
         Assert.Contains(@"""code"": ""de""", json);
         Assert.DoesNotContain(@"""support"": 7", json);
     }

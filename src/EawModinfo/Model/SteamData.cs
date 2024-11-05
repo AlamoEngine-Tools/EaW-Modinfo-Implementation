@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using EawModinfo.Model.Json;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
@@ -93,9 +94,34 @@ public sealed class SteamData : ISteamData
         return new SteamData(jsonData);
     }
 
+    /// <summary>
+    /// Parses and deserializes a json data into a <see cref="JsonSteamData"/>
+    /// </summary>
+    /// <param name="data">The json data stream.</param>
+    /// <returns>The deserialized object.</returns>
+    /// <exception cref="ModinfoParseException">Throws when parsing failed due to missing required properties.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/>.</exception>
+    public static SteamData Parse(Stream data)
+    {
+        if (data == null)
+            throw new ArgumentNullException(nameof(data));
+        var jsonData = ParseUtility.Parse<JsonSteamData>(data);
+        return new SteamData(jsonData);
+    }
+
+
+
     /// <inheritdoc/>
     public string ToJson()
     {
         return new JsonSteamData(this).ToJson();
+    }
+
+    /// <inheritdoc />
+    public void ToJson(Stream stream)
+    {
+        if (stream == null)
+            throw new ArgumentNullException(nameof(stream));
+        new JsonSteamData(this).ToJson(stream);
     }
 }

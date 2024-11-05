@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using EawModinfo.Spec;
@@ -65,5 +67,13 @@ internal class JsonLanguageInfo : ILanguageInfo
     {
         this.Validate();
         return JsonSerializer.Serialize(this, ParseUtility.SerializerOptions);
+    }
+
+    public void ToJson(Stream stream)
+    {
+        this.Validate();
+        if (stream == null) 
+            throw new ArgumentNullException(nameof(stream));
+        JsonSerializer.Serialize(stream, this, ParseUtility.SerializerOptions);
     }
 }

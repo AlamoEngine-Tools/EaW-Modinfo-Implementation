@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.IO;
 using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Equality;
@@ -68,6 +69,21 @@ public sealed class LanguageInfo : ILanguageInfo, IEquatable<LanguageInfo>
     }
 
     /// <summary>
+    /// Parses and deserializes a json data into a <see cref="LanguageInfo"/>.
+    /// </summary>
+    /// <param name="data">The json data stream.</param>
+    /// <returns>The deserialized object.</returns>
+    /// <exception cref="ModinfoParseException">Throws when parsing failed due to missing required properties.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/>.</exception>
+    public static LanguageInfo Parse(Stream data)
+    {
+        if (data == null)
+            throw new ArgumentNullException(nameof(data));
+        var jsonData = ParseUtility.Parse<JsonLanguageInfo>(data);
+        return new LanguageInfo(jsonData);
+    }
+
+    /// <summary>
     /// Gets a culture representation of the <see cref="Code"/> property.
     /// </summary>
     /// <exception cref="CultureNotFoundException"><see cref="Code"/> is not a valid culture name.</exception>
@@ -110,6 +126,14 @@ public sealed class LanguageInfo : ILanguageInfo, IEquatable<LanguageInfo>
     public string ToJson()
     {
         return new JsonLanguageInfo(this).ToJson();
+    }
+
+    /// <inheritdoc />
+    public void ToJson(Stream stream)
+    {
+        if (stream == null)
+            throw new ArgumentNullException(nameof(stream));
+        new JsonLanguageInfo(this).ToJson(stream);
     }
 
     /// <inheritdoc />

@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
+﻿using System.Linq;
 using System.Text.Json.Nodes;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using EawModinfo.Model.Json;
@@ -22,6 +24,12 @@ internal static class ParseUtility
         {
             Modifiers = { DefaultValueModifier }
         }
+    };
+
+    private static readonly JsonDocumentOptions DocumentOptions = new()
+    {
+        AllowTrailingCommas = true,
+        CommentHandling = JsonCommentHandling.Skip
     };
 
     private static void DefaultValueModifier(JsonTypeInfo obj)
@@ -56,21 +64,29 @@ internal static class ParseUtility
         }
     }
 
+    public static T Parse<T>(Stream dataStream)
+    {
+        try
+        { 
+            var jsonNode = JsonNode.Parse(dataStream, null, DocumentOptions);
+            var result = ParseCore<T>(jsonNode);
+
+            if (result is null)
+                throw new ModinfoParseException($"Unable to parse input from stream to {typeof(T).Name}. Unknown Error!");
+            return result;
+        }
+        catch (JsonException cause)
+        {
+            throw new ModinfoParseException(cause.Message, cause);
+        }
+    }
+
     public static T Parse<T>(string data)
     {
-        if (string.IsNullOrEmpty(data))
-            throw new ModinfoParseException("No input data.");
         try
         {
-            var jsonNode = JsonNode.Parse(data, null, new JsonDocumentOptions
-            {
-                AllowTrailingCommas = true,
-                CommentHandling = JsonCommentHandling.Skip
-            });
-
-            ModInfoJsonSchema.Evaluate<T>(jsonNode);
-
-            var parseResult = jsonNode.Deserialize<T>(SerializerOptions);
+            var jsonNode = JsonNode.Parse(data, null, DocumentOptions);
+            var parseResult = ParseCore<T>(jsonNode);
             if (parseResult is null)
                 throw new ModinfoParseException($"Unable to parse input '{data}' to {typeof(T).Name}. Unknown Error!");
             return parseResult;
@@ -79,5 +95,14 @@ internal static class ParseUtility
         {
             throw new ModinfoParseException(cause.Message, cause);
         }
+    }
+
+    public static T? ParseCore<T>(JsonNode? jsonData)
+    {
+        if (jsonData == null)
+            throw new ModinfoParseException("Unable to parse input to JSON Node");
+
+        ModInfoJsonSchema.Evaluate<T>(jsonData);
+        return jsonData.Deserialize<T>(SerializerOptions);
     }
 }

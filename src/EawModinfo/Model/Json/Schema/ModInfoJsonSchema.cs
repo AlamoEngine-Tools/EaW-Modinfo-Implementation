@@ -270,14 +270,17 @@ public static class ModInfoJsonSchema
     /// <param name="json">The JSON node to evaluate.</param>
     /// <param name="evaluationType">The schema to use.</param>
     /// <exception cref="ModinfoParseException"><paramref name="json"/> is not valid against the JSON schema specified by <paramref name="evaluationType"/>.</exception>
-    public static void Evaluate(JsonNode? json, EvaluationType evaluationType)
+    /// <exception cref="ArgumentNullException"><paramref name="json"/> is <see langword="null"/>.</exception>
+    public static void Evaluate(JsonNode json, EvaluationType evaluationType)
     {
+        if (json == null) 
+            throw new ArgumentNullException(nameof(json));
         var schema = GetSchemaForType(evaluationType);
         var result = schema.Evaluate(json, EvaluationOptions);
         ThrowOnValidationError(result);
     }
 
-    internal static void Evaluate<T>(JsonNode? json)
+    internal static void Evaluate<T>(JsonNode json)
     {
         Evaluate(json, GetSchemaForType(typeof(T)));
     }
