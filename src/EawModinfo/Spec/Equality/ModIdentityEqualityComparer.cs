@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace EawModinfo.Spec.Equality;
 
 /// <summary>
-/// Compares two <see cref="IModReference"/>
+/// Compares two <see cref="IModReference"/>.
 /// </summary>
 public sealed class ModIdentityEqualityComparer : IEqualityComparer<IModIdentity>
 {

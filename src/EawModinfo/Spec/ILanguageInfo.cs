@@ -4,21 +4,23 @@ using System.ComponentModel;
 namespace EawModinfo.Spec;
 
 /// <summary>
-/// Data type that represents a supported language.
-/// <br></br>
-/// Implements <see cref="IEquatable{T}"/>. For equality, only <see cref="Code"/> is relevant.
+/// Represents a supported game language.
 /// </summary>
+/// <remarks>
+/// According to the modinfo specification, for equality, only <see cref="Code"/> is relevant.
+/// </remarks>
 public interface ILanguageInfo : IEquatable<ILanguageInfo>, IConvertibleToJson
 {
+    // TODO: Validate in Schema
     /// <summary>
-    /// The ISO 639-1 two letter language code.
+    /// Gets the ISO 639-1 two letter language code.
     /// </summary>
     string Code { get; }
 
     /// <summary>
-    /// The level of which this language is supported by the mod.
+    /// Gets the level of how this language is supported by the mod.
     /// </summary>
-    /// <remarks>Default value is <see cref="LanguageSupportLevel.FullLocalized"/></remarks>
+    /// <remarks>If not other value is provided, the value <see cref="LanguageSupportLevel.FullLocalized"/> shall be returned as default.</remarks>
     [DefaultValue(LanguageSupportLevel.FullLocalized)]
     LanguageSupportLevel Support { get; }
 }

@@ -3,50 +3,50 @@
 namespace EawModinfo.Spec.Steam;
 
 /// <summary>
-/// Data structure which represents important properties from the workshops uploader.
+/// Represents the data structure used by the Steam workshops uploader for submitting mods and updates.
 /// </summary>
 public interface ISteamData : IConvertibleToJson
 {
     /// <summary>
-    /// The Steam Workshop ID.
+    /// Gets the Steam Workshop ID.
     /// </summary>
     public string Id { get; }
 
     /// <summary>
-    /// The content folder's name as specified by the Steam Uploader.
+    /// Gets the content folder's name as specified by the Steam Uploader.
     /// </summary>
     public string ContentFolder { get; }
 
     /// <summary>
-    /// The visibility of the mod.
+    /// Gets the visibility of the mod.
     /// </summary>
     public SteamWorkshopVisibility Visibility { get; }
         
     /// <summary>
-    /// Arbitrary metadata as string. Can be <see langword="null"/>
+    /// Gets arbitrary metadata as string. Can be <see langword="null"/>
     /// </summary>
     public string? Metadata { get; }
 
     /// <summary>
-    /// Steam Tags as specified by the Steam Uploader.
+    /// Steam Tags as specified by the Steam Workshop documentation.
     /// </summary>
     /// <remarks>
-    /// Tags must be unique, are case-sensitive, limited to 255 characters and must not contain the comma ',' character.
+    /// Tags must be unique, are case-sensitive, are limited to 255 characters and must not contain the comma ',' character.
     /// </remarks>
     public IEnumerable<string> Tags { get; }
 
     /// <summary>
-    /// Description of the mod in Steam flavoured BB-Code.
+    /// Gets the description of the mod in Steam flavoured BB-Code.
     /// </summary>
     public string? Description { get; }
 
     /// <summary>
-    /// Relative path to an image file which holds the preview image
+    /// Gets the path to an image file which holds the preview image used by the Steam uploader
     /// </summary>
     public string? PreviewFile { get; }
 
     /// <summary>
-    /// The display name of the mod in Steam Workshops.
+    /// Gets the display name of the mod in Steam Workshops.
     /// </summary>
     public string Title { get; }
 }

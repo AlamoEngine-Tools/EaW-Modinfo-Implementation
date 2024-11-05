@@ -7,12 +7,12 @@ using EawModinfo.Utilities;
 namespace EawModinfo.File;
 
 /// <summary>
-/// A <see cref="ModinfoFile"/> representing a variant modinfo file.
+/// Represents a variant modinfo file.
 /// </summary>
 public sealed class ModinfoVariantFile : ModinfoFile
 {
     /// <summary>
-    /// Postfix for variant modinfo file names, including file extension.
+    /// Suffix for variant modinfo file names, including file extension.
     /// </summary>
     public const string VariantModinfoFileEnding = "-modinfo.json";
 
@@ -25,28 +25,39 @@ public sealed class ModinfoVariantFile : ModinfoFile
     internal override IModFileNameValidator FileNameValidator => new Validator();
 
     /// <summary>
-    /// Creates a file modinfo file from on a handle.
+    /// Initializes a new instance of the <see cref="ModinfoVariantFile"/> class with the specified file handle.
     /// </summary>
     /// <param name="file">The file handle.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="file"/>is <see langword="null"/>.</exception>
     public ModinfoVariantFile(IFileInfo file) : this(file, (IModinfo?) null)
     {
     }
 
     /// <summary>
-    /// Creates a file modinfo file from on a handle with a main modinfo file 
+    /// Initializes a new instance of the <see cref="ModinfoVariantFile"/> class with the specified file handle on optional main modinfo file.
     /// </summary>
+    /// <remarks>
+    /// If <paramref name="mainModinfoFile"/> is not <see langword="null"/>, the deserialized modinfo of this file will inherit
+    /// all properties from <paramref name="mainModinfoFile"/> unless not overwritten by this file.
+    /// </remarks>
     /// <param name="file">The file handle.</param>
-    /// <param name="mainModinfoFile">The main modinfo file</param>
+    /// <param name="mainModinfoFile">The main modinfo file or <see langword="null"/> if no main modinfo shall be used.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="file"/>is <see langword="null"/>.</exception>
     public ModinfoVariantFile(IFileInfo file, MainModinfoFile? mainModinfoFile) : base(file)
     {
         _mainModinfoFile = mainModinfoFile;
     }
 
     /// <summary>
-    /// Creates a file modinfo file from on a handle with a main modinfo data 
+    /// nitializes a new instance of the <see cref="ModinfoVariantFile"/> class with the specified file handle on optional modinfo data.
     /// </summary>
+    /// <remarks>
+    /// If <paramref name="mainModinfoData"/> is not <see langword="null"/>, the deserialized modinfo of this file will inherit
+    /// all properties from <paramref name="mainModinfoData"/> unless not overwritten by this file.
+    /// </remarks>
     /// <param name="file">The file handle.</param>
-    /// <param name="mainModinfoData">The main modinfo data</param>
+    /// <param name="mainModinfoData">The main modinfo data or <see langword="null"/> if no main modinfo shall be used.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="file"/>is <see langword="null"/>.</exception>
     public ModinfoVariantFile(IFileInfo file, IModinfo? mainModinfoData) : base(file)
     {
         _mainModinfoData = mainModinfoData;

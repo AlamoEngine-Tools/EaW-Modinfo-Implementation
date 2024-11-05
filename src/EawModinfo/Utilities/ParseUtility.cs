@@ -5,6 +5,7 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using EawModinfo.Model.Json;
+using EawModinfo.Model.Json.Schema;
 using EawModinfo.Spec;
 
 namespace EawModinfo.Utilities;

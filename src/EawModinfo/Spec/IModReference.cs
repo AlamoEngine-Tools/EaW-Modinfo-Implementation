@@ -4,23 +4,22 @@ using Semver;
 namespace EawModinfo.Spec;
 
 /// <summary>
-/// Data type which is used for representing an external mod dependency. 
+/// Represents a reference to a mod which can be used to describe a dependency. 
 /// </summary>
 public interface IModReference : IEquatable<IModReference>
 {
     /// <summary>
-    /// Unique identifier as a textual representation. The <see cref="Type"/> property my indicate how the data can be interpreted. 
+    /// Gets the unique identifier as a textual representation. The <see cref="Type"/> property my indicate how the data can be interpreted. 
     /// </summary>
     string Identifier { get; }
 
     /// <summary>
-    /// The <see cref="ModType"/> of this reference.
+    /// Gets the <see cref="ModType"/> of the mod reference.
     /// </summary>
     ModType Type { get; }
 
     /// <summary>
-    /// Optional, NPM-style compatible version range for this instance.
-    /// Its concrete data semantics is defined by the tool producing and using this property.
+    /// Gets the NPM-style compatible version range for this instance or <see langword="null"/> is no version range was specified.
     /// </summary>
     /// <remarks>
     /// As stated in the specification this property is not used for equality matching.

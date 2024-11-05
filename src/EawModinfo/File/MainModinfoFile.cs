@@ -4,7 +4,9 @@ using EawModinfo.Spec;
 
 namespace EawModinfo.File;
 
-/// <inheritdoc/>
+/// <summary>
+/// Represents a main "modinfo.json" file.
+/// </summary>
 public sealed class MainModinfoFile : ModinfoFile
 {
     /// <summary>
@@ -17,7 +19,11 @@ public sealed class MainModinfoFile : ModinfoFile
 
     internal override IModFileNameValidator FileNameValidator => new Validator();
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MainModinfoFile"/> class with the specified file handle.
+    /// </summary>
+    /// <param name="modinfoFile">The file handle.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="modinfoFile"/> is <see langword="null"/>.</exception>
     public MainModinfoFile(IFileInfo modinfoFile) : base(modinfoFile)
     {
     }

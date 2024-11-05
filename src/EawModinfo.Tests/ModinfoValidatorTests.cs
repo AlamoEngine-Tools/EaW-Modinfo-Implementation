@@ -215,28 +215,25 @@ public class ModinfoValidatorTests
 
     public static IEnumerable<object[]> GetLanguageInfos()
     {
-        yield return [new LanguageInfo { Code = "en" }, false];
-        yield return [new LanguageInfo { Code = "de" }, false];
-        yield return [new LanguageInfo { Code = "es" }, false];
+        yield return [new LanguageInfo("en", LanguageSupportLevel.FullLocalized), false];
+        yield return [new LanguageInfo("de", LanguageSupportLevel.FullLocalized), false];
+        yield return [new LanguageInfo("es", LanguageSupportLevel.FullLocalized), false];
     }
 
 
     public static IEnumerable<object[]> GetInvalidLanguageInfos()
     {
-        yield return [new LanguageInfo(), true];
+        yield return [new JsonLanguageInfo(null!, LanguageSupportLevel.FullLocalized), true];
         yield return
         [
-            new LanguageInfo
-            {
-                Code = string.Empty
-            },
+            new JsonLanguageInfo("", LanguageSupportLevel.FullLocalized),
             true
         ];
-        yield return [new LanguageInfo { Code = "ens" }, true];
-        yield return [new LanguageInfo { Code = "de-de" }, true];
-        yield return [new LanguageInfo { Code = "deu" }, true];
-        yield return [new LanguageInfo { Code = "iv" }, true];
-        yield return [new LanguageInfo { Code = ".." }, true];
+        yield return [new LanguageInfo("ens", LanguageSupportLevel.FullLocalized), true];
+        yield return [new LanguageInfo("de-de", LanguageSupportLevel.FullLocalized), true];
+        yield return [new LanguageInfo("deu", LanguageSupportLevel.FullLocalized), true];
+        yield return [new LanguageInfo("iv", LanguageSupportLevel.FullLocalized), true];
+        yield return [new LanguageInfo("..", LanguageSupportLevel.FullLocalized), true];
     }
 
 

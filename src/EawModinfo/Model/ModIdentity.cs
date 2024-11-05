@@ -10,6 +10,8 @@ namespace EawModinfo.Model;
 /// <inheritdoc cref="IModIdentity"/> 
 public sealed class ModIdentity : IModIdentity, IEquatable<ModIdentity>
 {
+    private readonly IModDependencyList _dependencies = DependencyList.EmptyDependencyList;
+
     /// <inheritdoc />
     public string Name { get; }
 
@@ -17,12 +19,23 @@ public sealed class ModIdentity : IModIdentity, IEquatable<ModIdentity>
     public SemVersion? Version { get; init; }
 
     /// <inheritdoc />
-    public IModDependencyList Dependencies { get; init; } = DependencyList.EmptyDependencyList;
+    public IModDependencyList Dependencies
+    {
+        get => _dependencies;
+        init
+        {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+            _dependencies = new DependencyList(value);
+        }
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ModIdentity"/> class with a specified name.
     /// </summary>
     /// <param name="name">The name of the mod identity.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="name"/> is empty.</exception>
     public ModIdentity(string name)
     {
         ThrowHelper.ThrowIfNullOrEmpty(name);

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using EawModinfo.Model;
-using EawModinfo.Model.Json;
+using EawModinfo.Model.Json.Schema;
 using EawModinfo.Spec.Steam;
 using Xunit;
 
@@ -57,6 +57,12 @@ public class SteamDataTests
             Assert.Equal(expected.Visibility, steamData.Visibility);
             Assert.Equal(expected.PreviewFile, steamData.PreviewFile);
         }
+    }
+
+    [Fact]
+    public void Parse_Null_Throws()
+    {
+        Assert.Throws<ArgumentNullException>(() => SteamData.Parse(null!));
     }
 
     [Fact]
@@ -116,7 +122,7 @@ public class SteamDataTests
     public static void Test_TagsAreUnique()
     {
         var steamData = new SteamData("123", "Test", SteamWorkshopVisibility.Public, "Title", ["FOC", "foc", "FOC"]);
-        Assert.Equivalent(new List<string>{"FOC", "foc"}, steamData.Tags);
+        Assert.Equivalent(new List<string>{"FOC", "foc"}, steamData.Tags, true);
     }
 
 
@@ -132,7 +138,7 @@ public class SteamDataTests
 
         Assert.Equal("Test", steamData.ContentFolder);
         Assert.Equal("123", steamData.Id);
-        Assert.Equivalent(new List<string>{"FOC", "SinglePlayer"}, steamData.Tags);
+        Assert.Equivalent(new List<string>{"FOC", "SinglePlayer"}, steamData.Tags, true);
         Assert.Equal("Title", steamData.Title);
         Assert.Equal(SteamWorkshopVisibility.Private, steamData.Visibility);
         Assert.Equal("This is some text", steamData.Description);
@@ -145,7 +151,7 @@ public class SteamDataTests
 
         Assert.Equal(steamData.ContentFolder, newSteamData.ContentFolder);
         Assert.Equal(steamData.Id, newSteamData.Id);
-        Assert.Equivalent(steamData.Tags, newSteamData.Tags);
+        Assert.Equivalent(steamData.Tags, newSteamData.Tags, true);
         Assert.Equal(steamData.Title, newSteamData.Title);
         Assert.Equal(steamData.Visibility, newSteamData.Visibility);
         Assert.Equal(steamData.Description, newSteamData.Description);
@@ -157,5 +163,9 @@ public class SteamDataTests
     public void Ctor_Throws()
     {
         Assert.Throws<ArgumentNullException>(() => new SteamData(null!));
+        Assert.Throws<ArgumentNullException>(() => new SteamData(null!, "path", SteamWorkshopVisibility.Private, "title", []));
+        Assert.Throws<ArgumentNullException>(() => new SteamData("123", null!, SteamWorkshopVisibility.Private, "title", []));
+        Assert.Throws<ArgumentNullException>(() => new SteamData("123", "path", SteamWorkshopVisibility.Private, null!,[]));
+        Assert.Throws<ArgumentNullException>(() => new SteamData("123", "path", SteamWorkshopVisibility.Private, "title", null!));
     }
 }

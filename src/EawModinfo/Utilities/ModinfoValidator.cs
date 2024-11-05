@@ -10,16 +10,16 @@ using EawModinfo.Spec.Steam;
 namespace EawModinfo.Utilities;
 
 /// <summary>
-/// Provides validation methods for data types introduced by the modinfo specification.
+/// Provides validation methods for data types defined by the modinfo specification.
 /// </summary>
 public static class ModinfoValidator
 {
     /// <summary>
     /// Validates an <see cref="IModinfo"/> data. Throws an <see cref="ModinfoException"/> when validation failed.
-    /// Also throws is subsequent data such as <see cref="ISteamData"/> are invalid if present.
+    /// Also throws is subsequent data such as <see cref="ISteamData"/> are invalid, if present.
     /// </summary>
-    /// <param name="modinfo">The data to check</param>
-    /// <exception cref="ModinfoException">When validation failed.</exception>
+    /// <param name="modinfo">The data to validate.</param>
+    /// <exception cref="ModinfoException">The validation failed.</exception>
     public static void Validate(this IModinfo modinfo)
     {
         if (string.IsNullOrEmpty(modinfo.Name))
@@ -34,8 +34,8 @@ public static class ModinfoValidator
     /// <summary>
     /// Validates an <see cref="ISteamData"/> data. Throws an <see cref="ModinfoException"/> when validation failed.
     /// </summary>
-    /// <param name="steamData">The data to check</param>
-    /// <exception cref="ModinfoException">When validation failed.</exception>
+    /// <param name="steamData">The data to validate.</param>
+    /// <exception cref="ModinfoException">The validation failed.</exception>
     public static void Validate(this ISteamData steamData)
     {
         if (string.IsNullOrEmpty(steamData.Id))
@@ -84,14 +84,13 @@ public static class ModinfoValidator
     /// Validates an <see cref="IModReference"/> data. Throws an <see cref="ModinfoException"/> when validation failed.
     /// </summary>
     /// <remarks>
-    /// When <see cref="IModReference.Type"/> is <see cref="ModType.Workshops"/>: <see cref="IModReference.Identifier"/> must parse into an <see cref="uint"/>
-    /// However the value must also not be 0.
+    /// When <see cref="IModReference.Type"/> is <see cref="ModType.Workshops"/>:
+    /// <see cref="IModReference.Identifier"/> must parse into an <see cref="uint"/> larger than 0.
     /// <br></br>
-    /// The validator will not check for if the <see cref="IModReference.Identifier"/> is a valid relative or absolute path.
-    /// Tools will have to check this themselves based on the current operating system and file system.
+    /// The validator will not check for if the <see cref="IModReference.Identifier"/> is a valid file system path.
     /// </remarks>
-    /// <param name="modReference">The data to check</param>
-    /// <exception cref="ModinfoException">When validation failed.</exception>
+    /// <param name="modReference">The data to validate.</param>
+    /// <exception cref="ModinfoException">The validation failed.</exception>
     public static void Validate(this IModReference modReference)
     {
         if (string.IsNullOrEmpty(modReference.Identifier))
@@ -99,7 +98,7 @@ public static class ModinfoValidator
         switch (modReference.Type)
         {
             case ModType.Workshops:
-                ValidateSteamId(modReference.Identifier, "Mod-Reference data is invalid: ");
+                ValidateSteamId(modReference.Identifier, $"Mod-Reference data is invalid: '{modReference}'");
                 break;
             case ModType.Default:
             case ModType.Virtual:
@@ -119,8 +118,8 @@ public static class ModinfoValidator
     /// <br></br>
     /// Validation fails on the <see cref="CultureInfo.InvariantCulture"/>.
     /// </remarks>
-    /// <param name="languageInfo">The data to check</param>
-    /// <exception cref="ModinfoException">When validation failed.</exception>
+    /// <param name="languageInfo">The data to validate.</param>
+    /// <exception cref="ModinfoException">The validation failed.</exception>
     public static void Validate(this ILanguageInfo languageInfo)
     {
         if (string.IsNullOrEmpty(languageInfo.Code))

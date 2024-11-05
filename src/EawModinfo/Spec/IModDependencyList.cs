@@ -4,12 +4,12 @@ using System.Collections.Generic;
 namespace EawModinfo.Spec;
 
 /// <summary>
-/// Readonly list which contains <see cref="IModReference"/> of dependencies of a target mod.
+/// Represents a read-only list of mod references to specify a mod's dependencies.
 /// </summary>
 public interface IModDependencyList : IReadOnlyList<IModReference>, IEquatable<IModDependencyList>
 {
     /// <summary>
-    /// Describes how this dependency list shall get interpreted and processed.
+    /// Gets the resolve layout of the <see cref="IModDependencyList"/> that describes how this dependency list shall get interpreted and processed.
     /// </summary>
     DependencyResolveLayout ResolveLayout { get; }
 }

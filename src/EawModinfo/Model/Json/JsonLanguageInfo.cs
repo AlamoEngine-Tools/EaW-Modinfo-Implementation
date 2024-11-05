@@ -38,7 +38,7 @@ internal class JsonLanguageInfo : ILanguageInfo
         if (languageInfo == null)
             throw new ArgumentNullException(nameof(languageInfo));
         Code = languageInfo.Code;
-        Support = languageInfo.Support;
+        Support = languageInfo.Support is LanguageSupportLevel.FullLocalized ? default : languageInfo.Support;
     }
         
     /// <inheritdoc/>

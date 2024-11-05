@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Nodes;
 using EawModinfo.Model;
 using EawModinfo.Model.Json;
+using EawModinfo.Model.Json.Schema;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Equality;
 using Semver;
@@ -11,6 +13,14 @@ namespace EawModinfo.Tests;
 
 public class ModReferenceTests
 {
+    [Fact]
+    public void Ctor_Throws()
+    {
+        Assert.Throws<ArgumentNullException>(() => new ModReference(null, ModType.Default));
+        Assert.Throws<ArgumentException>(() => new ModReference("", ModType.Default));
+        Assert.Throws<ArgumentNullException>(() => new ModReference(null));
+    }
+
     public static IEnumerable<object[]> VersionRangeData()
     {
         yield return
@@ -185,8 +195,9 @@ public class ModReferenceTests
         }
     }
 
-    public static IEnumerable<object[]> GetReferences()
+    [Fact]
+    public void Parse_Null_Throws()
     {
-        yield return [new ModReference("123", ModType.Default), "{\"identifier\":\"123\"}"];
+        Assert.Throws<ArgumentNullException>(() => ModReference.Parse(null!));
     }
 }

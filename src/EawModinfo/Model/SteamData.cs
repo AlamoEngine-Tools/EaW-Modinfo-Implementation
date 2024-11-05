@@ -34,10 +34,21 @@ public sealed class SteamData : ISteamData
     public string Title { get; }
 
     /// <summary>
-    /// Creates a new instance with necessary data
+    /// Initializes a new instance of the <see cref="SteamData"/> class.
     /// </summary>
+    /// <param name="id">The Steam Workshops code.</param>
+    /// <param name="contentFolder">The content folder used by the Steam Workshop uploader.</param>
+    /// <param name="visibility">The visibility of the workshop item.</param>
+    /// <param name="title">The title of the workshop item.</param>
+    /// <param name="tags">The tags shall be included to the workshop item.</param>
+    /// <exception cref="ArgumentNullException">
+    /// <paramref name="id"/> or <paramref name="contentFolder"/> or <paramref name="title"/> or <paramref name="tags"/> is <see langword="null"/>.
+    /// </exception>
+    /// <exception cref="ArgumentException"><paramref name="id"/> or <paramref name="contentFolder"/> or <paramref name="tags"/> is empty.</exception>
     public SteamData(string id, string contentFolder, SteamWorkshopVisibility visibility, string title, IEnumerable<string> tags)
     {
+        if (tags == null) 
+            throw new ArgumentNullException(nameof(tags));
         ThrowHelper.ThrowIfNullOrEmpty(id);
         ThrowHelper.ThrowIfNullOrEmpty(contentFolder);
         ThrowHelper.ThrowIfNullOrEmpty(title);
@@ -52,6 +63,7 @@ public sealed class SteamData : ISteamData
     /// Creates a new instance from a given <see cref="ISteamData"/> instance.
     /// </summary>
     /// <param name="steamData">The instance that will be copied.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="steamData"/> is <see langword="null"/>. </exception>
     public SteamData(ISteamData steamData)
     {
         if (steamData == null)
@@ -72,8 +84,11 @@ public sealed class SteamData : ISteamData
     /// <param name="data">The raw json data.</param>
     /// <returns>The deserialized object.</returns>
     /// <exception cref="ModinfoParseException">Throws when parsing failed due to missing required properties.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/>.</exception>
     public static SteamData Parse(string data)
     {
+        if (data == null) 
+            throw new ArgumentNullException(nameof(data));
         var jsonData = ParseUtility.Parse<JsonSteamData>(data);
         return new SteamData(jsonData);
     }

@@ -30,6 +30,10 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="Required" Version="1.0.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Semver" Version="3.0.0" />
 		<PackageReference Include="System.IO.Abstractions" Version="21.0.29" />
 		<PackageReference Include="System.Text.Json" Version="8.0.5" />
@@ -37,6 +41,10 @@
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
 		<PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Resources\Schemas\3.0.0\" />
 	</ItemGroup>
 
 </Project>

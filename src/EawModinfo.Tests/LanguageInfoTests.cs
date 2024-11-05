@@ -1,7 +1,11 @@
+using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Text.Json.Nodes;
 using EawModinfo.Model;
 using EawModinfo.Model.Json;
+using EawModinfo.Model.Json.Schema;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Equality;
 using Xunit;
@@ -13,11 +17,11 @@ public class LanguageInfoTests
     [Fact]
     public void Test_Equal_GetHashCode()
     {
-        var a = new LanguageInfo {Code = "en", Support = LanguageSupportLevel.FullLocalized};
-        ILanguageInfo b = new JsonLanguageInfo(new LanguageInfo { Code = "en", Support = LanguageSupportLevel.SFX });
-        var c = new LanguageInfo { Code = "de", Support = LanguageSupportLevel.FullLocalized};
+        var a = new LanguageInfo("en", LanguageSupportLevel.FullLocalized);
+        ILanguageInfo b = new JsonLanguageInfo(new LanguageInfo("en", LanguageSupportLevel.SFX));
+        var c = new LanguageInfo("de", LanguageSupportLevel.FullLocalized);
         var d = LanguageInfo.Default;
-        var f = new LanguageInfo { Code = "EN", Support = LanguageSupportLevel.FullLocalized };
+        var f = new LanguageInfo("EN", LanguageSupportLevel.FullLocalized);
 
         EqualityTestHelpers.AssertDefaultEquals(false, false, a, null);
         EqualityTestHelpers.AssertDefaultEquals<ILanguageInfo>(false, false, a, null);
@@ -46,6 +50,33 @@ public class LanguageInfoTests
         EqualityTestHelpers.AssertDefaultEquals<ILanguageInfo>(true, true, a, f);
         EqualityTestHelpers.AssertWithComparer(true, LanguageInfoEqualityComparer.Default, a, f);
         EqualityTestHelpers.AssertWithComparer(true, LanguageInfoEqualityComparer.WithSupportLevel, a, f);
+    }
+
+    [Fact]
+    public void Ctor()
+    {
+        var info = new LanguageInfo("en", LanguageSupportLevel.FullLocalized);
+        Assert.Equal("en", info.Code);
+        Assert.Equal(LanguageSupportLevel.FullLocalized, info.Support);
+    }
+
+    [Fact]
+    public void Ctor_DefaultSupportCoercesToFullLocalized()
+    {
+        var info = new LanguageInfo("de", default);
+        Assert.Equal("de", info.Code);
+        Assert.Equal(LanguageSupportLevel.FullLocalized, info.Support);
+
+        var info2 = new LanguageInfo(new JsonLanguageInfo("en", default));
+        Assert.Equal("en", info2.Code);
+        Assert.Equal(LanguageSupportLevel.FullLocalized, info2.Support);
+    }
+
+    [Fact]
+    public void Ctor_Throws()
+    {
+        Assert.Throws<ArgumentNullException>(() => new LanguageInfo(null!, LanguageSupportLevel.Default));
+        Assert.Throws<ArgumentNullException>(() => new LanguageInfo(null!));
     }
 
     public static IEnumerable<object[]> GetJsonData()
@@ -94,10 +125,10 @@ public class LanguageInfoTests
     public void Test_Parse(string data, string expectedCode, LanguageSupportLevel expectedLevel)
     {
         ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModLanguageInfo);
+        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModLanguageInfo, out _));
         var languageInfo = LanguageInfo.Parse(data);
         Assert.Equal(expectedCode, languageInfo.Code);
         Assert.Equal(expectedLevel, languageInfo.Support);
-        Assert.NotNull(languageInfo.Culture);
     }
 
     public static IEnumerable<object[]> GetInvalidData()
@@ -107,7 +138,7 @@ public class LanguageInfoTests
             @"
 {
     ""code"":""abc""
-}"
+}", new[]{ "maxLength" }
         ];
         yield return
         [
@@ -115,7 +146,7 @@ public class LanguageInfoTests
 {
     ""code"":""en"",
     ""support"": -1
-}",
+}", new[]{ "minimum" }
         ];
 
         yield return
@@ -124,7 +155,7 @@ public class LanguageInfoTests
 {
     ""code"":""en"",
     ""support"": 0
-}",
+}", new[]{"minimum"}
         ];
 
         yield return
@@ -133,7 +164,7 @@ public class LanguageInfoTests
 {
     ""code"":""en"",
     ""support"": 8
-}",
+}", new[]{"maximum"}
         ];
 
         yield return
@@ -143,16 +174,24 @@ public class LanguageInfoTests
     ""code"":""en"",
     ""support"": 1,
     ""other"":""value""
-}",
+}", new[]{""}
         ];
     }
 
     [Theory]
     [MemberData(nameof(GetInvalidData))]
-    public void Parse_InvalidDataThrows(string data)
+    public void Parse_InvalidDataThrows(string data, IList<string> expectedErrorKeys)
     {
         Assert.Throws<ModinfoParseException>(() => ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModLanguageInfo));
+        Assert.False(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModLanguageInfo, out var errors));
+        Assert.Equivalent(expectedErrorKeys, errors.Select(x => x.Key), true);
         Assert.Throws<ModinfoParseException>(() => LanguageInfo.Parse(data));
+    }
+
+    [Fact]
+    public void Parse_Null_Throws()
+    {
+        Assert.Throws<ArgumentNullException>(() => LanguageInfo.Parse(null!));
     }
 
     [Fact]
@@ -160,9 +199,8 @@ public class LanguageInfoTests
     {
         var languageInfo = LanguageInfo.Default;
         var json = languageInfo.ToJson();
-        
         Assert.Contains(@"""code"": ""en""", json);
-        Assert.Contains(@"""support"": 7", json);
+        Assert.DoesNotContain(@"""support"": 7", json);
     }
 
     [Fact]
@@ -180,7 +218,7 @@ public class LanguageInfoTests
         var languageInfo = new LanguageInfo("en", LanguageSupportLevel.FullLocalized);
         var json = languageInfo.ToJson();
         Assert.Contains(@"""code"": ""en""", json);
-        Assert.Contains(@"""support"": 7", json);
+        Assert.DoesNotContain(@"""support"": 7", json);
     }
 
     [Fact]
@@ -190,6 +228,21 @@ public class LanguageInfoTests
         var json = languageInfo.ToJson();
 
         Assert.Contains(@"""code"": ""de""", json);
-        Assert.Contains(@"""support"": 7", json);
+        Assert.DoesNotContain(@"""support"": 7", json);
+    }
+
+    [Fact]
+    public void GetCulture_Valid()
+    {
+        var info = new LanguageInfo("de", LanguageSupportLevel.Text);
+        Assert.NotNull(info.GetCulture());
+        Assert.NotNull(info.GetCulture());
+    }
+
+    [Fact]
+    public void GetCulture_Invalid()
+    {
+        var info = new LanguageInfo("d3", LanguageSupportLevel.Text);
+        Assert.Throws<CultureNotFoundException>(() => info.GetCulture());
     }
 }

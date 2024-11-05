@@ -5,17 +5,17 @@ using System.Threading.Tasks;
 namespace EawModinfo.Spec;
 
 /// <summary>
-/// Container that represents a modinfo file on the filesystem.
+/// Represents a file handle represents a modinfo file on the filesystem.
 /// </summary>
 public interface IModinfoFile
 {
     /// <summary>
-    /// Distinguishes the contained file between a "main" or "variant" modinfo file.
+    /// Gets the file kind of the modinfo file which is either <see cref="ModinfoFileKind.MainFile"/> or <see cref="ModinfoFileKind.VariantFile"/>.
     /// </summary>
     ModinfoFileKind FileKind { get; }
         
     /// <summary>
-    /// The file handle.
+    /// Gets the underlying file handle.
     /// </summary>
     IFileInfo File { get; }
 
@@ -28,21 +28,21 @@ public interface IModinfoFile
     bool IsFileValid([NotNullWhen(false)] out string? error);
 
     /// <summary>
-    /// Gets the content of the <see cref="File"/> and deserializes it into an <see cref="IModinfo"/>.
+    /// Gets the content of the file and deserializes it into an <see cref="IModinfo"/>.
     /// </summary>
-    /// <returns>The <see cref="IModinfo"/></returns>
-    /// <exception cref="ModinfoException">Throws if it was not possible to get the<see cref="IModinfo"/> or the result was not valid.</exception>
+    /// <returns>The deserialized <see cref="IModinfo"/>.</returns>
+    /// <exception cref="ModinfoException">The file does not exist, has an invalid name or its content is not a valid modinfo instance.</exception>
     IModinfo GetModinfo();
 
     /// <summary>
-    /// Asynchronously gets the content of the <see cref="File"/> and deserializes it into an <see cref="IModinfo"/>.
+    /// Asynchronously gets the content of the file and deserializes it into an <see cref="IModinfo"/>.
     /// </summary>
-    /// <returns>The <see cref="IModinfo"/></returns>
-    /// <exception cref="ModinfoException">Throws if it was not possible to get the<see cref="IModinfo"/> or the result was not valid.</exception>
+    /// <returns>A task that represents the asynchronous read operation. The value of the task is the deserialized modinfo instance.</returns>
+    /// <exception cref="ModinfoException">The file does not exist, has an invalid name or its content is not a valid modinfo instance.</exception>
     Task<IModinfo> GetModinfoAsync();
 
     /// <summary>
-    /// Tries to get the content of the <see cref="File"/> and deserializes it into an <see cref="IModinfo"/>.
+    /// Tries to get the content of the file and deserializes it into an <see cref="IModinfo"/>.
     /// </summary>
     /// <param name="modinfo">When this method returns, contains the deserialized modinfo or <see langword="null"/> if an error occurred.</param>
     /// <returns><see langword="true"/> when the file could be successfully deserialized to a modinfo; otherwise, <see langword="false"/>.</returns>

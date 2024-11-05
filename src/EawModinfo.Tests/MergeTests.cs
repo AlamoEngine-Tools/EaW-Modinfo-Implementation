@@ -19,14 +19,14 @@ public class MergeTests
         var mainData = new ModinfoData("Mod")
         {
             Icon = "icon.ico",
-            Languages = [new LanguageInfo { Code = "en"}],
+            Languages = [LanguageInfo.Default],
             Dependencies = new DependencyList([new ModReference { Identifier = "bla" }], DependencyResolveLayout.FullResolved),
             Custom = new Dictionary<string, object> { { "testKey1", "value" } }
         };
 
         var variantData = new ModinfoData("Variant of Mod")
         {
-            Languages = [new LanguageInfo { Code = "en"}, new LanguageInfo { Code = "de"}],
+            Languages = [LanguageInfo.Default, new LanguageInfo("de", LanguageSupportLevel.FullLocalized)],
             SteamData = new JsonSteamData {Id = "123", Tags = ["FOC"], ContentFolder = "bla", Title = "Title"},
             Custom = new Dictionary<string, object> { { "testKey2", "value" } },
             Dependencies = new DependencyList([

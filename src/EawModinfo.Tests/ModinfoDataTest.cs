@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using EawModinfo.Model;
-using EawModinfo.Model.Json;
+using EawModinfo.Model.Json.Schema;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 using Semver;
@@ -529,8 +529,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
       ""support"": 1
     },
     {
-      ""code"": ""fr"",
-      ""support"": 7
+      ""code"": ""fr""
     }
   ],
   ""custom"": {
@@ -622,16 +621,17 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Equal("icon.ico", modinfo.Icon);
         Assert.Equivalent(
             new List<LanguageInfo>{new("en", 0), new("de", LanguageSupportLevel.Text), new("fr", LanguageSupportLevel.FullLocalized)}, 
-            modinfo.Languages);
+            modinfo.Languages,
+            true);
         Assert.Equivalent(new Dictionary<string, object>
         {
             { "key", "value" }
-        }, modinfo.Custom);
+        }, modinfo.Custom, true);
         Assert.Equal("123", modinfo.SteamData.Id);
         Assert.Equal("folder", modinfo.SteamData.ContentFolder);
         Assert.Equal(SteamWorkshopVisibility.Public, modinfo.SteamData.Visibility);
         Assert.Equal("Test", modinfo.SteamData.Title);
-        Assert.Equivalent(new List<string>{"FOC"}, modinfo.SteamData.Tags);
+        Assert.Equivalent(new List<string>{"FOC"}, modinfo.SteamData.Tags, true);
 
         var other = new ModinfoData(modinfo);
 
@@ -639,12 +639,12 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Equal(modinfo.Summary, other.Summary);
         Assert.Equal(modinfo.Icon, other.Icon);
         Assert.Equal(modinfo.Languages, other.Languages);
-        Assert.Equivalent(modinfo.Custom, other.Custom);
+        Assert.Equivalent(modinfo.Custom, other.Custom, true);
         Assert.Equal(modinfo.SteamData.Id, other.SteamData.Id);
         Assert.Equal(modinfo.SteamData.ContentFolder, other.SteamData.ContentFolder);
         Assert.Equal(modinfo.SteamData.Visibility, other.SteamData.Visibility);
         Assert.Equal(modinfo.SteamData.Title, other.SteamData.Title);
-        Assert.Equivalent(modinfo.SteamData.Tags, other.SteamData.Tags);
+        Assert.Equivalent(modinfo.SteamData.Tags, other.SteamData.Tags, true);
     }
 
     [Fact]
@@ -673,12 +673,12 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Equal(modinfo.Summary, other.Summary);
         Assert.Equal(modinfo.Icon, other.Icon);
         Assert.Equal(modinfo.Languages, other.Languages);
-        Assert.Equivalent(modinfo.Custom, other.Custom);
+        Assert.Equivalent(modinfo.Custom, other.Custom, true);
         Assert.Equal(modinfo.SteamData.Id, other.SteamData.Id);
         Assert.Equal(modinfo.SteamData.ContentFolder, other.SteamData.ContentFolder);
         Assert.Equal(modinfo.SteamData.Visibility, other.SteamData.Visibility);
         Assert.Equal(modinfo.SteamData.Title, other.SteamData.Title);
-        Assert.Equivalent(modinfo.SteamData.Tags, other.SteamData.Tags);
+        Assert.Equivalent(modinfo.SteamData.Tags, other.SteamData.Tags, true);
     }
 
     [Fact]
@@ -700,7 +700,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Equal(SemVersion.Parse("1.2.3-beta1"), modinfo.Version);
         Assert.Equal(DependencyResolveLayout.FullResolved, modinfo.Dependencies.ResolveLayout);
         Assert.Equal([new ModReference("1", ModType.Default), new ModReference("2", ModType.Workshops, SemVersionRange.Parse("*"))], modinfo.Dependencies.ToList());
-        Assert.Equivalent(new Dictionary<string, string>(), modinfo.Custom);
+        Assert.Equivalent(new Dictionary<string, string>(), modinfo.Custom, true);
         Assert.Equal([LanguageInfo.Default], modinfo.Languages);
         Assert.Null(modinfo.Icon);
         Assert.Null(modinfo.SteamData);

@@ -38,6 +38,10 @@ public abstract class ModinfoFileTestsBase
         Assert.True(file.IsFileValid(out _));
         var modInfo = file.GetModinfo();
         Assert.NotNull(modInfo);
+
+        // Call again
+        modInfo = file.GetModinfo();
+        Assert.NotNull(modInfo);
     }
 
     [Fact]
@@ -48,6 +52,10 @@ public abstract class ModinfoFileTestsBase
 
         Assert.True(file.IsFileValid(out _));
         var modInfo = await file.GetModinfoAsync();
+        Assert.NotNull(modInfo);
+
+        // Call again
+        modInfo = await file.GetModinfoAsync();
         Assert.NotNull(modInfo);
     }
 

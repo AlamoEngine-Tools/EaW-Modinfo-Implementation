@@ -9,7 +9,7 @@ using EawModinfo.Utilities;
 namespace EawModinfo.File;
 
 /// <summary>
-/// Implementation of an <see cref="IModinfoFile"/>. The file's content will be loaded and validated lazily.
+/// Provides the base class for both <see cref="MainModinfoFile"/> and <see cref="ModinfoVariantFile"/> objects.
 /// </summary>
 public abstract class ModinfoFile : IModinfoFile
 {
@@ -27,9 +27,10 @@ public abstract class ModinfoFile : IModinfoFile
     internal abstract IModFileNameValidator FileNameValidator { get; }
 
     /// <summary>
-    /// Creates a new <see cref="ModinfoFile"/> instance
+    /// Initializes a new instance of the <see cref="ModinfoFile"/> class with the specified file handle.
     /// </summary>
-    /// <param name="file">The file representation</param>
+    /// <param name="file">The file handle.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="file"/> is <see langword="null"/>.</exception>
     protected ModinfoFile(IFileInfo file)
     {
         File = file ?? throw new ArgumentNullException(nameof(file));
@@ -88,16 +89,16 @@ public abstract class ModinfoFile : IModinfoFile
     }
 
     /// <summary>
-    /// Deserializes the file's content async.
+    /// Asynchronously deserializes the file's content to an <see cref="IModinfo"/>.
     /// </summary>
-    /// <returns>The deserialization task.</returns>
+    /// <returns>A task that represents the asynchronous read operation. The value of the task is the deserialized modinfo instance.</returns>
     protected virtual Task<IModinfo> GetModinfoCoreAsync()
     {
         return ParseAsync();
     }
 
     /// <summary>
-    /// Deserializes the file's content.
+    /// Deserializes the file's content to an <see cref="IModinfo"/>.
     /// </summary>
     /// <returns>The deserialized <see cref="IModinfo"/>.</returns>
     protected virtual IModinfo GetModinfoCore()

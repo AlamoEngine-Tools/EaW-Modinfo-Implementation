@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using EawModinfo.Model;
 using EawModinfo.Model.Json;
@@ -7,10 +8,11 @@ using System.Text.Json.Nodes;
 using Xunit;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 using EawModinfo.Spec.Equality;
+using EawModinfo.Model.Json.Schema;
 
 namespace EawModinfo.Tests;
 
-public class ModDependencyListTest
+public class DependencyListTest
 {
     [Fact]
     public void ModDependencyList_Equal_GetHashCode()
@@ -46,6 +48,13 @@ public class ModDependencyListTest
         EqualityTestHelpers.AssertDefaultEquals(false, false, EqualityTestHelpers.List, EqualityTestHelpers.AllDifferent);
         EqualityTestHelpers.AssertDefaultEquals<IModDependencyList>(false, false, EqualityTestHelpers.List, EqualityTestHelpers.AllDifferent);
 
+    }
+
+    [Fact]
+    public void CtorThrows()
+    {
+        Assert.Throws<ArgumentNullException>(() => new DependencyList(null!, DependencyResolveLayout.FullResolved));
+        Assert.Throws<ArgumentNullException>(() => new DependencyList(null!));
     }
 
     public static IEnumerable<object[]> GetJsonData()
@@ -117,6 +126,12 @@ public class ModDependencyListTest
             Assert.Equal(refs, depList);
             Assert.Equal(resolveLayout, depList.ResolveLayout);
         }
+    }
+
+    [Fact]
+    public void ParseNull_Throws()
+    {
+        Assert.Throws<ArgumentNullException>(() => DependencyList.Parse(null!));
     }
 
     public static IEnumerable<object[]> GetListInstances()

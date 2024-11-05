@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json.Nodes;
 using Json.Schema;
 
-namespace EawModinfo.Model.Json;
+namespace EawModinfo.Model.Json.Schema;
 
 /// <summary>
-/// 
+/// Performs operations to validate JSON data against the modinfo JSON schema specification.
 /// </summary>
 public static class ModInfoJsonSchema
 {
@@ -19,7 +20,7 @@ public static class ModInfoJsonSchema
         var evalvOptions = new EvaluationOptions
         {
             EvaluateAs = SpecVersion.Draft202012,
-            OutputFormat = OutputFormat.List,
+            OutputFormat = OutputFormat.Hierarchical,
             AllowReferencesIntoUnknownKeywords = false
         };
         var registry = evalvOptions.SchemaRegistry;
@@ -34,10 +35,12 @@ public static class ModInfoJsonSchema
         EvaluationOptions = evalvOptions;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public const string ModRefSchema = @"{
+    private static JsonSchema GetSchemaFromResource(string schema)
+    {
+        return null!;
+    }
+
+    internal const string ModRefSchema = @"{
   ""$id"": ""https://AlamoEngine-Tools.github.io/schemas/3.0.0/mod-ref"",
   ""$schema"": ""https://json-schema.org/draft/2020-12/schema"",
   ""description"": ""Represents a reference to a mod."",
@@ -63,10 +66,7 @@ public static class ModInfoJsonSchema
       ""additionalProperties"":false
 }";
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public const string DependenciesSchema = @"{
+    internal const string DependenciesSchema = @"{
   ""$id"": ""https://AlamoEngine-Tools.github.io/schemas/3.0.0/mod-deps"",
   ""$schema"": ""https://json-schema.org/draft/2020-12/schema"",
   ""description"": ""Represents a mod's dependencies as an ordered array."",
@@ -101,10 +101,7 @@ public static class ModInfoJsonSchema
   ]
 }";
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public const string LanguageInfoSchema = @"{
+    internal const string LanguageInfoSchema = @"{
   ""$id"":""https://AlamoEngine-Tools.github.io/schemas/3.0.0/lang-info"",
   ""$schema"":""https://json-schema.org/draft/2020-12/schema"",
   ""description"":""Represents the level of localizatio support for a single language."",
@@ -125,10 +122,7 @@ public static class ModInfoJsonSchema
    ""additionalProperties"":false
 }";
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public const string SteamDataSchema = @"{
+    internal const string SteamDataSchema = @"{
   ""$id"": ""https://AlamoEngine-Tools.github.io/schemas/3.0.0/steam-data"",
   ""$schema"": ""https://json-schema.org/draft/2020-12/schema"",
   ""description"": ""Represents the steam information ."",
@@ -193,10 +187,7 @@ public static class ModInfoJsonSchema
   ""additionalProperties"": false
 }";
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public const string ModInfo = @"{
+    internal const string ModInfo = @"{
   ""$id"":""https://AlamoEngine-Tools.github.io/schemas/3.0.0/modinfo"",
   ""$schema"":""https://json-schema.org/draft/2020-12/schema"",
   ""description"":""A standard definition for Star Wars: Empire at War mod info files."",
@@ -237,16 +228,53 @@ public static class ModInfoJsonSchema
   ]
 }";
 
+
+    // TODO: TEST this for all schemas
+
     /// <summary>
-    /// 
+    /// Evaluates a JSON node against the specified modinfo JSON schema.
     /// </summary>
-    /// <param name="json"></param>
-    /// <param name="evaluationType"></param>
+    /// <param name="json">The JSON node to evaluate.</param>
+    /// <param name="evaluationType">The schema to use.</param>
+    /// <param name="errors">When this method returns, contains the identified errors, or <see langword="null"/> if <paramref name="json"/> is valid.</param>
+    /// <returns><see langword="true"/> if <paramref name="json"/> is valid against the schema; otherwise, <see langword="false"/>.</returns>
+    public static bool IsValid(JsonNode? json, EvaluationType evaluationType, [NotNullWhen(false)] out IReadOnlyCollection<KeyValuePair<string, string>>? errors)
+    {
+        errors = null;
+        var schema = GetSchemaForType(evaluationType);
+        var result = schema.Evaluate(json, EvaluationOptions);
+        if (!result.IsValid)
+        {
+            var errorList = new List<KeyValuePair<string, string>>();
+            CollectErrors(result, errorList);
+            errors = errorList;
+
+        }
+        return result.IsValid;
+    }
+
+    private static void CollectErrors(EvaluationResults result, List<KeyValuePair<string, string>> errors)
+    {
+        if (result.IsValid)
+            return;
+        if (result.HasErrors) 
+            errors.AddRange(result.Errors!);
+
+        foreach (var detail in result.Details)
+            CollectErrors(detail, errors);
+    }
+
+    /// <summary>
+    /// Evaluates a JSON node against the specified modinfo JSON schema.
+    /// </summary>
+    /// <param name="json">The JSON node to evaluate.</param>
+    /// <param name="evaluationType">The schema to use.</param>
+    /// <exception cref="ModinfoParseException"><paramref name="json"/> is not valid against the JSON schema specified by <paramref name="evaluationType"/>.</exception>
     public static void Evaluate(JsonNode? json, EvaluationType evaluationType)
     {
         var schema = GetSchemaForType(evaluationType);
-        var validationErrors = schema.Evaluate(json, EvaluationOptions);
-        ThrowOnValidationError(validationErrors);
+        var result = schema.Evaluate(json, EvaluationOptions);
+        ThrowOnValidationError(result);
     }
 
     internal static void Evaluate<T>(JsonNode? json)
@@ -316,31 +344,4 @@ public static class ModInfoJsonSchema
             return EvaluationType.ModInfo;
         throw new ArgumentOutOfRangeException(nameof(type), $"Unable to get EvaluationType for type '{type.FullName}'");
     }
-}
-
-/// <summary>
-/// 
-/// </summary>
-public enum EvaluationType
-{
-    /// <summary>
-    /// 
-    /// </summary>
-    ModInfo,
-    /// <summary>
-    /// 
-    /// </summary>
-    ModReference,
-    /// <summary>
-    /// 
-    /// </summary>
-    ModDependencyList,
-    /// <summary>
-    /// 
-    /// </summary>
-    ModLanguageInfo,
-    /// <summary>
-    /// 
-    /// </summary>
-    SteamData
 }

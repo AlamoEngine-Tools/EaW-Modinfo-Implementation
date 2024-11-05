@@ -17,12 +17,10 @@ public static class ModinfoDataUtilities
     /// </summary>
     /// <remarks>Subsequent data such as <see cref="IModinfo.Languages"/> will be replaced entirely and not merged by property.
     /// Exception is <see cref="IModinfo.Custom"/>, where items will get merged individually.
-    /// <br></br>
-    /// Subsequent data get replaced by creating a new copy of that element. This means the new and the merged property are not equal by reference.
     /// </remarks>
-    /// <param name="target">the data source from which data will get merged.</param>
-    /// <param name="baseModinfo">Original data which will get updated.</param>
-    /// <returns>A new instance of an <see cref="IModinfo"/> or <paramref name="target"/> if <paramref name="baseModinfo"/> was <see langword="null"/></returns>
+    /// <param name="target">The data source into which data will get merged.</param>
+    /// <param name="baseModinfo">Base data which will get merged to <paramref name="baseModinfo"/>.</param>
+    /// <returns>A merged modinfo or <paramref name="target"/> if <paramref name="baseModinfo"/> was <see langword="null"/></returns>
     public static IModinfo MergeInto(this IModinfo target, IModinfo? baseModinfo)
     {
         if (target is null)
@@ -73,7 +71,7 @@ public static class ModinfoDataUtilities
         if (target.Languages.Any())
         {
 #if NETSTANDARD2_1
-                    languages = target.Languages.Select(x => (ILanguageInfo) new LanguageInfo(x)).ToHashSet(null);
+            languages = target.Languages.Select(x => (ILanguageInfo)new LanguageInfo(x)).ToHashSet(null);
 #else
             languages = target.Languages.Select(x => (ILanguageInfo)new LanguageInfo(x)).Distinct();
 #endif

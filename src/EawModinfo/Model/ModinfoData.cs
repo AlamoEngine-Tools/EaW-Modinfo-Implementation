@@ -37,9 +37,11 @@ public sealed class ModinfoData : IModinfo
     public IEnumerable<ILanguageInfo> Languages { get; init; } = new List<ILanguageInfo> { LanguageInfo.Default };
         
     /// <summary>
-    /// Creates a new instance with a given name
+    /// Initializes a new instance of the <see cref="ModinfoData"/> class with a given name.
     /// </summary>
-    /// <param name="name"></param>
+    /// <param name="name">The name of the mod.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="name"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="name"/> is empty.</exception>
     public ModinfoData(string name)
     {
         ThrowHelper.ThrowIfNullOrEmpty(name);
@@ -47,9 +49,10 @@ public sealed class ModinfoData : IModinfo
     }
 
     /// <summary>
-    /// Creates a new instance from a given <see cref="IModIdentity"/> instance.
+    /// Initializes a new instance of the <see cref="ModinfoData"/> class of the specified mod identity.
     /// </summary>
-    /// <param name="modIdentity">The instance that will used as a base.</param>
+    /// <param name="modIdentity">The mod identity to represent as a modinfo.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="modIdentity"/> is <see langword="null"/>.</exception>
     public ModinfoData(IModIdentity modIdentity)
     {
         if (modIdentity == null) 

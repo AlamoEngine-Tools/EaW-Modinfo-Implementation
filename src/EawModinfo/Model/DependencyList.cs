@@ -13,7 +13,7 @@ namespace EawModinfo.Model;
 public class DependencyList : ReadOnlyCollection<IModReference>, IModDependencyList, IEquatable<DependencyList>
 {
     /// <summary>
-    /// An empty dependency list singleton instance.
+    /// Returns a singleton instance of an empty dependency list.
     /// </summary>
     public static readonly IModDependencyList EmptyDependencyList =
         new DependencyList(new List<IModReference>(), DependencyResolveLayout.FullResolved);
@@ -22,16 +22,21 @@ public class DependencyList : ReadOnlyCollection<IModReference>, IModDependencyL
     public DependencyResolveLayout ResolveLayout { get; }
 
     /// <summary>
-    /// Creates a new instance from a given <see cref="IModDependencyList"/>.
+    /// Initializes a new instance of the <see cref="DependencyList"/> class from an <see cref="IModDependencyList"/>.
     /// </summary>
-    public DependencyList(IModDependencyList dependencyList) : base(dependencyList.ToList())
+    /// <exception cref="ArgumentNullException"><paramref name="dependencyList"/> is <see langword="null"/>.</exception>
+    public DependencyList(IModDependencyList dependencyList) 
+        : base(dependencyList?.ToList() ?? throw new ArgumentNullException(nameof(dependencyList)))
     {
         ResolveLayout = dependencyList.ResolveLayout;
     }
 
     /// <summary>
-    /// Creates a new instance.
+    /// Initializes a new instance of the <see cref="DependencyList"/> class from list of mod references and a resolve layout.
     /// </summary>
+    /// <param name="dependencies">List of mod references.</param>
+    /// <param name="resolveLayout">The resolve layout of this dependency list.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="dependencies"/> is <see langword="null"/>.</exception>
     public DependencyList(IList<IModReference> dependencies, DependencyResolveLayout resolveLayout) 
         : base(dependencies)
     {
@@ -44,8 +49,11 @@ public class DependencyList : ReadOnlyCollection<IModReference>, IModDependencyL
     /// <param name="data">The raw json data.</param>
     /// <returns>The deserialized object.</returns>
     /// <exception cref="ModinfoParseException">When parsing failed, e.g. due to missing required properties.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/>.</exception>
     public static DependencyList Parse(string data)
     {
+        if (data == null) 
+            throw new ArgumentNullException(nameof(data));
         return new DependencyList(ParseUtility.Parse<JsonDependencyList>(data));
     }
 

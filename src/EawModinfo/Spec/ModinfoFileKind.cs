@@ -1,7 +1,7 @@
 ﻿namespace EawModinfo.Spec;
 
 /// <summary>
-/// Identifier for a <see cref="IModinfoFile"/>
+/// Defines the type for a <see cref="IModinfoFile"/>.
 /// </summary>
 public enum ModinfoFileKind
 {
