@@ -11,7 +11,6 @@ namespace EawModinfo.Spec;
 /// </remarks>
 public interface ILanguageInfo : IEquatable<ILanguageInfo>, IConvertibleToJson
 {
-    // TODO: Validate in Schema
     /// <summary>
     /// Gets the ISO 639-1 two letter language code.
     /// </summary>

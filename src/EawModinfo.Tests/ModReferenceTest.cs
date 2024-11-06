@@ -16,9 +16,9 @@ public class ModReferenceTests
     [Fact]
     public void Ctor_Throws()
     {
-        Assert.Throws<ArgumentNullException>(() => new ModReference(null, ModType.Default));
+        Assert.Throws<ArgumentNullException>(() => new ModReference(null!, ModType.Default));
         Assert.Throws<ArgumentException>(() => new ModReference("", ModType.Default));
-        Assert.Throws<ArgumentNullException>(() => new ModReference(null));
+        Assert.Throws<ArgumentNullException>(() => new ModReference(null!));
     }
 
     public static IEnumerable<object[]> VersionRangeData()
@@ -60,7 +60,7 @@ public class ModReferenceTests
     [MemberData(nameof(VersionRangeData))]
     public void Test_Parse_VersionRange(string data, SemVersionRange? range)
     {
-        ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModReference);
+        TestUtilities.Evaluate(data, EvaluationType.ModReference);
         var modReference = ModReference.Parse(data);
         Assert.Equal(range, modReference.VersionRange);
     }
@@ -92,13 +92,19 @@ public class ModReferenceTests
         EqualityTestHelpers.AssertDefaultEquals<IModReference>(false, false, a, c);
         EqualityTestHelpers.AssertWithComparer(false, ModReferenceEqualityComparer.Default, a, c);
 
+#pragma warning disable xUnit2004
         Assert.Equal(false, a.Equals(d));
         Assert.Equal(false, d.Equals(a));
+#pragma warning restore xUnit2004
+
         EqualityTestHelpers.AssertDefaultEquals(false, false, a, d);
         EqualityTestHelpers.AssertWithComparer(false, ModReferenceEqualityComparer.Default, a, d);
 
+#pragma warning disable xUnit2004
         Assert.Equal(true, a.Equals(e));
         Assert.Equal(true, e.Equals(a));
+#pragma warning restore xUnit2004
+
         EqualityTestHelpers.AssertDefaultEquals(false, true, a, e);
         EqualityTestHelpers.AssertWithComparer(true, ModReferenceEqualityComparer.Default, a, e);
 
@@ -183,12 +189,13 @@ public class ModReferenceTests
     {
         if (throws)
         {
-            Assert.Throws<ModinfoParseException>(() => ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModReference));
+            Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.ModReference));
             Assert.Throws<ModinfoParseException>(() => ModReference.Parse(data));
         }
         else
         {
-            ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModReference);
+            Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModReference, out _));
+            TestUtilities.Evaluate(data, EvaluationType.ModReference);
             var modReference = ModReference.Parse(data);
             Assert.Equal(expectedId, modReference.Identifier);
             Assert.Equal(expectedType, modReference.Type);

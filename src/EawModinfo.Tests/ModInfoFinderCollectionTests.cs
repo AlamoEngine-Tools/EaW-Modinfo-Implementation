@@ -13,7 +13,7 @@ public class ModinfoFinderCollectionTests
     [Fact]
     public void Test_Enumerate_Main()
     { 
-        var mainFile = new MainModinfoFile(ModinfoDataUtils.CreateModinfoFile(_fileSystem, "mods/A"));
+        var mainFile = new MainModinfoFile(TestUtilities.CreateModinfoFile(_fileSystem, "mods/A"));
         var collection = new ModinfoFinderCollection(_fileSystem.DirectoryInfo.New("mods/A"), mainFile, []);
         Assert.True(collection.HasMainModinfoFile);
         Assert.NotNull(collection.MainModinfo);
@@ -25,7 +25,7 @@ public class ModinfoFinderCollectionTests
     [Fact]
     public void Test_Enumerate_OnlyVariants()
     {
-        var variant = new ModinfoVariantFile(ModinfoDataUtils.CreateVariantMainFile(_fileSystem, "mods/A"));
+        var variant = new ModinfoVariantFile(TestUtilities.CreateVariantMainFile(_fileSystem, "mods/A"));
         var collection = new ModinfoFinderCollection(_fileSystem.DirectoryInfo.New("mods/A"), null, [variant]);
         Assert.False(collection.HasMainModinfoFile);
         Assert.Null(collection.MainModinfo);
@@ -36,8 +36,8 @@ public class ModinfoFinderCollectionTests
     [Fact]
     public void Test_Enumerate_MainPlusSingleVariants()
     { 
-        var variant = new ModinfoVariantFile(ModinfoDataUtils.CreateVariantMainFile(_fileSystem, "mods/A"));
-        var mainFile = new MainModinfoFile(ModinfoDataUtils.CreateModinfoFile(_fileSystem, "mods/A"));
+        var variant = new ModinfoVariantFile(TestUtilities.CreateVariantMainFile(_fileSystem, "mods/A"));
+        var mainFile = new MainModinfoFile(TestUtilities.CreateModinfoFile(_fileSystem, "mods/A"));
         var collection = new ModinfoFinderCollection(_fileSystem.DirectoryInfo.New("mods/A"), mainFile, [variant]);
         Assert.True(collection.HasMainModinfoFile);
         Assert.NotNull(collection.MainModinfo);
@@ -48,9 +48,9 @@ public class ModinfoFinderCollectionTests
     [Fact]
     public void Test_Enumerate_MainPlusMultipleVariants()
     {
-        var variantFileInfo = ModinfoDataUtils.CreateVariantMainFile(_fileSystem, "mods/A");
+        var variantFileInfo = TestUtilities.CreateVariantMainFile(_fileSystem, "mods/A");
         var variant = new ModinfoVariantFile(variantFileInfo);
-        var mainFile = new MainModinfoFile(ModinfoDataUtils.CreateModinfoFile(_fileSystem, "mods/A"));
+        var mainFile = new MainModinfoFile(TestUtilities.CreateModinfoFile(_fileSystem, "mods/A"));
         var variantM = new ModinfoVariantFile(variantFileInfo, mainFile);
         var collection = new ModinfoFinderCollection(
             _fileSystem.DirectoryInfo.New("mods/A"), mainFile, [variant, variantM]);

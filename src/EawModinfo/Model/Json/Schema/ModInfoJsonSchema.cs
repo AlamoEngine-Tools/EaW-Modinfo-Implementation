@@ -221,6 +221,9 @@ public static class ModInfoJsonSchema
     ""steamdata"":{
       ""type"":""object"",
       ""$ref"":""/schemas/3.0.0/steam-data""
+    },
+    ""custom"":{
+        ""type"":""object""
     }
   },
   ""required"":[

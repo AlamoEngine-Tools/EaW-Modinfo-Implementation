@@ -16,7 +16,7 @@ public abstract class ModinfoFileTestsBase
     protected abstract IModinfoFile CreateFile(string path, bool isInvalidFileContent = false);
 
     [Theory]
-    [MemberData(nameof(ModinfoDataUtils.InvalidModinfoFileNamesTestData), MemberType = typeof(ModinfoDataUtils))]
+    [MemberData(nameof(TestUtilities.InvalidModinfoFileNamesTestData), MemberType = typeof(TestUtilities))]
     public async void ValidateFile_InvalidName(string name)
     {
         var file = CreateFile(FileSystem.Path.Combine("mods", "myMod", name));

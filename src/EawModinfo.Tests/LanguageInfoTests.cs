@@ -126,7 +126,7 @@ public class LanguageInfoTests
     [MemberData(nameof(GetJsonData))]
     public void Test_Parse(string data, string expectedCode, LanguageSupportLevel expectedLevel)
     {
-        ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModLanguageInfo);
+        TestUtilities.Evaluate(data, EvaluationType.ModLanguageInfo);
         Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModLanguageInfo, out _));
         var languageInfo = LanguageInfo.Parse(data);
         Assert.Equal(expectedCode, languageInfo.Code);
@@ -189,7 +189,7 @@ public class LanguageInfoTests
     [MemberData(nameof(GetInvalidData))]
     public void Parse_InvalidDataThrows(string data, IList<string> expectedErrorKeys)
     {
-        Assert.Throws<ModinfoParseException>(() => ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModLanguageInfo));
+        Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.ModLanguageInfo));
         Assert.False(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModLanguageInfo, out var errors));
         Assert.Equivalent(expectedErrorKeys, errors.Select(x => x.Key), true); 
         Assert.Throws<ModinfoParseException>(() => LanguageInfo.Parse(data));
@@ -265,6 +265,12 @@ public class LanguageInfoTests
     }
 
     [Fact]
+    public void ToJson_Throws()
+    {
+        Assert.Throws<ArgumentNullException>(() => new LanguageInfo("en", LanguageSupportLevel.FullLocalized).ToJson(null!));
+    }
+
+    [Fact]
     public void GetCulture_Valid()
     {
         var info = new LanguageInfo("de", LanguageSupportLevel.Text);
@@ -276,6 +282,7 @@ public class LanguageInfoTests
     public void GetCulture_Invalid()
     {
         var info = new LanguageInfo("d3", LanguageSupportLevel.Text);
+        Assert.Throws<CultureNotFoundException>(() => info.GetCulture());
         Assert.Throws<CultureNotFoundException>(() => info.GetCulture());
     }
 }

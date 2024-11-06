@@ -20,7 +20,7 @@ public class VariantModinfoFileTest : ModinfoFileTestsBase
 
     protected override IModinfoFile CreateFile(string path, bool isInvalidFileContent = false)
     {
-        var content = isInvalidFileContent == false ? ModinfoDataUtils.VariantModifnoData : "{}";
+        var content = isInvalidFileContent == false ? TestUtilities.VariantModifnoData : "{}";
         return CreateVariantWithBaseFile(path, null, content);
     }
 
@@ -37,7 +37,7 @@ public class VariantModinfoFileTest : ModinfoFileTestsBase
     {
         var fileInfo = FileSystem.FileInfo.New(path);
         fileInfo.Directory.Create();
-        FileSystem.File.WriteAllText(path, ModinfoDataUtils.VariantModifnoData);
+        FileSystem.File.WriteAllText(path, TestUtilities.VariantModifnoData);
         fileInfo.Refresh();
         return new ModinfoVariantFile(fileInfo, baseInfo);
     }
@@ -77,10 +77,10 @@ public class VariantModinfoFileTest : ModinfoFileTestsBase
 
     private ModinfoVariantFile CreateVariantWithMainFile(bool isInvalidFileContent = false)
     {
-        var mainFileInfo = ModinfoDataUtils.CreateModinfoFile(FileSystem, "mods/A");
+        var mainFileInfo = TestUtilities.CreateModinfoFile(FileSystem, "mods/A");
         var mainFile = new MainModinfoFile(mainFileInfo);
 
-        var content = isInvalidFileContent == false ? ModinfoDataUtils.VariantModifnoData : "{}";
+        var content = isInvalidFileContent == false ? TestUtilities.VariantModifnoData : "{}";
         return CreateVariantWithBaseFile(
             FileSystem.Path.Combine("mods", "myMod", GetFileName()),
             mainFile,

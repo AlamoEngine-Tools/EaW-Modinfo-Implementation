@@ -19,7 +19,7 @@ public class MainModinfoFileTest : ModinfoFileTestsBase
         var fileInfo = FileSystem.FileInfo.New(path);
         fileInfo.Directory.Create();
 
-        FileSystem.File.WriteAllText(path, !isInvalidFileContent ? ModinfoDataUtils.MainModinfoData : "{}");
+        FileSystem.File.WriteAllText(path, !isInvalidFileContent ? TestUtilities.MainModinfoData : "{}");
         fileInfo.Refresh();
         return new MainModinfoFile(fileInfo);
     }

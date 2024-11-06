@@ -2,10 +2,13 @@ using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
+using System.Text.Json.Nodes;
+using System.Text.Json;
+using EawModinfo.Model.Json.Schema;
 
 namespace EawModinfo.Tests;
 
-internal static class ModinfoDataUtils
+internal static class TestUtilities
 {
     internal static string MainModinfoData = @"{
 	""name"": ""testmod"",
@@ -82,5 +85,14 @@ internal static class ModinfoDataUtils
     public static IEnumerable<object[]> InvalidModinfoFileNamesTestData()
     {
         return GetInvalidModinfoFileNames().Select(name => (object[])[name]);
+    }
+
+    public static void Evaluate(string json, EvaluationType type)
+    {
+        ModInfoJsonSchema.Evaluate(JsonNode.Parse(json, null, new JsonDocumentOptions
+        {
+            AllowTrailingCommas = true,
+            CommentHandling = JsonCommentHandling.Skip
+        })!, type);
     }
 }

@@ -31,7 +31,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
 }";
 
         // Parsing supports it, but in this test, we ensure evaluation also supports it.
-        ModInfoJsonSchema.Evaluate(JsonNode.Parse(data, null, new JsonDocumentOptions{AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip}), EvaluationType.ModInfo);
+        TestUtilities.Evaluate(data, EvaluationType.ModInfo);
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
 
@@ -47,7 +47,9 @@ public class ModinfoDataTest(ITestOutputHelper output)
     ""name"":""My Mod Name""
 }";
 
-        ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModInfo);
+        TestUtilities.Evaluate(data, EvaluationType.ModInfo);
+        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Null(modinfo.Version);
@@ -68,7 +70,9 @@ public class ModinfoDataTest(ITestOutputHelper output)
     ""version"":""1.1.1-BETA""
 }";
 
-        ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModInfo);
+        TestUtilities.Evaluate(data, EvaluationType.ModInfo);
+        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Equal(SemVersion.ParsedFrom(1, 1, 1, "BETA"), modinfo.Version);
@@ -88,7 +92,9 @@ public class ModinfoDataTest(ITestOutputHelper output)
     ""icon"":""icon.ico""
 }";
 
-        ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModInfo);
+        TestUtilities.Evaluate(data, EvaluationType.ModInfo);
+        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Equal("Some Text", modinfo.Summary);
@@ -112,7 +118,9 @@ public class ModinfoDataTest(ITestOutputHelper output)
         }
     ]
 }";
-        ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModInfo);
+        TestUtilities.Evaluate(data, EvaluationType.ModInfo);
+        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Single(modinfo.Languages);
@@ -138,7 +146,9 @@ public class ModinfoDataTest(ITestOutputHelper output)
         }
     ]
 }";
-        ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModInfo);
+        TestUtilities.Evaluate(data, EvaluationType.ModInfo);
+        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Equal(2, modinfo.Languages.Count());
@@ -164,7 +174,9 @@ public class ModinfoDataTest(ITestOutputHelper output)
         }
     ]
 }";
-        ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModInfo);
+        TestUtilities.Evaluate(data, EvaluationType.ModInfo);
+        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Single(modinfo.Languages);
@@ -190,7 +202,9 @@ public class ModinfoDataTest(ITestOutputHelper output)
         }
     ]
 }";
-        ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModInfo);
+        TestUtilities.Evaluate(data, EvaluationType.ModInfo);
+        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Single(modinfo.Languages);
@@ -207,7 +221,9 @@ public class ModinfoDataTest(ITestOutputHelper output)
 {
     ""name"":""My Mod Name""
 }";
-        ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModInfo);
+        TestUtilities.Evaluate(data, EvaluationType.ModInfo);
+        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Single(modinfo.Languages);
@@ -228,7 +244,9 @@ public class ModinfoDataTest(ITestOutputHelper output)
 {
     ""name"":""My Mod Name""
 }";
-        ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModInfo);
+        TestUtilities.Evaluate(data, EvaluationType.ModInfo);
+        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Empty(modinfo.Dependencies);
@@ -258,7 +276,9 @@ public class ModinfoDataTest(ITestOutputHelper output)
         }
     ]
 }";
-        ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModInfo);
+        TestUtilities.Evaluate(data, EvaluationType.ModInfo);
+        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Equal(2, modinfo.Dependencies.Count);
@@ -292,7 +312,9 @@ public class ModinfoDataTest(ITestOutputHelper output)
         }
     ]
 }";
-        ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModInfo);
+        TestUtilities.Evaluate(data, EvaluationType.ModInfo);
+        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Equal(2, modinfo.Dependencies.Count);
@@ -327,7 +349,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     ]
 }";
 
-        Assert.Throws<ModinfoParseException>(() => ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModInfo));
+        Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.ModInfo));
         Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(data));
         Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data))));
     }
@@ -350,7 +372,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
         }
     ]
 }";
-        Assert.Throws<ModinfoParseException>(() => ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModInfo));
+        Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.ModInfo));
         Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(data));
         Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data))));
     }
@@ -363,7 +385,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     ""name"":""My Mod Name"",
     ""dependencies"": [ ]
 }";
-        Assert.Throws<ModinfoParseException>(() => ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModInfo));
+        Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.ModInfo));
         Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(data));
         Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data))));
     }
@@ -376,7 +398,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     ""name"":""My Mod Name"",
     ""dependencies"": [ ""FullResolved"" ]
 }";
-        Assert.Throws<ModinfoParseException>(() => ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModInfo));
+        Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.ModInfo));
         Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(data));
         Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data))));
     }
@@ -389,7 +411,20 @@ public class ModinfoDataTest(ITestOutputHelper output)
     ""name"":""My Mod Name"",
     ""dependencies"": [ ""FullResolved"", {""identifier"":""123""} ]
 }";
-        Assert.Throws<ModinfoParseException>(() => ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModInfo));
+        Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.ModInfo));
+        Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(data));
+        Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data))));
+    }
+
+    [Fact]
+    public void Test_Parse_WithIncompatibleCustom()
+    {
+        var data = @"
+{
+    ""name"":""My Mod Name"",
+    ""custom"": [ {""key"":""value""}, {""key2"": ""value""} ]
+}";
+        Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.ModInfo));
         Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(data));
         Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data))));
     }
@@ -403,7 +438,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     ""name"":""My Mod Name"",
     ""custom"": {}
 }";
-        ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModInfo);
+        TestUtilities.Evaluate(data, EvaluationType.ModInfo);
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Empty(modinfo.Custom);
@@ -412,33 +447,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Empty(modinfo.Custom);
     }
-
-    [Fact]
-    public void Test_Parse_Custom_TwoPairs()
-    {
-        var data = @"
-{
-    ""name"":""My Mod Name"",
-    ""custom"": {
-        ""test-key"":{},
-        ""test-key2"":""123""
-    }
-}";
-        ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModInfo);
-        var modinfo = ModinfoData.Parse(data);
-        Assert.Equal("My Mod Name", modinfo.Name);
-        Assert.Equal(2, modinfo.Custom.Count);
-        Assert.Equal("123", ((JsonElement)modinfo.Custom["test-key2"]).GetString());
-        Assert.IsType<JsonElement>(modinfo.Custom["test-key"]);
-
-        modinfo = ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)));
-        Assert.Equal("My Mod Name", modinfo.Name);
-        Assert.Equal(2, modinfo.Custom.Count);
-        Assert.Equal("123", ((JsonElement)modinfo.Custom["test-key2"]).GetString());
-        Assert.IsType<JsonElement>(modinfo.Custom["test-key"]);
-    }
-
-
+    
     [Fact]
     public void Test_Parse_SteamData()
     {
@@ -456,7 +465,9 @@ public class ModinfoDataTest(ITestOutputHelper output)
         ]
     }
 }";
-        ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModInfo);
+        TestUtilities.Evaluate(data, EvaluationType.ModInfo); 
+        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.NotNull(modinfo.SteamData);
@@ -516,7 +527,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
         { 
             if(data != string.Empty) 
                 Assert.Throws<ModinfoParseException>(() => ModInfoJsonSchema.Evaluate(JsonNode.Parse(data)!, EvaluationType.ModInfo));
-            Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(data!));
+            Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(data));
             Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data))));
         }
     }
@@ -602,6 +613,91 @@ public class ModinfoDataTest(ITestOutputHelper output)
         data = GetStringFromStream(modinfo);
         Assert.Contains(@"""summary"": ""Summary""", data);
         Assert.Contains(@"""icon"": ""icon.ico""", data);
+    }
+
+    [Fact]
+    public void ToJson_Custom()
+    {
+        var modinfo = new ModinfoData("Test")
+        {
+            Custom = new Dictionary<string, object>
+            {
+                {"key1", "value"},
+                {"key2", 2},
+                {"key3", new object()},
+                {"key4", null!},
+            }
+        };
+       
+        var expected = @"{
+  ""name"": ""Test"",
+  ""custom"": {
+    ""key1"": ""value"",
+    ""key2"": 2,
+    ""key3"": {},
+    ""key4"": null
+  }
+}";
+        var data = modinfo.ToJson();
+        output.WriteLine(data);
+        Assert.Equal(expected, data);
+
+        data = GetStringFromStream(modinfo);
+        Assert.Equal(expected, data);
+    }
+
+    [Fact]
+    public void Parse_Custom()
+    {
+        var data = @"{
+  ""name"": ""Test"",
+  ""custom"": {
+    ""key1"": ""value"",
+    ""key2"": 2,
+    ""key3"": {},
+    ""key4"": null
+  }
+}";
+
+        TestUtilities.Evaluate(data, EvaluationType.ModInfo);
+        var modinfo = ModinfoData.Parse(data);
+        Assert.Equal(JsonValueKind.String, ((JsonElement)modinfo.Custom["key1"]).ValueKind);
+        Assert.Equal("value", ((JsonElement)modinfo.Custom["key1"]).GetString());
+        Assert.Equal(JsonValueKind.Number, ((JsonElement)modinfo.Custom["key2"]).ValueKind);
+        Assert.Equal(2, ((JsonElement)modinfo.Custom["key2"]).GetInt32());
+        Assert.Equal(JsonValueKind.Object, ((JsonElement)modinfo.Custom["key3"]).ValueKind);
+        Assert.Null(modinfo.Custom["key4"]);
+
+        modinfo = ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)));
+        Assert.Equal(JsonValueKind.String, ((JsonElement)modinfo.Custom["key1"]).ValueKind);
+        Assert.Equal("value", ((JsonElement)modinfo.Custom["key1"]).GetString());
+        Assert.Equal(JsonValueKind.Number, ((JsonElement)modinfo.Custom["key2"]).ValueKind);
+        Assert.Equal(2, ((JsonElement)modinfo.Custom["key2"]).GetInt32());
+        Assert.Equal(JsonValueKind.Object, ((JsonElement)modinfo.Custom["key3"]).ValueKind);
+        Assert.Null(modinfo.Custom["key4"]);
+    }
+
+    [Fact]
+    public void Parse_Custom_WithNonUniqueKeys()
+    {
+        var data = @"{
+  ""name"": ""Test"",
+  ""custom"": {
+    ""key1"": ""value"",
+    ""key1"": 2,
+    ""key1"": {},
+    ""key1"": null
+  }
+}";
+
+        TestUtilities.Evaluate(data, EvaluationType.ModInfo);
+        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+
+        var modinfo = ModinfoData.Parse(data);
+        Assert.Equivalent(new Dictionary<string, object?>{{"key1", null}},modinfo.Custom);
+
+        modinfo = ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)));
+        Assert.Equivalent(new Dictionary<string, object?> { { "key1", null } }, modinfo.Custom);
     }
 
 
@@ -703,6 +799,12 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
+    public void ToJson_Throws()
+    {
+        Assert.Throws<ArgumentNullException>(() => new ModinfoData("name").ToJson(null!));
+    }
+
+    [Fact]
     public void Test_Parse_TolerantVersion()
     {
         var data = @"
@@ -710,7 +812,9 @@ public class ModinfoDataTest(ITestOutputHelper output)
     ""name"":""My Mod Name"",
     ""version"": ""1.0""
 }";
-        ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModInfo);
+        TestUtilities.Evaluate(data, EvaluationType.ModInfo);
+        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Equal(new SemVersion(1, 0, 0), modinfo.Version);
@@ -735,7 +839,10 @@ public class ModinfoDataTest(ITestOutputHelper output)
             },
             Custom = new Dictionary<string, object>
             {
-                { "key", "value" }
+                { "key1", "value" },
+                { "key2", 2 },
+                { "key3", new object() },
+                { "key4", null! },
             },
             SteamData = new SteamData("123", "folder", SteamWorkshopVisibility.Public, "Test", ["FOC"])
         };
@@ -749,7 +856,10 @@ public class ModinfoDataTest(ITestOutputHelper output)
             true);
         Assert.Equivalent(new Dictionary<string, object>
         {
-            { "key", "value" }
+            { "key1", "value" },
+            { "key2", 2 },
+            { "key3", new object() },
+            { "key4", null! },
         }, modinfo.Custom, true);
         Assert.Equal("123", modinfo.SteamData.Id);
         Assert.Equal("folder", modinfo.SteamData.ContentFolder);
@@ -764,7 +874,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Equal(modinfo.Icon, other.Icon);
         Assert.Equal(modinfo.Languages, other.Languages);
         Assert.Equivalent(modinfo.Custom, other.Custom, true);
-        Assert.Equal(modinfo.SteamData.Id, other.SteamData.Id);
+        Assert.Equal(modinfo.SteamData.Id, other.SteamData!.Id);
         Assert.Equal(modinfo.SteamData.ContentFolder, other.SteamData.ContentFolder);
         Assert.Equal(modinfo.SteamData.Visibility, other.SteamData.Visibility);
         Assert.Equal(modinfo.SteamData.Title, other.SteamData.Title);
@@ -786,24 +896,36 @@ public class ModinfoDataTest(ITestOutputHelper output)
             },
             Custom = new Dictionary<string, object>
             {
-                { "key", "value" }
+                { "key1", "value" },
+                { "key2", 2 },
+                { "key3", new object() },
+                { "key4", null! },
             },
             SteamData = new SteamData("123", "folder", SteamWorkshopVisibility.Public, "Test", ["FOC"])
         };
 
         var json = modinfo.ToJson();
         var other = ModinfoData.Parse(json);
+        var otherJson = other.ToJson();
+
+        Assert.Equal(json, otherJson);
 
         Assert.Equal(modinfo.Name, other.Name);
         Assert.Equal(modinfo.Summary, other.Summary);
         Assert.Equal(modinfo.Icon, other.Icon);
         Assert.Equal(modinfo.Languages, other.Languages);
-        Assert.Equivalent(modinfo.Custom, other.Custom, true);
-        Assert.Equal(modinfo.SteamData.Id, other.SteamData.Id);
+        Assert.Equal(modinfo.SteamData.Id, other.SteamData!.Id);
         Assert.Equal(modinfo.SteamData.ContentFolder, other.SteamData.ContentFolder);
         Assert.Equal(modinfo.SteamData.Visibility, other.SteamData.Visibility);
         Assert.Equal(modinfo.SteamData.Title, other.SteamData.Title);
         Assert.Equivalent(modinfo.SteamData.Tags, other.SteamData.Tags, true);
+
+        Assert.Equal(JsonValueKind.String, ((JsonElement)other.Custom["key1"]).ValueKind);
+        Assert.Equal("value", ((JsonElement)other.Custom["key1"]).GetString());
+        Assert.Equal(JsonValueKind.Number, ((JsonElement)other.Custom["key2"]).ValueKind);
+        Assert.Equal(2, ((JsonElement)other.Custom["key2"]).GetInt32());
+        Assert.Equal(JsonValueKind.Object, ((JsonElement)other.Custom["key3"]).ValueKind);
+        Assert.Null(other.Custom["key4"]);
     }
 
     [Fact]

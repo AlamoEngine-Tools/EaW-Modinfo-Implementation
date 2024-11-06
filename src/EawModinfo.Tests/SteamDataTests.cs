@@ -42,13 +42,17 @@ public class SteamDataTests
     {
         if (throws)
         {
-            Assert.Throws<ModinfoParseException>(() => ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.SteamData));
+            Assert.Throws<ModinfoParseException>(() => ModInfoJsonSchema.Evaluate(JsonNode.Parse(data)!, EvaluationType.SteamData));
             Assert.Throws<ModinfoParseException>(() => SteamData.Parse(data));
             Assert.Throws<ModinfoParseException>(() => SteamData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data))));
         }
         else
         {
             Assert.NotNull(expected);
+
+            Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.SteamData, out _));
+            ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.SteamData);
+
             var steamData = SteamData.Parse(data);
 
             AssertSteamDataEquals(expected, steamData);
@@ -117,6 +121,13 @@ public class SteamDataTests
         var ms = new MemoryStream();
         steamData.ToJson(ms);
         Assert.Equal(expected, Encoding.UTF8.GetString(ms.ToArray()));
+    }
+
+    [Fact]
+    public void ToJson_Throws()
+    {
+        Assert.Throws<ArgumentNullException>(() =>
+            new SteamData("name", "path", SteamWorkshopVisibility.Private, "title", ["FOC"]).ToJson(null!));
     }
 
 

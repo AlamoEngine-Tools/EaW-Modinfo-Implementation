@@ -4,11 +4,11 @@ using EawModinfo.Model;
 using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using EawModinfo.Utilities;
-using System.Text.Json.Nodes;
 using Xunit;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 using EawModinfo.Spec.Equality;
 using EawModinfo.Model.Json.Schema;
+using System.Text.Json.Nodes;
 
 namespace EawModinfo.Tests;
 
@@ -116,12 +116,13 @@ public class DependencyListTest
     {
         if (throws)
         {
-            Assert.Throws<ModinfoParseException>(() => ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModDependencyList));
+            Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.ModDependencyList));
             Assert.Throws<ModinfoParseException>(() => DependencyList.Parse(data));
         }
         else
         {
-            ModInfoJsonSchema.Evaluate(JsonNode.Parse(data), EvaluationType.ModDependencyList);
+            Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModDependencyList, out _));
+            TestUtilities.Evaluate(data, EvaluationType.ModDependencyList);
             var depList = DependencyList.Parse(data);
             Assert.Equal(refs, depList);
             Assert.Equal(resolveLayout, depList.ResolveLayout);

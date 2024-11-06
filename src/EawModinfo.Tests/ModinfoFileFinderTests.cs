@@ -95,7 +95,7 @@ public class ModinfoFileFinderTests
         {
             const string path = "scenario3";
 
-            foreach (var name in ModinfoDataUtils.GetInvalidModinfoFileNames()) 
+            foreach (var name in TestUtilities.GetInvalidModinfoFileNames()) 
                 _fileSystem.AddFile(_fileSystem.Path.Combine(path, name), new MockFileData(string.Empty));
             return path;
         });
@@ -149,7 +149,7 @@ public class ModinfoFileFinderTests
             _fileSystem.AddFile(mainFilePath, new MockFileData(mainFileData));
             _fileSystem.AddFile(variantFilePath, new MockFileData(variantFileData));
 
-            foreach (var name in ModinfoDataUtils.GetInvalidModinfoFileNames())
+            foreach (var name in TestUtilities.GetInvalidModinfoFileNames())
                 _fileSystem.AddFile(_fileSystem.Path.Combine(path, name), new MockFileData(string.Empty));
 
             return path;
