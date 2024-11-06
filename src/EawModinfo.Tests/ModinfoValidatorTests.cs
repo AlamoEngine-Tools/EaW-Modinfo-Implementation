@@ -80,14 +80,14 @@ public class ModinfoValidatorTests
 
     [Theory]
     [MemberData(nameof(GetModinfo))]
-    public void Test_Validate(IModinfo modinfo)
+    public void Validate(IModinfo modinfo)
     {
         Assert.Null(Record.Exception(modinfo.Validate));
     }
 
     [Theory]
     [MemberData(nameof(GetInvalidModinfo))]
-    public void Test_Validate_ThrowsModinfoException(IModinfo modinfo)
+    public void Validate_ThrowsModinfoException(IModinfo modinfo)
     {
         Assert.Throws<ModinfoException>(modinfo.Validate);
     }
@@ -157,7 +157,7 @@ public class ModinfoValidatorTests
     [Theory]
     [MemberData(nameof(GetSteamData))]
     [MemberData(nameof(GetInvalidSteamData))]
-    public void Test_Validate_SteamData(ISteamData steamData, bool shallThrow)
+    public void Validate_SteamData(ISteamData steamData, bool shallThrow)
     {
         if (!shallThrow)
             Assert.Null(Record.Exception(steamData.Validate));
@@ -204,7 +204,7 @@ public class ModinfoValidatorTests
     [Theory]
     [MemberData(nameof(GetModReferences))]
     [MemberData(nameof(GetInvalidModReferences))]
-    public void Test_Validate_ModReference(IModReference modReference, bool shallThrow)
+    public void Validate_ModReference(IModReference modReference, bool shallThrow)
     {
         if (!shallThrow)
             Assert.Null(Record.Exception(modReference.Validate));
@@ -236,13 +236,10 @@ public class ModinfoValidatorTests
         yield return [new LanguageInfo("..", LanguageSupportLevel.FullLocalized), true];
     }
 
-
-
-
     [Theory]
     [MemberData(nameof(GetLanguageInfos))]
     [MemberData(nameof(GetInvalidLanguageInfos))]
-    public void Test_Validate_Language(ILanguageInfo info, bool shallThrow)
+    public void Validate_Language(ILanguageInfo info, bool shallThrow)
     {
         if (!shallThrow)
             Assert.Null(Record.Exception(info.Validate));

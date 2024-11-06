@@ -17,7 +17,7 @@ public class MainModinfoFileTest : ModinfoFileTestsBase
     protected override IModinfoFile CreateFile(string path, bool isInvalidFileContent = false)
     {
         var fileInfo = FileSystem.FileInfo.New(path);
-        fileInfo.Directory.Create();
+        fileInfo.Directory!.Create();
 
         FileSystem.File.WriteAllText(path, !isInvalidFileContent ? TestUtilities.MainModinfoData : "{}");
         fileInfo.Refresh();
@@ -25,7 +25,7 @@ public class MainModinfoFileTest : ModinfoFileTestsBase
     }
 
     [Fact]
-    public void Test_Ctor_ThrowsArgumentNullException()
+    public void Ctor_ThrowsArgumentNullException()
     {
         Assert.Throws<ArgumentNullException>(() => new MainModinfoFile(null!));
     }

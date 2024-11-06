@@ -29,7 +29,7 @@ public static class ModinfoExceptionTests
         AssertException(exception, innerException: innerException, message: message);
     }
 
-    public static void AssertException(Exception e,
+    internal static void AssertException(Exception e,
         Exception? innerException = null,
         string? message = null,
         string? stackTrace = null,

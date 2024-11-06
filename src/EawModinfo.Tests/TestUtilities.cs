@@ -69,12 +69,6 @@ internal static class TestUtilities
         return CreateFile(fs, path, name, VariantMainModinfoData);
     }
 
-    internal static IFileInfo CreateVariantFile(MockFileSystem fs, string path)
-    {
-        const string name = "variant-modinfo.json";
-        return CreateFile(fs, path, name, VariantModifnoData);
-    }
-
     internal static IFileInfo CreateFile(MockFileSystem fs, string path, string name, string data)
     {
         var fullPath = fs.Path.Combine(path, name);

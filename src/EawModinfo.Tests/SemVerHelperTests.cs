@@ -30,7 +30,7 @@ public class SemVerHelperTests(ITestOutputHelper output)
 
     [Theory]
     [MemberData(nameof(GetTestData))]
-    public void Test_CreateSanitizedVersion(string? inputData, SemVersion? semanticVersion)
+    public void CreateSanitizedVersion(string? inputData, SemVersion? semanticVersion)
     {
         var newVersion = SemVerHelper.CreateSanitizedVersion(inputData);
         if (semanticVersion is not null)

@@ -18,10 +18,8 @@ IModinfo modinfo = modinfoFile.GetModinfo();
 ### Searching for modinfo files
 
 ```cs
-var file = new DirectoryInfo("YourModPath");
-IModinfoFileFinder finder = new ModinfoFileFinder(dir);
-
-ModinfoFinderCollection result = finder.Find(FindOptions.FindAny);
+var dir = new DirectoryInfo("YourModPath");
+ModinfoFinderCollection result = ModinfoFileFinder.FindModinfoFiles(dir);
 
 IModinfoFile mainFile = result.MainModinfo;
 IEnumerable<IModinfoFile> variantFiles = result.Variants;

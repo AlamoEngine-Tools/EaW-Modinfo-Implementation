@@ -17,7 +17,7 @@ public abstract class ModinfoFileTestsBase
 
     [Theory]
     [MemberData(nameof(TestUtilities.InvalidModinfoFileNamesTestData), MemberType = typeof(TestUtilities))]
-    public async void ValidateFile_InvalidName(string name)
+    public async Task ValidateFile_InvalidName(string name)
     {
         var file = CreateFile(FileSystem.Path.Combine("mods", "myMod", name));
         Assert.True(file.File.Exists);
@@ -87,7 +87,7 @@ public abstract class ModinfoFileTestsBase
     }
 
     [Fact]
-    public void Test_ValidateFile_FileNotFound_ThenFileIsFound()
+    public void IsFileValid_FileNotFound_ThenFileIsFound()
     {
         var file = CreateFile(FileSystem.Path.Combine("mods", "myMod", GetFileName()));
 

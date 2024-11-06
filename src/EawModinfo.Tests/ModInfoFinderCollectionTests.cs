@@ -11,7 +11,7 @@ public class ModinfoFinderCollectionTests
     private readonly MockFileSystem _fileSystem = new();
 
     [Fact]
-    public void Test_Enumerate_Main()
+    public void Enumerate_Main()
     { 
         var mainFile = new MainModinfoFile(TestUtilities.CreateModinfoFile(_fileSystem, "mods/A"));
         var collection = new ModinfoFinderCollection(_fileSystem.DirectoryInfo.New("mods/A"), mainFile, []);
@@ -23,7 +23,7 @@ public class ModinfoFinderCollectionTests
     }
 
     [Fact]
-    public void Test_Enumerate_OnlyVariants()
+    public void Enumerate_OnlyVariants()
     {
         var variant = new ModinfoVariantFile(TestUtilities.CreateVariantMainFile(_fileSystem, "mods/A"));
         var collection = new ModinfoFinderCollection(_fileSystem.DirectoryInfo.New("mods/A"), null, [variant]);
@@ -34,7 +34,7 @@ public class ModinfoFinderCollectionTests
     }
 
     [Fact]
-    public void Test_Enumerate_MainPlusSingleVariants()
+    public void Enumerate_MainPlusSingleVariants()
     { 
         var variant = new ModinfoVariantFile(TestUtilities.CreateVariantMainFile(_fileSystem, "mods/A"));
         var mainFile = new MainModinfoFile(TestUtilities.CreateModinfoFile(_fileSystem, "mods/A"));
@@ -46,7 +46,7 @@ public class ModinfoFinderCollectionTests
     }
 
     [Fact]
-    public void Test_Enumerate_MainPlusMultipleVariants()
+    public void Enumerate_MainPlusMultipleVariants()
     {
         var variantFileInfo = TestUtilities.CreateVariantMainFile(_fileSystem, "mods/A");
         var variant = new ModinfoVariantFile(variantFileInfo);

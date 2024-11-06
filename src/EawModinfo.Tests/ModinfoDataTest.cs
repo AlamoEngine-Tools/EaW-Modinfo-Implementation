@@ -20,7 +20,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     #region Parse
 
     [Fact]
-    public void Test_Parse_AllowTrailingCommaAndComments()
+    public void Parse_AllowTrailingCommaAndComments()
     {
         var data = @"
 {
@@ -42,7 +42,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_Parse_Minimal()
+    public void Parse_Minimal()
     {
         var data = @"
 {
@@ -64,7 +64,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_Parse_Version()
+    public void Parse_Version()
     {
         var data = @"
 {
@@ -85,7 +85,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_Parse_SummaryIcon()
+    public void Parse_SummaryIcon()
     {
         var data = @"
 {
@@ -109,7 +109,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_Parse_WithOneLanguage()
+    public void Parse_WithOneLanguage()
     {
         var data = @"
 {
@@ -134,7 +134,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_Parse_WithManyLanguages()
+    public void Parse_WithManyLanguages()
     {
         var data = @"
 {
@@ -162,7 +162,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_Parse_WithDuplicateLanguage()
+    public void Parse_WithDuplicateLanguage()
     {
         var data = @"
 {
@@ -189,7 +189,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_Parse_WithDuplicateLanguage2()
+    public void Parse_WithDuplicateLanguage2()
     {
         var data = @"
 {
@@ -217,7 +217,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_Parse_WithoutLanguage()
+    public void Parse_WithoutLanguage()
     {
         var data = @"
 {
@@ -240,7 +240,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_Parse_WithEmptyLanguage()
+    public void Parse_WithEmptyLanguage()
     {
         var data = @"
 {
@@ -261,7 +261,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_Parse_WithoutDeps()
+    public void Parse_WithoutDeps()
     {
         var data = @"
 {
@@ -283,7 +283,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
 
 
     [Fact]
-    public void Test_Parse_WithManyDeps()
+    public void Parse_WithManyDeps()
     {
         var data = @"
 {
@@ -318,7 +318,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_Parse_WithDepsLayout()
+    public void Parse_WithDepsLayout()
     {
         var data = @"
 {
@@ -354,7 +354,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_Parse_WithDepsLayout_ThrowsModinfoParseException()
+    public void Parse_WithDepsLayout_ThrowsModinfoParseException()
     {
         var data = @"
 {
@@ -381,7 +381,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_Parse_WithUnknownDepsLayout_ThrowsModinfoParseException()
+    public void Parse_WithUnknownDepsLayout_ThrowsModinfoParseException()
     {
         var data = @"
 {
@@ -407,7 +407,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_Parse_WithEmptyDeps_ThrowsModinfoParseException()
+    public void Parse_WithEmptyDeps_ThrowsModinfoParseException()
     {
         var data = @"
 {
@@ -423,7 +423,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_Parse_WithEmptyDeps_ThrowsModinfoParseException2()
+    public void Parse_WithEmptyDeps_ThrowsModinfoParseException2()
     {
         var data = @"
 {
@@ -439,7 +439,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_Parse_WithIncompleteModRef_ThrowsModinfoParseException2()
+    public void Parse_WithIncompleteModRef_ThrowsModinfoParseException2()
     {
         var data = @"
 {
@@ -455,7 +455,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_Parse_WithIncompatibleCustom()
+    public void Parse_WithIncompatibleCustom()
     {
         var data = @"
 {
@@ -472,7 +472,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
 
 
     [Fact]
-    public void Test_Parse_Custom_Empty()
+    public void Parse_Custom_Empty()
     {
         var data = @"
 {
@@ -490,7 +490,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_Parse_SteamData()
+    public void Parse_SteamData()
     {
         var data = @"
 {
@@ -547,7 +547,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
 
     [Theory]
     [MemberData(nameof(GetInvalidData))]
-    public void Test_Parse_FailingParseTest(string? data, IList<string> expectedErrorKeys)
+    public void Parse_FailingParseTest(string? data, IList<string> expectedErrorKeys)
     {
         if (data is null)
         {
@@ -629,7 +629,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     #region ToJson
 
     [Fact]
-    public void Test_ToJson()
+    public void ToJson()
     {
         var modinfo = new ModinfoData("Test") { Version = SemVersion.ParsedFrom(1, 1, 1, "BETA") };
         var data = modinfo.ToJson();
@@ -643,7 +643,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_ToJson_DependencyList()
+    public void ToJson_DependencyList()
     {
         var modinfo = new ModinfoData("Test")
         {
@@ -662,7 +662,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_ToJson_EmptyDependencyList()
+    public void ToJson_EmptyDependencyList()
     {
         var modinfo = new ModinfoData("Test")
         {
@@ -677,7 +677,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_ToJson_ModRefRange()
+    public void ToJson_ModRefRange()
     {
         var modinfo = new ModinfoData("Test")
         {
@@ -694,7 +694,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_ToJson_SummaryIcon()
+    public void ToJson_SummaryIcon()
     {
         var modinfo = new ModinfoData("Test")
         {
@@ -743,7 +743,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_ToJson_Full()
+    public void ToJson_Full()
     {
         var modinfo = new ModinfoData("Test")
         {
@@ -804,7 +804,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_ToJson_CustomDefaultLanguageOnly()
+    public void ToJson_CustomDefaultLanguageOnly()
     {
         var modinfo = new ModinfoData("Test")
         {
@@ -822,7 +822,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_ToJson_DefaultOnlyLanguage()
+    public void ToJson_DefaultOnlyLanguage()
     {
         var modinfo = new ModinfoData("Test")
         {
@@ -846,7 +846,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
-    public void Test_Parse_TolerantVersion()
+    public void Parse_TolerantVersion()
     {
         var data = @"
 {

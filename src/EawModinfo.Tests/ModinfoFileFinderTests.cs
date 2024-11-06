@@ -14,7 +14,7 @@ public class ModinfoFileFinderTests
     private readonly MockFileSystem _fileSystem = new();
 
     [Fact]
-    public void TestInvalidArgs_Throws()
+    public void FindModinfoFiles_InvalidArgs_Throws()
     {
         Assert.Throws<ArgumentNullException>(() => ModinfoFileFinder.FindModinfoFiles(null!));
         var scenarioPath = _fileSystem.DirectoryInfo.New("notfound");
@@ -38,7 +38,7 @@ public class ModinfoFileFinderTests
     [InlineData(4, true, 1)]
     [InlineData(5, false, 2)]
     [InlineData(6, true, 1)]
-    public void TestAll(int scenario, bool hasMain, int numberVariants)
+    public void FindModinfoFiles_TestAll(int scenario, bool hasMain, int numberVariants)
     {
         var scenarioPath = _fileSystem.DirectoryInfo.New(_scenarioPaths[scenario]);
         var result = ModinfoFileFinder.FindModinfoFiles(scenarioPath);
@@ -50,7 +50,7 @@ public class ModinfoFileFinderTests
     [Theory]
     [InlineData(4)]
     [InlineData(6)]
-    public void TestMerge(int scenario)
+    public void FindModinfoFiles_TestMerge(int scenario)
     {
         var scenarioPath = _fileSystem.DirectoryInfo.New(_scenarioPaths[scenario]);
         var all = ModinfoFileFinder.FindModinfoFiles(scenarioPath);

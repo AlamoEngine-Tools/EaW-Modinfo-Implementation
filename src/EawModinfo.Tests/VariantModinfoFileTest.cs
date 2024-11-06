@@ -43,7 +43,7 @@ public class VariantModinfoFileTest : ModinfoFileTestsBase
     }
 
     [Fact]
-    public void Test_Ctor_ThrowsArgumentNullException()
+    public void Ctor_ThrowsArgumentNullException()
     {
         Assert.Throws<ArgumentNullException>(() => new ModinfoVariantFile(null!));
         Assert.Throws<ArgumentNullException>(() => new ModinfoVariantFile(null!, (MainModinfoFile?)null));
