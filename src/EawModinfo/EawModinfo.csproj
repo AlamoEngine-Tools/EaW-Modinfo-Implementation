@@ -21,6 +21,21 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Schemas\3.0.0\languageinfo.json" />
+	  <None Remove="Resources\Schemas\3.0.0\moddependencies.json" />
+	  <None Remove="Resources\Schemas\3.0.0\modinfo.json" />
+	  <None Remove="Resources\Schemas\3.0.0\modref.json" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Resources\Schemas\3.0.0\languageinfo.json" />
+	  <EmbeddedResource Include="Resources\Schemas\3.0.0\moddependencies.json" />
+	  <EmbeddedResource Include="Resources\Schemas\3.0.0\modinfo.json" />
+	  <EmbeddedResource Include="Resources\Schemas\3.0.0\modref.json" />
+	  <EmbeddedResource Include="Resources\Schemas\3.0.0\steamdata.json" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="IsExternalInit" Version="1.0.3">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -43,8 +58,6 @@
 		<PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Resources\Schemas\3.0.0\" />
-	</ItemGroup>
+	<ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>

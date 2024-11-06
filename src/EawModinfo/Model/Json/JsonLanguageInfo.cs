@@ -70,9 +70,9 @@ internal class JsonLanguageInfo : ILanguageInfo
 
     public void ToJson(Stream stream)
     {
-        this.Validate();
-        if (stream == null) 
+        if (stream == null)
             throw new ArgumentNullException(nameof(stream));
+        this.Validate();
         JsonSerializer.Serialize(stream, this, ParseUtility.SerializerOptions);
     }
 }

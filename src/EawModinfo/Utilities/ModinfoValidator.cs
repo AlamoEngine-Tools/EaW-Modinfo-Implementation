@@ -153,4 +153,15 @@ public static class ModinfoValidator
             return (false, "Workshops ID cannot be 0.");
         return (true, string.Empty);
     }
+
+    /// <summary>
+    /// Validates an <see cref="IModDependencyList"/> data. Throws an <see cref="ModinfoException"/> when validation failed.
+    /// </summary>
+    /// <param name="dependencyList">The data to validate.</param>
+    /// <exception cref="ModinfoException">The validation failed.</exception>
+    public static void Validate(this IModDependencyList dependencyList)
+    {
+        foreach (var dep in dependencyList) 
+            dep.Validate();
+    }
 }

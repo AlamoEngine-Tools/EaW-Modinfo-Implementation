@@ -17,7 +17,7 @@ namespace EawModinfo.Tests;
 public class LanguageInfoTests
 {
     [Fact]
-    public void Test_Equal_GetHashCode()
+    public void Equal_GetHashCode()
     {
         var a = new LanguageInfo("en", LanguageSupportLevel.FullLocalized);
         ILanguageInfo b = new JsonLanguageInfo(new LanguageInfo("en", LanguageSupportLevel.SFX));
@@ -124,7 +124,7 @@ public class LanguageInfoTests
 
     [Theory]
     [MemberData(nameof(GetJsonData))]
-    public void Test_Parse(string data, string expectedCode, LanguageSupportLevel expectedLevel)
+    public void Parse(string data, string expectedCode, LanguageSupportLevel expectedLevel)
     {
         TestUtilities.Evaluate(data, EvaluationType.ModLanguageInfo);
         Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModLanguageInfo, out _));
@@ -204,7 +204,7 @@ public class LanguageInfoTests
     }
 
     [Fact]
-    public void Test_ToJson_Languages_Default()
+    public void ToJson_Languages_Default()
     {
         var languageInfo = LanguageInfo.Default;
         var json = languageInfo.ToJson();
@@ -219,7 +219,7 @@ public class LanguageInfoTests
     }
 
     [Fact]
-    public void Test_ToJson_Languages_CustomDefault()
+    public void ToJson_Languages_CustomDefault()
     {
         var languageInfo = new LanguageInfo("en", 0);
         var json = languageInfo.ToJson();
@@ -234,7 +234,7 @@ public class LanguageInfoTests
     }
 
     [Fact]
-    public void Test_ToJson_Languages_Full()
+    public void ToJson_Languages_Full()
     {
         var languageInfo = new LanguageInfo("en", LanguageSupportLevel.FullLocalized);
         var json = languageInfo.ToJson();
@@ -249,7 +249,7 @@ public class LanguageInfoTests
     }
 
     [Fact]
-    public void Test_ToJson_Languages_NonEnglish()
+    public void ToJson_Languages_NonEnglish()
     {
         var languageInfo = new LanguageInfo("de", LanguageSupportLevel.FullLocalized);
         var json = languageInfo.ToJson();

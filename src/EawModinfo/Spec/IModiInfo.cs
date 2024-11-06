@@ -34,5 +34,5 @@ public interface IModinfo : IModIdentity, IConvertibleToJson
     /// <remarks>
     /// If no other language infos are provided, a default language info gets returned. The default language info is English - FullLocalized.
     /// </remarks>
-    IEnumerable<ILanguageInfo> Languages { get; }
+    IReadOnlyCollection<ILanguageInfo> Languages { get; }
 }

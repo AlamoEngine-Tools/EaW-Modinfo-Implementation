@@ -27,7 +27,7 @@ public class VariantModinfoFileTest : ModinfoFileTestsBase
     private ModinfoVariantFile CreateVariantWithBaseFile(string path, MainModinfoFile? baseFile, string content)
     {
         var fileInfo = FileSystem.FileInfo.New(path);
-        fileInfo.Directory.Create();
+        fileInfo.Directory!.Create();
         FileSystem.File.WriteAllText(path, content);
         fileInfo.Refresh();
         return new ModinfoVariantFile(fileInfo, baseFile);
@@ -36,7 +36,7 @@ public class VariantModinfoFileTest : ModinfoFileTestsBase
     private ModinfoVariantFile CreateVariantWithBaseInfo(string path, IModinfo? baseInfo)
     {
         var fileInfo = FileSystem.FileInfo.New(path);
-        fileInfo.Directory.Create();
+        fileInfo.Directory!.Create();
         FileSystem.File.WriteAllText(path, TestUtilities.VariantModifnoData);
         fileInfo.Refresh();
         return new ModinfoVariantFile(fileInfo, baseInfo);
@@ -119,7 +119,8 @@ public class VariantModinfoFileTest : ModinfoFileTestsBase
             Version = SemVersion.Parse("1.1.1-BETA"),
             Dependencies = new DependencyList([new ModReference { Identifier = "123", Type = ModType.Workshops }],
                 DependencyResolveLayout.FullResolved),
-            Custom = new Dictionary<string, object>{{"key", "value"}}
+            Custom = new Dictionary<string, object>{{"key", "value"}},
+            Languages = [new LanguageInfo("en", LanguageSupportLevel.FullLocalized), new LanguageInfo("de", LanguageSupportLevel.SFX)]
         };
 
         return CreateVariantWithBaseInfo(FileSystem.Path.Combine("mods", "myMod", GetFileName()), main);
@@ -134,7 +135,7 @@ public class VariantModinfoFileTest : ModinfoFileTestsBase
         
         Assert.Equal(SemVersion.ParsedFrom(1, 1, 1, "BETA"), data.Version);
         Assert.Single(data.Custom);
-        Assert.Single(data.Languages);
+        Assert.Equal(2, data.Languages.Count);
     }
 
     [Fact]
@@ -151,5 +152,22 @@ public class VariantModinfoFileTest : ModinfoFileTestsBase
             Assert.Throws<ModinfoParseException>(() => file.GetModinfo());
         });
         await Assert.ThrowsAsync<ModinfoParseException>(() => file.GetModinfoAsync());
+    }
+
+    [Fact]
+    public void MergeMainIntoVariant_WhereVariantSetsLanguageExplicitly()
+    {
+        FileSystem.Directory.CreateDirectory("integration");
+        FileSystem.File.WriteAllText("integration/modinfo.json", TestUtilities.MainModinfoData);
+        FileSystem.File.WriteAllText("integration/variant-modinfo.json", TestUtilities.VariantModifnoDataWithExplicitLanguage);
+
+        var mainFile = new MainModinfoFile(FileSystem.FileInfo.New("integration/modinfo.json"));
+        var variantFile = new ModinfoVariantFile(FileSystem.FileInfo.New("integration/variant-modinfo.json"), mainFile);
+
+        var main = mainFile.GetModinfo();
+        Assert.Equal(2, main.Languages.Count);
+
+        var variant = variantFile.GetModinfo();
+        Assert.Single(variant.Languages);
     }
 }

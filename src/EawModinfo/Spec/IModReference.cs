@@ -6,7 +6,7 @@ namespace EawModinfo.Spec;
 /// <summary>
 /// Represents a reference to a mod which can be used to describe a dependency. 
 /// </summary>
-public interface IModReference : IEquatable<IModReference>
+public interface IModReference : IEquatable<IModReference>, IConvertibleToJson
 {
     /// <summary>
     /// Gets the unique identifier as a textual representation. The <see cref="Type"/> property my indicate how the data can be interpreted. 

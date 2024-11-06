@@ -1,0 +1,25 @@
+{
+  "$id": "https://AlamoEngine-Tools.github.io/schemas/3.0.0/mod-ref",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Represents a reference to a mod.",
+  "type": "object",
+  "required": [
+    "modtype",
+    "identifier"
+  ],
+  "properties": {
+    "modtype": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 2
+    },
+    "identifier": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version-range": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

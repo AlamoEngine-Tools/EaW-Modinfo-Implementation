@@ -48,6 +48,15 @@ internal static class TestUtilities
 	""name"": ""Addon""
 }";
 
+    internal static string VariantModifnoDataWithExplicitLanguage = @"{
+	""name"": ""Addon"",
+    ""languages"":[
+        {
+          ""code"": ""en""
+        }
+    ]
+}";
+
     internal static IFileInfo CreateModinfoFile(MockFileSystem fs, string path)
     {
         const string name = "modinfo.json";

@@ -15,7 +15,7 @@ namespace EawModinfo.Model.Json;
 /// <inheritdoc/>
 internal class JsonModinfoData : IModinfo
 {
-    [JsonIgnore] private HashSet<ILanguageInfo>? _languages;
+    [JsonIgnore] private IReadOnlyCollection<ILanguageInfo>? _languages;
     [JsonIgnore] private SemVersion? _modVersion;
     [JsonIgnore] private bool _versionDetermined;
     [JsonIgnore] private bool _languagesDetermined;
@@ -67,20 +67,21 @@ internal class JsonModinfoData : IModinfo
     public IModDependencyList Dependencies { get; set; }
 
     [JsonPropertyName("languages")]
-    public HashSet<JsonLanguageInfo> InternalLanguages { get; set; }
+    public HashSet<JsonLanguageInfo>? InternalLanguages { get; set; }
 
     /// <inheritdoc/>
     [JsonIgnore]
-    public IEnumerable<ILanguageInfo> Languages
+    public IReadOnlyCollection<ILanguageInfo> Languages
     {
         get
         {
             if (_languages is null && !_languagesDetermined)
             {
-                var languages = new HashSet<ILanguageInfo>(InternalLanguages.Select(x => new LanguageInfo(x)));
-                if (!languages.Any())
-                    languages.Add(LanguageInfo.Default);
-                _languages = languages;
+                if (InternalLanguages == null || InternalLanguages.Count == 0)
+                    _languages = ModinfoData.UnsetLanguages;
+                else
+                    _languages = new HashSet<ILanguageInfo>(InternalLanguages.Select(x => new LanguageInfo(x)));
+               
                 _languagesDetermined = true;
             }
             return _languages!;
@@ -108,7 +109,6 @@ internal class JsonModinfoData : IModinfo
     {
         Dependencies = new JsonDependencyList();
         Custom = new Dictionary<string, object>();
-        InternalLanguages = new HashSet<JsonLanguageInfo>();
     }
 
     /// <summary>
@@ -138,9 +138,9 @@ internal class JsonModinfoData : IModinfo
 
     public void ToJson(Stream stream)
     {
-        this.Validate();
         if (stream == null)
             throw new ArgumentNullException(nameof(stream));
+        this.Validate();
         JsonSerializer.Serialize(stream, this, ParseUtility.SerializerOptions);
     }
 

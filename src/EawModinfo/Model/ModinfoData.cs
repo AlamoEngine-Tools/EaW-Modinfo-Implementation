@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Equality;
@@ -13,6 +14,8 @@ namespace EawModinfo.Model;
 /// <inheritdoc cref="IModinfo"/>
 public sealed class ModinfoData : IModinfo
 {
+    internal static readonly IReadOnlyCollection<ILanguageInfo> UnsetLanguages = [LanguageInfo.Default];
+
     /// <inheritdoc/>
     public string Name { get; }
 
@@ -35,7 +38,7 @@ public sealed class ModinfoData : IModinfo
     public ISteamData? SteamData { get; init; }
 
     /// <inheritdoc/>
-    public IEnumerable<ILanguageInfo> Languages { get; init; } = new List<ILanguageInfo> { LanguageInfo.Default };
+    public IReadOnlyCollection<ILanguageInfo> Languages { get; init; } = UnsetLanguages;
         
     /// <summary>
     /// Initializes a new instance of the <see cref="ModinfoData"/> class with a given name.
@@ -64,7 +67,7 @@ public sealed class ModinfoData : IModinfo
     }
 
     /// <summary>
-    /// Creates a new instance from a given <see cref="IModinfo"/> instance.
+    /// Initializes a new instance of the <see cref="ModinfoData"/> of the specified <see cref="IModinfo"/>.
     /// </summary>
     /// <param name="modinfo">The instance that will be copied.</param>
     public ModinfoData(IModinfo modinfo)
@@ -77,8 +80,11 @@ public sealed class ModinfoData : IModinfo
         Summary = modinfo.Summary;
         Icon = modinfo.Icon;
         SteamData = modinfo.SteamData != null ? new SteamData(modinfo.SteamData) : null;
-        Languages = new List<ILanguageInfo>(modinfo.Languages);
         Custom = new Dictionary<string, object>(modinfo.Custom);
+
+        if (ReferenceEquals(modinfo.Languages, UnsetLanguages) || modinfo.Languages.Count == 0)
+            return;
+        Languages = modinfo.Languages.Select(x => new LanguageInfo(x)).Distinct().ToList();
     }
 
     /// <summary>

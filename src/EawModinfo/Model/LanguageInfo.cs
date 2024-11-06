@@ -13,7 +13,7 @@ namespace EawModinfo.Model;
 public sealed class LanguageInfo : ILanguageInfo, IEquatable<LanguageInfo>
 {
     private CultureInfo? _culture;
-
+    
     /// <summary>
     /// Returns an instance of the <see cref="LanguageInfo"/> class representing full localized English.
     /// </summary>

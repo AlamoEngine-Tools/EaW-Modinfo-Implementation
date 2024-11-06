@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Text.Json.Nodes;
 using EawModinfo.Model;
 using EawModinfo.Model.Json;
@@ -58,7 +61,7 @@ public class ModReferenceTests
 
     [Theory]
     [MemberData(nameof(VersionRangeData))]
-    public void Test_Parse_VersionRange(string data, SemVersionRange? range)
+    public void Parse_VersionRange(string data, SemVersionRange? range)
     {
         TestUtilities.Evaluate(data, EvaluationType.ModReference);
         var modReference = ModReference.Parse(data);
@@ -66,7 +69,7 @@ public class ModReferenceTests
     }
 
     [Fact]
-    public void Test_Equals_GetHashCode()
+    public void Equals_GetHashCode()
     {
         var a = new ModReference { Type = ModType.Workshops, Identifier = "123" };
         var b = new ModReference { Type = ModType.Workshops, Identifier = "123" };
@@ -123,7 +126,63 @@ public class ModReferenceTests
 
     }
 
-    public static IEnumerable<object[]> GetData()
+    public static IEnumerable<object[]> GetInvalidJsonData()
+    {
+        yield return
+        [
+            @"
+{
+    ""identifier"":""123123""
+}",
+            new[]{"required"}];
+
+        yield return
+        [
+            @"
+{
+    ""modtype"":1
+}",
+            new[]{"required"}];
+
+        yield return
+        [
+            @"
+{
+    ""modtype"":-1
+}",
+            new[]{"required", "minimum"}];
+
+        yield return
+        [
+            @"
+{
+    ""modtype"":50
+}",
+            new[]{"required", "maximum"}];
+
+        yield return
+        [
+            @"
+{
+    ""identifier"":"""",
+    ""modtype"":1
+}", 
+            new[]{"minLength"}];
+    }
+
+    [Theory]
+    [MemberData(nameof(GetInvalidJsonData))]
+    public void Parse_Throws(string data, IList<string> expectedErrorKeys)
+    {
+        Assert.False(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModReference, out var errors));
+        Assert.Equivalent(expectedErrorKeys, errors.Select(x => x.Key), true);
+
+        Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.ModReference));
+        Assert.Throws<ModinfoParseException>(() => ModReference.Parse(data));
+        Assert.Throws<ModinfoParseException>(() => SteamData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data))));
+    }
+
+    public static IEnumerable<object[]> GetJsonData()
     {
         yield return
         [
@@ -132,79 +191,66 @@ public class ModReferenceTests
     ""identifier"":""123123"",
     ""modtype"":1
 }",
-            "123123", ModType.Workshops, false
+            "123123", ModType.Workshops
         ];
-
-        yield return
-        [
-            @"
-{
-    ""identifier"":""123123""
-}",
-            null!, null!, true
-        ];
-
-        yield return
-        [
-            @"
-{
-    ""modtype"":1
-}",
-            null!, null!, true
-        ];
-
-        yield return
-        [
-            @"
-{
-    ""modtype"":-1
-}",
-            null!, null!, true
-        ];
-
-        yield return
-        [
-            @"
-{
-    ""modtype"":50
-}",
-            null!, null!, true
-        ];
-
-        yield return
-        [
-            @"
-{
-    ""identifier"":"""",
-    ""modtype"":1
-}",
-            null!, null!, true
-        ];
-
     }
 
     [Theory]
-    [MemberData(nameof(GetData))]
-    public void Test_Parse(string data, string? expectedId, ModType? expectedType, bool throws)
+    [MemberData(nameof(GetJsonData))]
+    public void Parse(string data, string? expectedId, ModType? expectedType)
     {
-        if (throws)
-        {
-            Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.ModReference));
-            Assert.Throws<ModinfoParseException>(() => ModReference.Parse(data));
-        }
-        else
-        {
-            Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModReference, out _));
-            TestUtilities.Evaluate(data, EvaluationType.ModReference);
-            var modReference = ModReference.Parse(data);
-            Assert.Equal(expectedId, modReference.Identifier);
-            Assert.Equal(expectedType, modReference.Type);
-        }
+        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModReference, out _));
+        TestUtilities.Evaluate(data, EvaluationType.ModReference);
+        var modReference = ModReference.Parse(data);
+        Assert.Equal(expectedId, modReference.Identifier);
+        Assert.Equal(expectedType, modReference.Type);
     }
 
     [Fact]
     public void Parse_Null_Throws()
     {
         Assert.Throws<ArgumentNullException>(() => ModReference.Parse(null!));
+    }
+
+    [Fact]
+    public void ToJson_Throws()
+    {
+        Assert.Throws<ArgumentNullException>(() => new ModReference().ToJson(null!));
+        ModReference modReference = default;
+        Assert.Throws<ModinfoException>(() => modReference.ToJson());
+        Assert.Throws<ModinfoException>(() => modReference.ToJson(new MemoryStream()));
+    }
+
+    [Fact]
+    public static void ToJson()
+    {
+        var expected = @"{
+  ""identifier"": ""name"",
+  ""modtype"": 0
+}";
+        var modReference = new ModReference("name", ModType.Default);
+        var data = modReference.ToJson();
+        Assert.Equal(expected, data);
+
+        var ms = new MemoryStream();
+        modReference.ToJson(ms);
+        Assert.Equal(expected, Encoding.UTF8.GetString(ms.ToArray()));
+    }
+
+    [Fact]
+    public static void ToJson_WithRange()
+    {
+        var expected = @"{
+  ""identifier"": ""name"",
+  ""modtype"": 0,
+  ""version-range"": ""*""
+}";
+        var modReference = new ModReference("name", ModType.Default, SemVersionRange.Parse("*"));
+        var data = modReference.ToJson();
+        Assert.Equal(expected, data);
+
+        var ms = new MemoryStream();
+        modReference.ToJson(ms);
+        Assert.Equal(expected, Encoding.UTF8.GetString(ms.ToArray()));
     }
 }

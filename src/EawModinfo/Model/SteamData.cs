@@ -109,8 +109,6 @@ public sealed class SteamData : ISteamData
         return new SteamData(jsonData);
     }
 
-
-
     /// <inheritdoc/>
     public string ToJson()
     {

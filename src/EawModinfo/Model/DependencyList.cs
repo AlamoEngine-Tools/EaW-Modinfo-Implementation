@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using EawModinfo.Model.Json;
 using EawModinfo.Spec;
@@ -26,6 +27,7 @@ public class DependencyList : ReadOnlyCollection<IModReference>, IModDependencyL
     /// </summary>
     /// <exception cref="ArgumentNullException"><paramref name="dependencyList"/> is <see langword="null"/>.</exception>
     public DependencyList(IModDependencyList dependencyList) 
+        // ReSharper disable once ConditionalAccessQualifierIsNonNullableAccordingToAPIContract
         : base(dependencyList?.ToList() ?? throw new ArgumentNullException(nameof(dependencyList)))
     {
         ResolveLayout = dependencyList.ResolveLayout;
@@ -53,6 +55,20 @@ public class DependencyList : ReadOnlyCollection<IModReference>, IModDependencyL
     public static DependencyList Parse(string data)
     {
         if (data == null) 
+            throw new ArgumentNullException(nameof(data));
+        return new DependencyList(ParseUtility.Parse<JsonDependencyList>(data));
+    }
+
+    /// <summary>
+    /// Parses and deserializes a json data into a <see cref="DependencyList"/>.
+    /// </summary>
+    /// <param name="data">The json data stream.</param>
+    /// <returns>The deserialized object.</returns>
+    /// <exception cref="ModinfoParseException">When parsing failed, e.g. due to missing required properties.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/>.</exception>
+    public static DependencyList Parse(Stream data)
+    {
+        if (data == null)
             throw new ArgumentNullException(nameof(data));
         return new DependencyList(ParseUtility.Parse<JsonDependencyList>(data));
     }
@@ -87,5 +103,17 @@ public class DependencyList : ReadOnlyCollection<IModReference>, IModDependencyL
     public bool Equals(IModDependencyList? other)
     {
         return ModDependencyListEqualityComparer.Default.Equals(this, other);
+    }
+
+    /// <inheritdoc />
+    public string ToJson()
+    {
+        return new JsonDependencyList(this).ToJson();
+    }
+
+    /// <inheritdoc />
+    public void ToJson(Stream stream)
+    {
+        new JsonDependencyList(this).ToJson(stream);
     }
 }

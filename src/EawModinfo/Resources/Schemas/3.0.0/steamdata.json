@@ -1,0 +1,64 @@
+{
+  "$id": "https://AlamoEngine-Tools.github.io/schemas/3.0.0/steam-data",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Represents the steam information .",
+  "type": "object",
+  "$defs": {
+    "tagType": {
+      "type": "string",
+      "pattern": "^[^,\u0000-\u001F\u007F-\uFFFF]*$",
+      "maxLength": 255
+    }
+  },
+  "required": [
+    "publishedfileid",
+    "contentfolder",
+    "visibility",
+    "title",
+    "tags"
+  ],
+  "properties": {
+    "publishedfileid": {
+      "type": "string"
+    },
+    "contentfolder": {
+      "type": "string"
+    },
+    "visibility": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3
+    },
+    "title": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "uniqueItems": true,
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/tagType"
+      },
+      "contains": {
+        "oneOf": [
+          {
+            "const": "FOC"
+          },
+          {
+            "const": "EAW"
+          }
+        ]
+      }
+    },
+    "previewfile": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

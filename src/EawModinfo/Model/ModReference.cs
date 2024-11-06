@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Equality;
@@ -85,5 +86,19 @@ public readonly struct ModReference : IModReference , IEquatable<ModReference>
     public bool Equals(ModReference other)
     {
         return ModReferenceEqualityComparer.Default.Equals(this, other);
+    }
+
+    /// <inheritdoc/>
+    public string ToJson()
+    {
+        return new JsonModReference(this).ToJson();
+    }
+
+    /// <inheritdoc />
+    public void ToJson(Stream stream)
+    {
+        if (stream == null)
+            throw new ArgumentNullException(nameof(stream));
+        new JsonModReference(this).ToJson(stream);
     }
 }

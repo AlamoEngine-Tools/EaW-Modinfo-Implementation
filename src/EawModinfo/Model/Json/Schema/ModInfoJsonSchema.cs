@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json.Nodes;
@@ -25,11 +26,11 @@ public static class ModInfoJsonSchema
         };
         var registry = evalvOptions.SchemaRegistry;
 
-        registry.Register(JsonSchema.FromText(DependenciesSchema));
-        registry.Register(JsonSchema.FromText(ModRefSchema));
-        registry.Register(JsonSchema.FromText(LanguageInfoSchema));
-        registry.Register(JsonSchema.FromText(SteamDataSchema));
-        registry.Register(JsonSchema.FromText(ModInfo));
+        registry.Register(GetSchemaFromResource("modref.json"));
+        registry.Register(GetSchemaFromResource("moddependencies.json"));
+        registry.Register(GetSchemaFromResource("languageinfo.json"));
+        registry.Register(GetSchemaFromResource("steamdata.json"));
+        registry.Register(GetSchemaFromResource("modinfo.json"));
 
         Registry = evalvOptions.SchemaRegistry;
         EvaluationOptions = evalvOptions;
@@ -37,202 +38,12 @@ public static class ModInfoJsonSchema
 
     private static JsonSchema GetSchemaFromResource(string schema)
     {
-        return null!;
+        using var resourceStream = typeof(ModInfoJsonSchema)
+            .Assembly.GetManifestResourceStream($"EawModinfo.Resources.Schemas._3._0._0.{schema}");
+
+        Debug.Assert(resourceStream is not null);
+        return JsonSchema.FromStream(resourceStream!).GetAwaiter().GetResult();
     }
-
-    internal const string ModRefSchema = @"{
-  ""$id"": ""https://AlamoEngine-Tools.github.io/schemas/3.0.0/mod-ref"",
-  ""$schema"": ""https://json-schema.org/draft/2020-12/schema"",
-  ""description"": ""Represents a reference to a mod."",
-  ""type"":""object"",
-      ""required"":[
-        ""modtype"",
-        ""identifier""
-      ],
-      ""properties"":{
-        ""modtype"":{
-          ""type"":""number"",
-          ""minimum"":0,
-          ""maximum"":2
-        },
-        ""identifier"":{
-          ""type"":""string"",
-          ""minLength"": 1
-        },
-        ""version-range"":{
-          ""type"":""string""
-        }
-      },
-      ""additionalProperties"":false
-}";
-
-    internal const string DependenciesSchema = @"{
-  ""$id"": ""https://AlamoEngine-Tools.github.io/schemas/3.0.0/mod-deps"",
-  ""$schema"": ""https://json-schema.org/draft/2020-12/schema"",
-  ""description"": ""Represents a mod's dependencies as an ordered array."",
-  ""type"": ""array"",
-  ""contains"": {
-    ""type"":""object"",
-    ""$ref"": ""/schemas/3.0.0/mod-ref""
-  },
-  ""additionalItems"": false,
-  ""oneOf"": [
-    {
-      ""prefixItems"": [
-        {
-          ""enum"": [
-            ""ResolveRecursive"",
-            ""ResolveLastItem"",
-            ""FullResolved""
-          ]
-        }
-      ],
-      ""items"": {
-        ""type"":""object"",
-        ""$ref"": ""/schemas/3.0.0/mod-ref""
-      }
-    },
-    {
-      ""items"": {
-        ""type"":""object"",
-        ""$ref"": ""/schemas/3.0.0/mod-ref""
-      }
-    }
-  ]
-}";
-
-    internal const string LanguageInfoSchema = @"{
-  ""$id"":""https://AlamoEngine-Tools.github.io/schemas/3.0.0/lang-info"",
-  ""$schema"":""https://json-schema.org/draft/2020-12/schema"",
-  ""description"":""Represents the level of localizatio support for a single language."",
-  ""type"":""object"",
-  ""properties"":{
-    ""code"":{
-      ""type"":""string"",
-      ""minLength"":2,
-      ""maxLength"":2
-    },
-    ""support"":{
-      ""type"":""number"",
-      ""minimum"":1,
-      ""maximum"":7
-    }
-  },
-
-   ""additionalProperties"":false
-}";
-
-    internal const string SteamDataSchema = @"{
-  ""$id"": ""https://AlamoEngine-Tools.github.io/schemas/3.0.0/steam-data"",
-  ""$schema"": ""https://json-schema.org/draft/2020-12/schema"",
-  ""description"": ""Represents the steam information ."",
-  ""type"": ""object"",
-  ""$defs"": {
-    ""tagType"":{
-      ""type"":""string"",
-      ""pattern"": ""^[^,\u0000-\u001F\u007F-\uFFFF]*$"",
-       ""maxLength"": 255 
-    }  
-  },
-  ""required"": [
-    ""publishedfileid"",
-    ""contentfolder"",
-    ""visibility"",
-    ""title"",
-    ""tags""
-  ],
-  ""properties"": {
-    ""publishedfileid"": {
-      ""type"": ""string""
-    },
-    ""contentfolder"": {
-      ""type"": ""string""
-    },
-    ""visibility"": {
-      ""type"": ""integer"",
-      ""minimum"": 0,
-      ""maximum"": 3
-    },
-    ""title"": {
-      ""type"": ""string""
-    },
-    ""metadata"": {
-      ""type"": ""string""
-    },
-    ""tags"": {
-      ""type"": ""array"",
-      ""uniqueItems"": true,
-      ""minItems"": 1,
-      ""items"": {
-        ""$ref"": ""#/$defs/tagType""
-      },
-      ""contains"": {
-        ""oneOf"": [
-          {
-            ""const"": ""FOC""
-          },
-          {
-            ""const"": ""EAW""
-          }
-        ]
-      }
-    },
-    ""previewfile"": {
-      ""type"": ""string""
-    },
-    ""description"": {
-      ""type"": ""string""
-    }
-  },
-  ""additionalProperties"": false
-}";
-
-    internal const string ModInfo = @"{
-  ""$id"":""https://AlamoEngine-Tools.github.io/schemas/3.0.0/modinfo"",
-  ""$schema"":""https://json-schema.org/draft/2020-12/schema"",
-  ""description"":""A standard definition for Star Wars: Empire at War mod info files."",
-  ""title"":""EaW Modinfo"",
-  ""type"":""object"",
-  ""properties"":{
-    ""name"":{
-      ""type"":""string"",
-      ""minLength"": 1
-    },
-    ""summary"":{
-      ""type"":""string""
-    },
-    ""icon"":{
-      ""type"":""string""
-    },
-    ""version"":{
-      ""type"":""string"",
-      ""description"":""No validation for the version string as implementations can verify this better than JSON schemas. ""
-    },
-    ""dependencies"":{
-      ""type"":""array"",
-	  ""$ref"":""/schemas/3.0.0/mod-deps""
-    },
-    ""languages"":{
-      ""type"":""array"",
-      ""items"":{
-        ""$ref"":""/schemas/3.0.0/lang-info""
-      }
-    },
-    ""steamdata"":{
-      ""type"":""object"",
-      ""$ref"":""/schemas/3.0.0/steam-data""
-    },
-    ""custom"":{
-        ""type"":""object""
-    }
-  },
-  ""required"":[
-    ""name""
-  ]
-}";
-
-
-    // TODO: TEST this for all schemas
 
     /// <summary>
     /// Evaluates a JSON node against the specified modinfo JSON schema.

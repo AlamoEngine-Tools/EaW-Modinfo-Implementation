@@ -1,9 +1,11 @@
 ﻿using System;
+using System.IO;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Equality;
+using EawModinfo.Utilities;
 using Semver;
-
 
 namespace EawModinfo.Model.Json;
 
@@ -60,5 +62,19 @@ internal class JsonModReference : IModReference
     public override int GetHashCode()
     {
         return ModReferenceEqualityComparer.Default.GetHashCode(this);
+    }
+
+    public string ToJson()
+    {
+        this.Validate();
+        return JsonSerializer.Serialize(this, ParseUtility.SerializerOptions);
+    }
+
+    public void ToJson(Stream stream)
+    {
+        if (stream == null)
+            throw new ArgumentNullException(nameof(stream));
+        this.Validate();
+        JsonSerializer.Serialize(stream, this, ParseUtility.SerializerOptions);
     }
 }

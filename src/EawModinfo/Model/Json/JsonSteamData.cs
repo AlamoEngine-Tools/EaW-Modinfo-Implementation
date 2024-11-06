@@ -87,9 +87,9 @@ internal class JsonSteamData : ISteamData
 
     public void ToJson(Stream stream)
     {
-        this.Validate();
         if (stream == null)
             throw new ArgumentNullException(nameof(stream));
+        this.Validate();
         JsonSerializer.Serialize(stream, this, ParseUtility.SerializerOptions);
     }
 }
