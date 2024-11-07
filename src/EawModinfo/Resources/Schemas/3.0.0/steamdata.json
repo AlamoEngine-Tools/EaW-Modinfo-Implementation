@@ -1,7 +1,7 @@
 {
   "$id": "https://AlamoEngine-Tools.github.io/schemas/3.0.0/steam-data",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Represents the steam information .",
+  "description": "Represents the steam information.",
   "type": "object",
   "$defs": {
     "tagType": {

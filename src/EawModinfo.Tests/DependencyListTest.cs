@@ -157,19 +157,36 @@ public class DependencyListTest
         [
             new DependencyList(new List<IModReference> { new ModReference("123", ModType.Default) },
                 DependencyResolveLayout.ResolveRecursive),
-            "[\r\n  {\r\n    \"identifier\": \"123\",\r\n    \"modtype\": 0\r\n  }\r\n]"
+            @"[
+  {
+    ""identifier"": ""123"",
+    ""modtype"": 0
+  }
+]"
         ];
         yield return
         [
             new DependencyList(new List<IModReference> { new ModReference("123", ModType.Default) },
                 DependencyResolveLayout.FullResolved),
-            "[\r\n  \"FullResolved\",\r\n  {\r\n    \"identifier\": \"123\",\r\n    \"modtype\": 0\r\n  }\r\n]"
+            @"[
+  ""FullResolved"",
+  {
+    ""identifier"": ""123"",
+    ""modtype"": 0
+  }
+]"
         ];
         yield return
         [
             new DependencyList(new List<IModReference> { new ModReference("123", ModType.Default) },
                 DependencyResolveLayout.FullResolved),
-            "[\r\n  \"FullResolved\",\r\n  {\r\n    \"identifier\": \"123\",\r\n    \"modtype\": 0\r\n  }\r\n]"
+            @"[
+  ""FullResolved"",
+  {
+    ""identifier"": ""123"",
+    ""modtype"": 0
+  }
+]"
         ];
     }
 

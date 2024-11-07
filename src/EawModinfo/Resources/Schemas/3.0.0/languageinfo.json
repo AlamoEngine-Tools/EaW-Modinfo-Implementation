@@ -1,7 +1,7 @@
 {
   "$id": "https://AlamoEngine-Tools.github.io/schemas/3.0.0/lang-info",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "description": "Represents the level of localizatio support for a single language.",
+  "description": "Represents the level of localization support for a language.",
   "type": "object",
   "properties": {
     "code": {
@@ -15,6 +15,8 @@
       "maximum": 7
     }
   },
-
+  "required": [
+    "code"
+  ],
   "additionalProperties": false
 }

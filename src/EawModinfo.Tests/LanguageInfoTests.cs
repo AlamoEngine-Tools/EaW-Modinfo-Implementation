@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json.Nodes;
 using EawModinfo.Model;
@@ -183,6 +184,14 @@ public class LanguageInfoTests
     ""other"":""value""
 }", new[]{""}
         ];
+
+        yield return
+        [
+            @"
+{
+    ""other"":""value""
+}", new[]{"", "required"}
+        ];
     }
 
     [Theory]
@@ -281,8 +290,10 @@ public class LanguageInfoTests
     [Fact]
     public void GetCulture_Invalid()
     {
+        if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            return;
         var info = new LanguageInfo("d3", LanguageSupportLevel.Text);
-        Assert.Throws<CultureNotFoundException>(() => info.GetCulture());
-        Assert.Throws<CultureNotFoundException>(() => info.GetCulture());
+        Assert.Throws<CultureNotFoundException>(info.GetCulture);
+        Assert.Throws<CultureNotFoundException>(info.GetCulture);
     }
 }

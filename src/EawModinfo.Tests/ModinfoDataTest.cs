@@ -263,6 +263,49 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 
     [Fact]
+    public void Parse_WithLanguageAndArbitraryObject_Throws()
+    {
+        var data = @"
+{
+    ""name"":""My Mod Name"",
+    ""languages"":[
+        {
+            ""code"":""en""
+        },
+        {
+            ""other"": ""value""
+        }
+    ]
+}";
+        Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.ModInfo));
+        Assert.False(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out var errors));
+        Assert.Equivalent(new List<string>{"required", ""}, errors.Select(x => x.Key), true);
+
+        Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(data));
+        Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data))));
+    }
+
+    [Fact]
+    public void Parse_OnlyArbitraryObject_Throws()
+    {
+        var data = @"
+{
+    ""name"":""My Mod Name"",
+    ""languages"":[
+        {
+            ""other"": ""value""
+        }
+    ]
+}";
+        Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.ModInfo));
+        Assert.False(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out var errors));
+        Assert.Equivalent(new List<string> { "required", "" }, errors.Select(x => x.Key), true);
+
+        Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(data));
+        Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data))));
+    }
+
+    [Fact]
     public void Parse_WithoutDeps()
     {
         var data = @"
@@ -618,10 +661,10 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
 
         var modinfo = ModinfoData.Parse(data);
-        Assert.Equivalent(new Dictionary<string, object?> { { "key1", null } }, modinfo.Custom);
+        Assert.Equivalent(new Dictionary<string, object?> { { "key1", null } }, modinfo.Custom, true);
 
         modinfo = ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)));
-        Assert.Equivalent(new Dictionary<string, object?> { { "key1", null } }, modinfo.Custom);
+        Assert.Equivalent(new Dictionary<string, object?> { { "key1", null } }, modinfo.Custom, true);
     }
 
     #endregion

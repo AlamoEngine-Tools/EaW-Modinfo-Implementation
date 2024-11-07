@@ -27,7 +27,8 @@
       "type": "array",
       "items": {
         "$ref": "/schemas/3.0.0/lang-info"
-      }
+      },
+      "additionalItems": false
     },
     "steamdata": {
       "type": "object",
