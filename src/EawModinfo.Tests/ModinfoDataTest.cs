@@ -24,6 +24,8 @@ public class ModinfoDataTest(ITestOutputHelper output)
     {
         var data = @"
 {
+    /*Multi-lin
+      comment */
     // This is a comment
     ""name"":""My Mod Name"",
 }";
@@ -273,12 +275,10 @@ public class ModinfoDataTest(ITestOutputHelper output)
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Empty(modinfo.Dependencies);
-        Assert.Equal(DependencyResolveLayout.ResolveRecursive, modinfo.Dependencies.ResolveLayout);
 
         modinfo = ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)));
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Empty(modinfo.Dependencies);
-        Assert.Equal(DependencyResolveLayout.ResolveRecursive, modinfo.Dependencies.ResolveLayout);
     }
 
 
@@ -922,6 +922,43 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Equal(modinfo.SteamData.Visibility, other.SteamData.Visibility);
         Assert.Equal(modinfo.SteamData.Title, other.SteamData.Title);
         Assert.Equivalent(modinfo.SteamData.Tags, other.SteamData.Tags, true);
+    }
+
+    [Fact]
+    public void Ctor_EmptyLanguage_ShouldFallbackToDefault()
+    {
+        var modinfo = new ModinfoData("name") { Languages = [] };
+        var lang = Assert.Single(modinfo.Languages);
+        Assert.Equal(LanguageInfo.Default, lang);
+
+        var newInfo = new ModinfoData(modinfo);
+        lang = Assert.Single(newInfo.Languages);
+        Assert.Equal(LanguageInfo.Default, lang);
+
+        var newParsed = ModinfoData.Parse(newInfo.ToJson());
+        lang = Assert.Single(newParsed.Languages);
+        Assert.Equal(LanguageInfo.Default, lang);
+    }
+
+    [Fact]
+    public void Ctor_EmptyDependencies()
+    {
+        var modinfo = new ModinfoData("name") { Dependencies = DependencyList.EmptyDependencyList };
+        Assert.Empty(modinfo.Dependencies);
+
+        var newInfo = new ModinfoData(modinfo);
+        Assert.Empty(newInfo.Dependencies);
+
+        var newParsed = ModinfoData.Parse(newInfo.ToJson());
+        Assert.Empty(newParsed.Dependencies);
+    }
+
+    [Fact]
+    public void Languages_Dependencies_InitNull_Throws()
+    {
+        Assert.Throws<ArgumentNullException>(() => new ModinfoData("name") { Languages = null! });
+        Assert.Throws<ArgumentNullException>(() => new ModinfoData("name") { Dependencies = null! });
+        Assert.Throws<ArgumentNullException>(() => new ModinfoData("name") { Custom = null! });
     }
 
     [Fact]

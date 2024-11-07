@@ -15,6 +15,9 @@ namespace EawModinfo.Model;
 public sealed class ModinfoData : IModinfo
 {
     internal static readonly IReadOnlyCollection<ILanguageInfo> UnsetLanguages = [LanguageInfo.Default];
+    private readonly IReadOnlyCollection<ILanguageInfo> _languages = UnsetLanguages;
+    private readonly IModDependencyList _dependencies = DependencyList.EmptyDependencyList;
+    private readonly IDictionary<string, object> _custom = new Dictionary<string, object>();
 
     /// <inheritdoc/>
     public string Name { get; }
@@ -23,7 +26,17 @@ public sealed class ModinfoData : IModinfo
     public SemVersion? Version { get; init; }
 
     /// <inheritdoc/>
-    public IModDependencyList Dependencies { get; init; } = DependencyList.EmptyDependencyList;
+    /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
+    public IModDependencyList Dependencies
+    {
+        get => _dependencies;
+        init
+        {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+            _dependencies = value.Count == 0 ? DependencyList.EmptyDependencyList : value;
+        }
+    }
 
     /// <inheritdoc/>
     public string? Summary { get; init; }
@@ -32,14 +45,29 @@ public sealed class ModinfoData : IModinfo
     public string? Icon { get; init; }
 
     /// <inheritdoc/>
-    public IDictionary<string, object> Custom { get; init; } = new Dictionary<string, object>();
+    /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
+    public IDictionary<string, object> Custom
+    {
+        get => _custom;
+        init => _custom = value ?? throw new ArgumentNullException(nameof(value));
+    }
 
     /// <inheritdoc/>
     public ISteamData? SteamData { get; init; }
 
     /// <inheritdoc/>
-    public IReadOnlyCollection<ILanguageInfo> Languages { get; init; } = UnsetLanguages;
-        
+    /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
+    public IReadOnlyCollection<ILanguageInfo> Languages
+    {
+        get => _languages;
+        init
+        {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+            _languages = value.Count == 0 ? UnsetLanguages : value;
+        }
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ModinfoData"/> class with a given name.
     /// </summary>
@@ -53,7 +81,7 @@ public sealed class ModinfoData : IModinfo
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ModinfoData"/> class of the specified mod identity.
+    /// Initializes a new instance of the <see cref="ModinfoData"/> class of the specified <see cref="IModIdentity"/>.
     /// </summary>
     /// <param name="modIdentity">The mod identity to represent as a modinfo.</param>
     /// <exception cref="ArgumentNullException"><paramref name="modIdentity"/> is <see langword="null"/>.</exception>
