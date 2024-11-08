@@ -31,7 +31,7 @@
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Semver" Version="2.3.0" />
-		<PackageReference Include="System.IO.Abstractions" Version="21.0.29" />
+		<PackageReference Include="System.IO.Abstractions" Version="21.1.2" />
 		<PackageReference Include="System.Text.Json" Version="8.0.5" />
 	</ItemGroup>
 
