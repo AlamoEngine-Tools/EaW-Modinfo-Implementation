@@ -80,6 +80,8 @@ public class DependencyListTest
         [
             @"[null, {""identifier"":""123"", ""modtype"":1 }]", new[]{ "oneOf", "enum", "type" }
         ];
+        yield return [@"[""FullResolved"", {""identifier"":""123"", ""modtype"":1}, {""other"": ""value""}]", new[] { "oneOf", "required", "", "type" }];
+        yield return [@"[{""identifier"":""123"", ""modtype"":1}, {""other"": ""value""}]", new[] { "oneOf", "required", "", "enum" }];
     }
 
     [Theory]
