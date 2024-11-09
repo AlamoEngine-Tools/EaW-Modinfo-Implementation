@@ -18,7 +18,7 @@ public enum SteamWorkshopVisibility
     /// </summary>
     Private = 2,
     /// <summary>
-    /// UNKNOWN BEHAVIOR!
+    /// Visible to everyone, but will not be returned in any global queries.
     /// </summary>
     Unlisted = 3
 }

@@ -5,7 +5,7 @@ namespace EawModinfo.Utilities;
 
 internal static class SemVerHelper
 {
-    private static readonly char[] DelimiterChars = { '-', '+' };
+    private static readonly char[] DelimiterChars = ['-', '+'];
 
     public static SemVersion? CreateSanitizedVersion(string? version)
     {
@@ -15,10 +15,8 @@ internal static class SemVerHelper
         var strArray = version!.Split('.');
         if (strArray.Length == 3)
             return SemVersion.Parse(version, SemVersionStyles.Any);
-        if (strArray.Length >= 5)
-            throw new InvalidOperationException();
 
-        ExtractReleaseAndBuildString(ref strArray[strArray.Length - 1], out var releaseAndBuild);
+        ExtractReleaseAndBuildString(ref strArray[^1], out var releaseAndBuild);
 
         var versionDigits = new string[3];
         for (var i = 0; i < versionDigits.Length; i++)

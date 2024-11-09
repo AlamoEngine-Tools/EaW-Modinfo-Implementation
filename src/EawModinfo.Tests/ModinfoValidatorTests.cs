@@ -53,6 +53,8 @@ public class ModinfoValidatorTests
 
     public static IEnumerable<object[]> GetInvalidModinfo()
     {
+        yield return [new JsonModinfoData{Name = string.Empty}];
+        yield return [new JsonModinfoData{Name = null!}];
         yield return
         [
             new ModinfoData("ModName")
@@ -78,14 +80,14 @@ public class ModinfoValidatorTests
 
     [Theory]
     [MemberData(nameof(GetModinfo))]
-    public void Test_Validate(IModinfo modinfo)
+    public void Validate(IModinfo modinfo)
     {
         Assert.Null(Record.Exception(modinfo.Validate));
     }
 
     [Theory]
     [MemberData(nameof(GetInvalidModinfo))]
-    public void Test_Validate_ThrowsModinfoException(IModinfo modinfo)
+    public void Validate_ThrowsModinfoException(IModinfo modinfo)
     {
         Assert.Throws<ModinfoException>(modinfo.Validate);
     }
@@ -130,26 +132,32 @@ public class ModinfoValidatorTests
     public static IEnumerable<object[]> GetInvalidSteamData()
     {
         yield return [new JsonSteamData(), true];
-        yield return [new JsonSteamData {Id = "asd", Tags = ["EAW"], ContentFolder = "testFolder"}, true];
-        yield return [new JsonSteamData {Id = "0", Tags = ["EAW"], ContentFolder = "testFolder"}, true];
-        yield return [new JsonSteamData {Id = "-123", Tags = ["EAW"], ContentFolder = "testFolder"}, true];
+        yield return [new JsonSteamData {Id = "asd", Tags = ["EAW"], ContentFolder = "testFolder"}, true]; 
+        yield return [new JsonSteamData {Id = "1234", Tags = ["EAW"], ContentFolder = "testFolder"}, true];
+        yield return [new JsonSteamData {Id = "0", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title"}, true];
+        yield return [new JsonSteamData {Id = "-123", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
         yield return
         [
-            new JsonSteamData {Id = "129381209812430981329048", Tags = ["EAW"], ContentFolder = "testFolder"},
+            new JsonSteamData {Id = "129381209812430981329048", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title"},
             true
         ];
-        yield return [new JsonSteamData {Id = "1234", Tags = Array.Empty<string>(), ContentFolder = "testFolder"}, true];
-        yield return [new JsonSteamData { Id = "1234", Tags = null!, ContentFolder = "testFolder" }, true];
-        yield return [new JsonSteamData { Id = "1234", Tags = ["EAW"], ContentFolder = "" }, true];
-        yield return [new JsonSteamData { Id = "1234", Tags = ["EAW"], ContentFolder = null! }, true];
-        yield return [new JsonSteamData { Id = "1234312", Tags = ["test"], Metadata = "bla", ContentFolder = "testFolder" }, true
-        ];
+        yield return [new JsonSteamData {Id = "1234", Tags = Array.Empty<string>(), ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1234", Tags = null!, ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1234", Tags = null!, ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1234", Tags = ["EAW"], ContentFolder = "", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1234", Tags = ["EAW"], ContentFolder = null!, Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1234312", Tags = ["eaw"], Metadata = "bla", ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1234312", Tags = ["test"], Metadata = "bla", ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1234312", Tags = ["FOC", "a,c"], Metadata = "bla", ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1234312", Tags = ["FOC", "a\tc"], Metadata = "bla", ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1234312", Tags = ["FOC", "FOC"], Metadata = "bla", ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1234312", Tags = ["FOC", new string('a', 256)], Metadata = "bla", ContentFolder = "testFolder", Title = "Title" }, true];
     }
 
     [Theory]
     [MemberData(nameof(GetSteamData))]
     [MemberData(nameof(GetInvalidSteamData))]
-    public void Test_Validate_SteamData(ISteamData steamData, bool shallThrow)
+    public void Validate_SteamData(ISteamData steamData, bool shallThrow)
     {
         if (!shallThrow)
             Assert.Null(Record.Exception(steamData.Validate));
@@ -187,7 +195,8 @@ public class ModinfoValidatorTests
         yield return [new ModReference { Identifier = string.Empty, Type = ModType.Virtual }, true];
         yield return [new ModReference { Identifier = "-1", Type = ModType.Workshops }, true];
         yield return [new ModReference { Identifier = "0", Type = ModType.Workshops }, true];
-        yield return [new ModReference {Identifier = "12921908098098098309481234", Type = ModType.Workshops}, true];
+        yield return [new ModReference { Identifier = "12921908098098098309481234", Type = ModType.Workshops }, true];
+        yield return [new ModReference { Identifier = "1234", Type = (ModType) 0xff }, true];
     }
 
 
@@ -195,7 +204,7 @@ public class ModinfoValidatorTests
     [Theory]
     [MemberData(nameof(GetModReferences))]
     [MemberData(nameof(GetInvalidModReferences))]
-    public void Test_Validate_ModReference(IModReference modReference, bool shallThrow)
+    public void Validate_ModReference(IModReference modReference, bool shallThrow)
     {
         if (!shallThrow)
             Assert.Null(Record.Exception(modReference.Validate));
@@ -206,36 +215,31 @@ public class ModinfoValidatorTests
 
     public static IEnumerable<object[]> GetLanguageInfos()
     {
-        yield return [new LanguageInfo { Code = "en" }, false];
-        yield return [new LanguageInfo { Code = "de" }, false];
-        yield return [new LanguageInfo { Code = "es" }, false];
+        yield return [new LanguageInfo("en", LanguageSupportLevel.FullLocalized), false];
+        yield return [new LanguageInfo("de", LanguageSupportLevel.FullLocalized), false];
+        yield return [new LanguageInfo("es", LanguageSupportLevel.FullLocalized), false];
     }
 
 
     public static IEnumerable<object[]> GetInvalidLanguageInfos()
     {
-        yield return [new LanguageInfo(), true];
+        yield return [new JsonLanguageInfo(null!, LanguageSupportLevel.FullLocalized), true];
         yield return
         [
-            new LanguageInfo
-            {
-                Code = string.Empty
-            },
+            new JsonLanguageInfo("", LanguageSupportLevel.FullLocalized),
             true
         ];
-        yield return [new LanguageInfo { Code = "ens" }, true];
-        yield return [new LanguageInfo { Code = "de-de" }, true];
-        yield return [new LanguageInfo { Code = "deu" }, true];
-        yield return [new LanguageInfo { Code = "iv" }, true];
+        yield return [new LanguageInfo("ens", LanguageSupportLevel.FullLocalized), true];
+        yield return [new LanguageInfo("de-de", LanguageSupportLevel.FullLocalized), true];
+        yield return [new LanguageInfo("deu", LanguageSupportLevel.FullLocalized), true];
+        yield return [new LanguageInfo("iv", LanguageSupportLevel.FullLocalized), true];
+        yield return [new LanguageInfo("..", LanguageSupportLevel.FullLocalized), true];
     }
-
-
-
 
     [Theory]
     [MemberData(nameof(GetLanguageInfos))]
     [MemberData(nameof(GetInvalidLanguageInfos))]
-    public void Test_Validate_Language(ILanguageInfo info, bool shallThrow)
+    public void Validate_Language(ILanguageInfo info, bool shallThrow)
     {
         if (!shallThrow)
             Assert.Null(Record.Exception(info.Validate));

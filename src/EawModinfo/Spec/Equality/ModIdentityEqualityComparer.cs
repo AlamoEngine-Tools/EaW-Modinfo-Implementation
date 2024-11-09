@@ -1,23 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using EawModinfo.Spec;
 
-namespace EawModinfo.Utilities;
+namespace EawModinfo.Spec.Equality;
 
 /// <summary>
-/// Compares two <see cref="IModIdentity"/>
+/// Compares two <see cref="IModReference"/>.
 /// </summary>
-public class ModIdentityEqualityComparer : IEqualityComparer<IModIdentity>
+public sealed class ModIdentityEqualityComparer : IEqualityComparer<IModIdentity>
 {
     /// <summary>
-    /// Compares two <see cref="IModIdentity"/> based on their name, version and dependencies. Name comparison is case-sensitive
+    /// The default instances of the <see cref="ModIdentityEqualityComparer"/>
+    /// which compares two <see cref="IModIdentity"/> based on their name, version and dependencies.
+    /// Name comparison is case-sensitive.
     /// </summary>
-    public static readonly ModIdentityEqualityComparer Default = new(true, true, StringComparison.Ordinal);
+    /// <remarks>
+    /// Implements the modinfo specification section III.1.1
+    /// </remarks>
+    public static readonly ModIdentityEqualityComparer Default = new(true, true, StringComparer.Ordinal);
 
     private readonly bool _includeVersion;
     private readonly bool _includeDependencies;
-    private readonly StringComparison _stringComparison;
+    private readonly StringComparer _stringComparison;
 
     /// <summary>
     /// Creates a new <see cref="IModIdentity"/> equality comparer.
@@ -25,7 +28,7 @@ public class ModIdentityEqualityComparer : IEqualityComparer<IModIdentity>
     /// <param name="includeVersion">Shall the versions get compared. When both versions are <see langword="null"/> the comparison matches</param>
     /// <param name="includeDependencies">Shall dependencies get compared.</param>
     /// <param name="stringComparison">Comparison mod for name equality.</param>
-    public ModIdentityEqualityComparer(bool includeVersion, bool includeDependencies, StringComparison stringComparison)
+    public ModIdentityEqualityComparer(bool includeVersion, bool includeDependencies, StringComparer stringComparison)
     {
         _includeVersion = includeVersion;
         _includeDependencies = includeDependencies;
@@ -35,12 +38,11 @@ public class ModIdentityEqualityComparer : IEqualityComparer<IModIdentity>
     /// <inheritdoc/>
     public bool Equals(IModIdentity? x, IModIdentity? y)
     {
-        if (y is null || x is null)
-            return false;
         if (ReferenceEquals(x, y))
             return true;
-
-        if (!x.Name.Equals(y.Name, _stringComparison))
+        if (x is null || y is null)
+            return false;
+        if (!_stringComparison.Equals(x.Name, y.Name))
             return false;
 
         if (_includeVersion)
@@ -54,10 +56,7 @@ public class ModIdentityEqualityComparer : IEqualityComparer<IModIdentity>
 
         if (_includeDependencies)
         {
-            if (x.Dependencies.Count != y.Dependencies.Count)
-                return false;
-
-            if (!x.Dependencies.SequenceEqual(y.Dependencies))
+            if (!x.Dependencies.Equals(y.Dependencies))
                 return false;
         }
         return true;
@@ -66,10 +65,12 @@ public class ModIdentityEqualityComparer : IEqualityComparer<IModIdentity>
     /// <inheritdoc/>
     public int GetHashCode(IModIdentity obj)
     {
+        var hashCode = new HashCode();
+        hashCode.Add(obj.Name, _stringComparison);
         if (_includeVersion)
-            return _includeDependencies
-                ? HashCode.Combine(obj.Name, obj.Version, obj.Dependencies)
-                : HashCode.Combine(obj.Name, obj.Version);
-        return HashCode.Combine(obj.Name);
+            hashCode.Add(obj.Version);
+        if (_includeDependencies)
+            hashCode.Add(obj.Dependencies);
+        return hashCode.ToHashCode();
     }
 }

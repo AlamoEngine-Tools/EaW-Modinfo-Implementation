@@ -1,9 +1,12 @@
-﻿using System.IO.Abstractions;
+﻿using System;
+using System.IO.Abstractions;
 using EawModinfo.Spec;
 
 namespace EawModinfo.File;
 
-/// <inheritdoc/>
+/// <summary>
+/// Represents a main "modinfo.json" file.
+/// </summary>
 public sealed class MainModinfoFile : ModinfoFile
 {
     /// <summary>
@@ -16,7 +19,11 @@ public sealed class MainModinfoFile : ModinfoFile
 
     internal override IModFileNameValidator FileNameValidator => new Validator();
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MainModinfoFile"/> class with the specified file handle.
+    /// </summary>
+    /// <param name="modinfoFile">The file handle.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="modinfoFile"/> is <see langword="null"/>.</exception>
     public MainModinfoFile(IFileInfo modinfoFile) : base(modinfoFile)
     {
     }
@@ -26,12 +33,11 @@ public sealed class MainModinfoFile : ModinfoFile
         public bool Validate(string fileName, out string error)
         {
             error = string.Empty;
-            if (!fileName.ToUpperInvariant().Equals(ModinfoFileName.ToUpperInvariant()))
+            if (!fileName.Equals(ModinfoFileName, StringComparison.OrdinalIgnoreCase))
             {
                 error = "The file's name must be 'modinfo.json'.";
                 return false;
             }
-
             return true;
         }
     }

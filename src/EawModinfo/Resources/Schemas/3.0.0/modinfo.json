@@ -1,0 +1,44 @@
+{
+  "$id": "https://AlamoEngine-Tools.github.io/schemas/3.0.0/modinfo",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "A standard definition for Star Wars: Empire at War mod info files.",
+  "title": "EaW Modinfo",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "description": "No validation for the version string as implementations can verify this better than JSON schemas. "
+    },
+    "dependencies": {
+      "type": "array",
+      "$ref": "/schemas/3.0.0/mod-deps"
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "$ref": "/schemas/3.0.0/lang-info"
+      },
+      "additionalItems": false
+    },
+    "steamdata": {
+      "type": "object",
+      "$ref": "/schemas/3.0.0/steam-data"
+    },
+    "custom": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

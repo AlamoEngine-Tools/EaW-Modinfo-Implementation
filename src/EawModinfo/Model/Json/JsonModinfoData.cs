@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using EawModinfo.Spec;
+using EawModinfo.Spec.Equality;
 using EawModinfo.Spec.Steam;
 using EawModinfo.Utilities;
 using Semver;
@@ -13,25 +15,10 @@ namespace EawModinfo.Model.Json;
 /// <inheritdoc/>
 internal class JsonModinfoData : IModinfo
 {
-    [JsonIgnore] private HashSet<ILanguageInfo>? _languages;
+    [JsonIgnore] private IReadOnlyCollection<ILanguageInfo>? _languages;
     [JsonIgnore] private SemVersion? _modVersion;
     [JsonIgnore] private bool _versionDetermined;
     [JsonIgnore] private bool _languagesDetermined;
-
-    /// <summary>
-    /// Returns <see langword="true"/> whether <see cref="Custom"/> has any contents; <see langword="false"/> otherwise.
-    /// </summary>
-    [JsonIgnore] public bool HasCustomObjects => Custom.Count > 0;
-
-    /// <summary>
-    /// Returns <see langword="true"/> whether <see cref="SteamData"/> is present; <see langword="false"/> otherwise.
-    /// </summary>
-    [JsonIgnore] public bool HasSteamData => SteamData != null;
-
-    /// <summary>
-    /// Returns <see langword="true"/> whether this instance has any dependencies; <see langword="false"/> otherwise.
-    /// </summary>
-    [JsonIgnore] public bool HasDependencies => Dependencies.Count > 0;
 
     /// <inheritdoc/>
     [JsonPropertyName("name")]
@@ -80,20 +67,21 @@ internal class JsonModinfoData : IModinfo
     public IModDependencyList Dependencies { get; set; }
 
     [JsonPropertyName("languages")]
-    public HashSet<JsonLanguageInfo> InternalLanguages { get; set; }
+    public HashSet<JsonLanguageInfo>? InternalLanguages { get; set; }
 
     /// <inheritdoc/>
     [JsonIgnore]
-    public IEnumerable<ILanguageInfo> Languages
+    public IReadOnlyCollection<ILanguageInfo> Languages
     {
         get
         {
             if (_languages is null && !_languagesDetermined)
             {
-                var languages = new HashSet<ILanguageInfo>(InternalLanguages.Select(x => new LanguageInfo(x)));
-                if (!languages.Any())
-                    languages.Add(LanguageInfo.Default);
-                _languages = languages;
+                if (InternalLanguages == null || InternalLanguages.Count == 0)
+                    _languages = ModinfoData.UnsetLanguages;
+                else
+                    _languages = new HashSet<ILanguageInfo>(InternalLanguages.Select(x => new LanguageInfo(x)));
+               
                 _languagesDetermined = true;
             }
             return _languages!;
@@ -121,7 +109,6 @@ internal class JsonModinfoData : IModinfo
     {
         Dependencies = new JsonDependencyList();
         Custom = new Dictionary<string, object>();
-        InternalLanguages = new HashSet<JsonLanguageInfo>();
     }
 
     /// <summary>
@@ -143,14 +130,20 @@ internal class JsonModinfoData : IModinfo
     }
 
 
-    /// <inheritdoc/>
-    public string ToJson(bool validate = true)
+    public string ToJson()
     {
-        if (validate)
-            this.Validate();
+        this.Validate();
         return JsonSerializer.Serialize(this, ParseUtility.SerializerOptions);
     }
-        
+
+    public void ToJson(Stream stream)
+    {
+        if (stream == null)
+            throw new ArgumentNullException(nameof(stream));
+        this.Validate();
+        JsonSerializer.Serialize(stream, this, ParseUtility.SerializerOptions);
+    }
+
     bool IEquatable<IModIdentity>.Equals(IModIdentity? other)
     {
         return ModIdentityEqualityComparer.Default.Equals(this, other);

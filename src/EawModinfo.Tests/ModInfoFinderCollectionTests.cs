@@ -1,6 +1,5 @@
-using System.Collections.Generic;
+using System;
 using System.IO.Abstractions.TestingHelpers;
-using System.Linq;
 using EawModinfo.File;
 using EawModinfo.Spec;
 using Xunit;
@@ -9,99 +8,62 @@ namespace EawModinfo.Tests;
 
 public class ModinfoFinderCollectionTests
 {
-    [Fact]
-    public void Test_Enumerate_Main()
-    {
-        var fs = new MockFileSystem(new Dictionary<string, MockFileData>());
+    private readonly MockFileSystem _fileSystem = new();
 
-        var mainFile = new MainModinfoFile(ModinfoDataUtils.CreateModifnoFile(fs, "mods/A"));
-        var collection = new ModinfoFinderCollection(fs.DirectoryInfo.New("mods/A"), mainFile);
-        Assert.Single(collection);
+    [Fact]
+    public void Enumerate_Main()
+    { 
+        var mainFile = new MainModinfoFile(TestUtilities.CreateModinfoFile(_fileSystem, "mods/A"));
+        var collection = new ModinfoFinderCollection(_fileSystem.DirectoryInfo.New("mods/A"), mainFile, []);
+        Assert.True(collection.HasMainModinfoFile);
         Assert.NotNull(collection.MainModinfo);
         Assert.Empty(collection.Variants);
+        Assert.False(collection.HasVariantModinfoFiles);
+        Assert.Equal(_fileSystem.DirectoryInfo.New("mods/A").FullName, collection.Directory.FullName);
     }
 
     [Fact]
-    public void Test_Enumerate_OnlyVariants()
+    public void Enumerate_OnlyVariants()
     {
-        var fs = new MockFileSystem(new Dictionary<string, MockFileData>());
-
-        var variant = new ModinfoVariantFile(ModinfoDataUtils.CreateVariantMainFile(fs, "mods/A"));
-        var collection = new ModinfoFinderCollection(
-            fs.DirectoryInfo.New("mods/A"), [variant]);
-        Assert.Single(collection);
-        Assert.Single(collection.Variants);
+        var variant = new ModinfoVariantFile(TestUtilities.CreateVariantMainFile(_fileSystem, "mods/A"));
+        var collection = new ModinfoFinderCollection(_fileSystem.DirectoryInfo.New("mods/A"), null, [variant]);
+        Assert.False(collection.HasMainModinfoFile);
         Assert.Null(collection.MainModinfo);
-    }
-
-    [Fact]
-    public void Test_Enumerate_MainPlusSingleVariants()
-    {
-        var fs = new MockFileSystem(new Dictionary<string, MockFileData>());
-
-        var variant = new ModinfoVariantFile(ModinfoDataUtils.CreateVariantMainFile(fs, "mods/A"));
-        var mainFile = new MainModinfoFile(ModinfoDataUtils.CreateModifnoFile(fs, "mods/A"));
-        var collection = new ModinfoFinderCollection(
-            fs.DirectoryInfo.New("mods/A"), mainFile, [variant]);
-        Assert.Equal(2, collection.Count());
         Assert.Single(collection.Variants);
-        Assert.NotNull(collection.MainModinfo);
+        Assert.True(collection.HasVariantModinfoFiles);
     }
 
     [Fact]
-    public void Test_Enumerate_MainPlusMultipleVariants()
-    {
-        var fs = new MockFileSystem(new Dictionary<string, MockFileData>());
+    public void Enumerate_MainPlusSingleVariants()
+    { 
+        var variant = new ModinfoVariantFile(TestUtilities.CreateVariantMainFile(_fileSystem, "mods/A"));
+        var mainFile = new MainModinfoFile(TestUtilities.CreateModinfoFile(_fileSystem, "mods/A"));
+        var collection = new ModinfoFinderCollection(_fileSystem.DirectoryInfo.New("mods/A"), mainFile, [variant]);
+        Assert.True(collection.HasMainModinfoFile);
+        Assert.NotNull(collection.MainModinfo);
+        Assert.Single(collection.Variants);
+        Assert.True(collection.HasVariantModinfoFiles);
+    }
 
-        var variantFileInfo = ModinfoDataUtils.CreateVariantMainFile(fs, "mods/A");
+    [Fact]
+    public void Enumerate_MainPlusMultipleVariants()
+    {
+        var variantFileInfo = TestUtilities.CreateVariantMainFile(_fileSystem, "mods/A");
         var variant = new ModinfoVariantFile(variantFileInfo);
-        var mainFile = new MainModinfoFile(ModinfoDataUtils.CreateModifnoFile(fs, "mods/A"));
+        var mainFile = new MainModinfoFile(TestUtilities.CreateModinfoFile(_fileSystem, "mods/A"));
         var variantM = new ModinfoVariantFile(variantFileInfo, mainFile);
         var collection = new ModinfoFinderCollection(
-            fs.DirectoryInfo.New("mods/A"), mainFile, [variant, variantM]);
-        Assert.Equal(3, collection.Count());
-        Assert.Equal(2, collection.Variants.Count);
+            _fileSystem.DirectoryInfo.New("mods/A"), mainFile, [variant, variantM]);
+        Assert.True(collection.HasMainModinfoFile);
         Assert.NotNull(collection.MainModinfo);
+        Assert.Equal(2, collection.Variants.Count);
+        Assert.True(collection.HasVariantModinfoFiles);
     }
 
     [Fact]
-    public void Test_Ctor_VariantAsMain_ThrowsModinfoException()
+    public void Ctor_Throws()
     {
-        var fs = new MockFileSystem(new Dictionary<string, MockFileData>());
-
-        var variant = new ModinfoVariantFile(ModinfoDataUtils.CreateVariantMainFile(fs, "mods/A"));
-
-        Assert.Throws<ModinfoException>(() =>
-            new ModinfoFinderCollection(fs.DirectoryInfo.New("mods/A"), variant));
-    }
-
-    [Fact]
-    public void Test_Ctor_MainAsVariant_ThrowsModinfoException()
-    {
-        var fs = new MockFileSystem(new Dictionary<string, MockFileData>());
-        var mainFile = new MainModinfoFile(ModinfoDataUtils.CreateModifnoFile(fs, "mods/A"));
-        Assert.Throws<ModinfoException>(() => new ModinfoFinderCollection(
-            fs.DirectoryInfo.New("mods/A"), [mainFile]));
-    }
-
-    [Fact]
-    public void Test_Ctor_MainAsVariant_ThrowsModinfoException2()
-    {
-        var fs = new MockFileSystem(new Dictionary<string, MockFileData>());
-
-        var variant = new ModinfoVariantFile(ModinfoDataUtils.CreateVariantMainFile(fs, "mods/A"));
-        var mainFile = new MainModinfoFile(ModinfoDataUtils.CreateModifnoFile(fs, "mods/A"));
-
-        Assert.Throws<ModinfoException>(() => new ModinfoFinderCollection(
-            fs.DirectoryInfo.New("mods/A"), [variant, mainFile]));
-    }
-
-    [Fact]
-    public void Test_Enumerate_Empty()
-    {
-        var fs = new MockFileSystem(new Dictionary<string, MockFileData>());
-        var collection = new ModinfoFinderCollection(fs.DirectoryInfo.New("mods/A"));
-        Assert.Null(collection.MainModinfo);
-        Assert.Empty(collection.Variants);
+        Assert.Throws<ArgumentNullException>(() => new ModinfoFinderCollection(null!, null, []));
+        Assert.Throws<ArgumentNullException>(() => new ModinfoFinderCollection(_fileSystem.DirectoryInfo.New("path"), null, null!));
     }
 }

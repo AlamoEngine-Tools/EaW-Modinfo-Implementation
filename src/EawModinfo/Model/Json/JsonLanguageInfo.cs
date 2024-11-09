@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using EawModinfo.Spec;
+using EawModinfo.Spec.Equality;
 using EawModinfo.Utilities;
 
 namespace EawModinfo.Model.Json;
@@ -37,41 +39,40 @@ internal class JsonLanguageInfo : ILanguageInfo
         if (languageInfo == null)
             throw new ArgumentNullException(nameof(languageInfo));
         Code = languageInfo.Code;
-        Support = languageInfo.Support;
+        Support = languageInfo.Support is LanguageSupportLevel.FullLocalized ? default : languageInfo.Support;
     }
         
     /// <inheritdoc/>
     public bool Equals(ILanguageInfo? other)
     {
-        if (other is null) 
-            return false;
-        if (ReferenceEquals(this, other)) return true;
-        return Code == other.Code;
+        return LanguageInfoEqualityComparer.Default.Equals(this, other);
     }
 
     /// <inheritdoc/>
     public override bool Equals(object? obj)
     {
-        if (obj is null) 
-            return false;
         if (ReferenceEquals(this, obj)) 
             return true;
-        if (obj is ILanguageInfo info) 
-            return Equals(info);
-        return false;
-
+        return obj is JsonLanguageInfo info && Equals(info);
     }
 
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        return Code.ToLower().GetHashCode();
+        return LanguageInfoEqualityComparer.Default.GetHashCode(this);
     }
 
-    public string ToJson(bool validate)
+    public string ToJson()
     {
-        if (validate)
-            this.Validate();
+        this.Validate();
         return JsonSerializer.Serialize(this, ParseUtility.SerializerOptions);
+    }
+
+    public void ToJson(Stream stream)
+    {
+        if (stream == null)
+            throw new ArgumentNullException(nameof(stream));
+        this.Validate();
+        JsonSerializer.Serialize(stream, this, ParseUtility.SerializerOptions);
     }
 }
