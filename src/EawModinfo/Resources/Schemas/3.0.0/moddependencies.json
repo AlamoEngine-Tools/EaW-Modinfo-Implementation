@@ -1,0 +1,34 @@
+{
+  "$id": "https://AlamoEngine-Tools.github.io/schemas/3.0.0/mod-deps",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Represents a mod's dependencies as an ordered array.",
+  "type": "array",
+  "contains": {
+    "type": "object",
+    "$ref": "/schemas/3.0.0/mod-ref"
+  },
+  "additionalItems": false,
+  "oneOf": [
+    {
+      "prefixItems": [
+        {
+          "enum": [
+            "ResolveRecursive",
+            "ResolveLastItem",
+            "FullResolved"
+          ]
+        }
+      ],
+      "items": {
+        "type": "object",
+        "$ref": "/schemas/3.0.0/mod-ref"
+      }
+    },
+    {
+      "items": {
+        "type": "object",
+        "$ref": "/schemas/3.0.0/mod-ref"
+      }
+    }
+  ]
+}

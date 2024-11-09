@@ -4,33 +4,35 @@ using EawModinfo.Spec.Steam;
 namespace EawModinfo.Spec;
 
 /// <summary>
-/// Immutable definition of a modinfo as specified in <see href="https://github.com/AlamoEngine-Tools/eaw.modinfo"/>
-/// <remarks>This interface always references the latest stable version of the specification.</remarks>
+/// Represents structured data to provide metadata of a mod as specified in <see href="https://github.com/AlamoEngine-Tools/eaw.modinfo"/>.
 /// </summary>
 public interface IModinfo : IModIdentity, IConvertibleToJson
 {
     /// <summary>
-    /// Short summary about the mod.
+    /// Gets a short summary about the mod or <see langword="null"/> if none was provided.
     /// </summary>
     string? Summary { get; }
 
     /// <summary>
-    /// The path to the mod's icon file relative to the mod's root directory or an absolute path.
+    /// Gets the path to the mod's icon file path or <see langword="null"/> if none was provided.
     /// </summary>
     string? Icon { get; }
 
     /// <summary>
-    /// Container which allows to define arbitrary extensions for tool support.
+    /// Gets a container which allows to define arbitrary data for 3rd party tool support.
     /// </summary>
     IDictionary<string, object> Custom { get; }
 
     /// <summary>
-    ///  Holds additional info that is required for the Steam Version of the game. 
+    ///  Gets the Steam information of mod or <see langword="null"/> if none was provided.
     /// </summary>
     ISteamData? SteamData { get; }
 
     /// <summary>
-    /// Supported languages of the mod
+    /// Gets the supported languages of the mod.
     /// </summary>
-    IEnumerable<ILanguageInfo> Languages { get; }
+    /// <remarks>
+    /// If no other language infos are provided, a default language info gets returned. The default language info is English - FullLocalized.
+    /// </remarks>
+    IReadOnlyCollection<ILanguageInfo> Languages { get; }
 }

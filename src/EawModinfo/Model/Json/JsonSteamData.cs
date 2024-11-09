@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using EawModinfo.Spec.Steam;
@@ -57,7 +58,7 @@ internal class JsonSteamData : ISteamData
     [JsonConstructor]
     public JsonSteamData()
     {
-        Tags = new List<string>();
+        Tags = new HashSet<string>();
     }
 
     /// <summary>
@@ -78,16 +79,17 @@ internal class JsonSteamData : ISteamData
         Tags = steamData.Tags;
     }
 
-    /// <summary>
-    /// Converts this instance to a json string.
-    /// </summary>
-    /// <param name="validate">If set to <see langword="true"/> this object gets validated first.</param>
-    /// <returns>The converted json string data</returns>
-    public string ToJson(bool validate = true)
+    public string ToJson()
     {
-        if (validate)
-            this.Validate();
-
+        this.Validate();
         return JsonSerializer.Serialize(this, ParseUtility.SerializerOptions);
+    }
+
+    public void ToJson(Stream stream)
+    {
+        if (stream == null)
+            throw new ArgumentNullException(nameof(stream));
+        this.Validate();
+        JsonSerializer.Serialize(stream, this, ParseUtility.SerializerOptions);
     }
 }
