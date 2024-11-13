@@ -35,4 +35,10 @@ public interface IModinfo : IModIdentity, IConvertibleToJson
     /// If no other language infos are provided, a default language info gets returned. The default language info is English - FullLocalized.
     /// </remarks>
     IReadOnlyCollection<ILanguageInfo> Languages { get; }
+
+    /// <summary>
+    /// Returns <see langword="true"/> if <see cref="Languages"/> was explicitly set,
+    /// or <see langword="false"/> is the default (English - FullLocalized) was implicitly applied.
+    /// </summary>
+    bool LanguagesExplicitlySet { get; }
 }
