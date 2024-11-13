@@ -70,7 +70,7 @@ public static class ModinfoDataUtilities
             dependencies = new DependencyList(target.Dependencies);
 
         var languages = current.Languages;
-        if (!ReferenceEquals(target.Languages, ModinfoData.UnsetLanguages)) 
+        if (target.LanguagesExplicitlySet) 
             languages = target.Languages.Select(x => (ILanguageInfo)new LanguageInfo(x)).Distinct().ToList();
 
         return new ModinfoData(name)

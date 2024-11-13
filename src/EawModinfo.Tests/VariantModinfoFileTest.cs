@@ -136,6 +136,7 @@ public class VariantModinfoFileTest : ModinfoFileTestsBase
         Assert.Equal(SemVersion.ParsedFrom(1, 1, 1, "BETA"), data.Version);
         Assert.Single(data.Custom);
         Assert.Equal(2, data.Languages.Count);
+        Assert.True(data.LanguagesExplicitlySet);
     }
 
     [Fact]
@@ -169,5 +170,6 @@ public class VariantModinfoFileTest : ModinfoFileTestsBase
 
         var variant = variantFile.GetModinfo();
         Assert.Single(variant.Languages);
+        Assert.True(variant.LanguagesExplicitlySet);
     }
 }

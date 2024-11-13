@@ -95,6 +95,9 @@ internal class JsonModinfoData : IModinfo
         }
     }
 
+    [JsonIgnore]
+    public bool LanguagesExplicitlySet => !ReferenceEquals(Languages, ModinfoData.UnsetLanguages);
+
     /// <inheritdoc/>
     [JsonPropertyName("custom")]
     public IDictionary<string, object> Custom { get; set; }

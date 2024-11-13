@@ -39,6 +39,7 @@ public class MergeTests
         Assert.Equal(mainData.Icon, newData.Icon);
         Assert.Equal(mainData.Summary, newData.Summary);
         Assert.Equal(2, newData.Languages.Count); // As stated by the specification in III.3.2, languages was not explicitly set.
+        Assert.True(newData.LanguagesExplicitlySet);
         Assert.Equal(LanguageInfo.Default, newData.Languages.First());
         Assert.Equal(2, newData.Dependencies.Count);
         Assert.Equal("bla", newData.Dependencies[0].Identifier);
@@ -89,7 +90,8 @@ public class MergeTests
         Assert.Equal(variantData.Name, newData.Name);
         Assert.Equal(variantData.Icon, newData.Icon);
         Assert.Equal(variantData.Summary, newData.Summary);
-        Assert.Equal(2, newData.Languages.Count());
+        Assert.Equal(2, newData.Languages.Count);
+        Assert.True(newData.LanguagesExplicitlySet);
         Assert.Equal(2, newData.Dependencies.Count);
         Assert.Equal("bar", newData.Dependencies[0].Identifier);
         Assert.NotNull(newData.SteamData);
@@ -172,6 +174,7 @@ public class MergeTests
         public IDictionary<string, object> Custom => null!;
         public ISteamData? SteamData => null;
         public IReadOnlyCollection<ILanguageInfo> Languages => null!;
+        public bool LanguagesExplicitlySet => false;
 
         public string ToJson() => string.Empty;
         public void ToJson(Stream stream)

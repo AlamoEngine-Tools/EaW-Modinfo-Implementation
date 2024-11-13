@@ -68,6 +68,9 @@ public sealed class ModinfoData : IModinfo
         }
     }
 
+    /// <inheritdoc />
+    public bool LanguagesExplicitlySet => !ReferenceEquals(Languages, UnsetLanguages);
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ModinfoData"/> class with a given name.
     /// </summary>
@@ -110,7 +113,7 @@ public sealed class ModinfoData : IModinfo
         SteamData = modinfo.SteamData != null ? new SteamData(modinfo.SteamData) : null;
         Custom = new Dictionary<string, object>(modinfo.Custom);
 
-        if (ReferenceEquals(modinfo.Languages, UnsetLanguages) || modinfo.Languages.Count == 0)
+        if (!modinfo.LanguagesExplicitlySet || modinfo.Languages.Count == 0)
             return;
         Languages = modinfo.Languages.Select(x => new LanguageInfo(x)).Distinct().ToList();
     }

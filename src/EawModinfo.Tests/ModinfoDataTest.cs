@@ -128,11 +128,13 @@ public class ModinfoDataTest(ITestOutputHelper output)
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Single(modinfo.Languages);
+        Assert.True(modinfo.LanguagesExplicitlySet);
 
         modinfo = ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)));
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Null(modinfo.Version);
         Assert.Null(modinfo.SteamData);
+        Assert.True(modinfo.LanguagesExplicitlySet);
     }
 
     [Fact]
@@ -155,12 +157,14 @@ public class ModinfoDataTest(ITestOutputHelper output)
 
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
-        Assert.Equal(2, modinfo.Languages.Count());
+        Assert.Equal(2, modinfo.Languages.Count);
+        Assert.True(modinfo.LanguagesExplicitlySet);
 
         modinfo = ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)));
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Null(modinfo.Version);
         Assert.Null(modinfo.SteamData);
+        Assert.True(modinfo.LanguagesExplicitlySet);
     }
 
     [Fact]
@@ -184,10 +188,12 @@ public class ModinfoDataTest(ITestOutputHelper output)
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Single(modinfo.Languages);
+        Assert.True(modinfo.LanguagesExplicitlySet);
 
         modinfo = ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)));
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Single(modinfo.Languages);
+        Assert.True(modinfo.LanguagesExplicitlySet);
     }
 
     [Fact]
@@ -212,10 +218,12 @@ public class ModinfoDataTest(ITestOutputHelper output)
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Single(modinfo.Languages);
+        Assert.True(modinfo.LanguagesExplicitlySet);
 
         modinfo = ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)));
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Single(modinfo.Languages);
+        Assert.True(modinfo.LanguagesExplicitlySet);
     }
 
     [Fact]
@@ -233,12 +241,14 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Single(modinfo.Languages);
         Assert.Equal("en", modinfo.Languages.ElementAt(0).Code);
         Assert.Equal(LanguageSupportLevel.FullLocalized, modinfo.Languages.ElementAt(0).Support);
+        Assert.False(modinfo.LanguagesExplicitlySet);
 
         modinfo = ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)));
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Single(modinfo.Languages);
         Assert.Equal("en", modinfo.Languages.ElementAt(0).Code);
         Assert.Equal(LanguageSupportLevel.FullLocalized, modinfo.Languages.ElementAt(0).Support);
+        Assert.False(modinfo.LanguagesExplicitlySet);
     }
 
     [Fact]
@@ -255,11 +265,13 @@ public class ModinfoDataTest(ITestOutputHelper output)
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Single(modinfo.Languages);
+        Assert.False(modinfo.LanguagesExplicitlySet);
 
         modinfo = ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)));
         Assert.Equal("My Mod Name", modinfo.Name);
         Assert.Null(modinfo.Version);
         Assert.Null(modinfo.SteamData);
+        Assert.False(modinfo.LanguagesExplicitlySet);
     }
 
     [Fact]
@@ -804,6 +816,8 @@ public class ModinfoDataTest(ITestOutputHelper output)
             },
             SteamData = new SteamData("123", "folder", SteamWorkshopVisibility.Public, "Test", ["FOC"])
         };
+
+        Assert.True(modinfo.LanguagesExplicitlySet);
         var data = modinfo.ToJson();
         output.WriteLine(data);
 
@@ -856,6 +870,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
                 new LanguageInfo("en", 0),
             }
         };
+        Assert.True(modinfo.LanguagesExplicitlySet);
         var data = modinfo.ToJson();
         Assert.DoesNotContain(@"""languages""", data);
         output.WriteLine(data);
@@ -874,6 +889,8 @@ public class ModinfoDataTest(ITestOutputHelper output)
                 LanguageInfo.Default
             }
         };
+        Assert.True(modinfo.LanguagesExplicitlySet);
+
         var data = modinfo.ToJson();
         Assert.DoesNotContain(@"""languages""", data);
         output.WriteLine(data);
@@ -952,6 +969,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Equal(SteamWorkshopVisibility.Public, modinfo.SteamData.Visibility);
         Assert.Equal("Test", modinfo.SteamData.Title);
         Assert.Equivalent(new List<string>{"FOC"}, modinfo.SteamData.Tags, true);
+        Assert.True(modinfo.LanguagesExplicitlySet);
 
         var other = new ModinfoData(modinfo);
 
@@ -965,6 +983,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Equal(modinfo.SteamData.Visibility, other.SteamData.Visibility);
         Assert.Equal(modinfo.SteamData.Title, other.SteamData.Title);
         Assert.Equivalent(modinfo.SteamData.Tags, other.SteamData.Tags, true);
+        Assert.True(other.LanguagesExplicitlySet);
     }
 
     [Fact]
@@ -973,14 +992,17 @@ public class ModinfoDataTest(ITestOutputHelper output)
         var modinfo = new ModinfoData("name") { Languages = [] };
         var lang = Assert.Single(modinfo.Languages);
         Assert.Equal(LanguageInfo.Default, lang);
+        Assert.False(modinfo.LanguagesExplicitlySet);
 
         var newInfo = new ModinfoData(modinfo);
         lang = Assert.Single(newInfo.Languages);
         Assert.Equal(LanguageInfo.Default, lang);
+        Assert.False(modinfo.LanguagesExplicitlySet);
 
         var newParsed = ModinfoData.Parse(newInfo.ToJson());
         lang = Assert.Single(newParsed.Languages);
         Assert.Equal(LanguageInfo.Default, lang);
+        Assert.False(modinfo.LanguagesExplicitlySet);
     }
 
     [Fact]
@@ -1037,6 +1059,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Equal(modinfo.Summary, other.Summary);
         Assert.Equal(modinfo.Icon, other.Icon);
         Assert.Equal(modinfo.Languages, other.Languages);
+        Assert.True(other.LanguagesExplicitlySet);
         Assert.Equal(modinfo.SteamData.Id, other.SteamData!.Id);
         Assert.Equal(modinfo.SteamData.ContentFolder, other.SteamData.ContentFolder);
         Assert.Equal(modinfo.SteamData.Visibility, other.SteamData.Visibility);
@@ -1072,6 +1095,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Equal([new ModReference("1", ModType.Default), new ModReference("2", ModType.Workshops, SemVersionRange.Parse("*"))], modinfo.Dependencies.ToList());
         Assert.Equivalent(new Dictionary<string, string>(), modinfo.Custom, true);
         Assert.Equal([LanguageInfo.Default], modinfo.Languages);
+        Assert.False(modinfo.LanguagesExplicitlySet);
         Assert.Null(modinfo.Icon);
         Assert.Null(modinfo.SteamData);
         Assert.Null(modinfo.Summary);
