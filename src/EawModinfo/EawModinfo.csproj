@@ -50,7 +50,7 @@
 		</PackageReference>
 		<PackageReference Include="Semver" Version="3.0.0" />
 		<PackageReference Include="System.IO.Abstractions" Version="21.1.3" />
-		<PackageReference Include="System.Text.Json" Version="8.0.5" />
+		<PackageReference Include="System.Text.Json" Version="9.0.0" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
