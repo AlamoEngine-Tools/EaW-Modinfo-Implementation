@@ -1,13 +1,15 @@
 ﻿using System;
+using System.IO;
 using EawModinfo.Model.Json;
 using EawModinfo.Spec;
+using EawModinfo.Spec.Equality;
 using EawModinfo.Utilities;
 using Semver;
 
 namespace EawModinfo.Model;
 
-/// <inheritdoc/>
-public struct ModReference : IModReference
+/// <inheritdoc cref="IModReference"/>
+public readonly struct ModReference : IModReference , IEquatable<ModReference>
 {
     /// <inheritdoc/>
     public string Identifier { get; init; }
@@ -19,8 +21,13 @@ public struct ModReference : IModReference
     public SemVersionRange? VersionRange { get; }
 
     /// <summary>
-    /// Create a new instance.
+    /// Initializes a new instance of the <see cref="ModReference"/> struct.
     /// </summary>
+    /// <param name="id">The identifier name of the mod.</param>
+    /// <param name="modType">The type of the mod.</param>
+    /// <param name="range">The version range or <see langword="null"/> which describes this reference. Default is <see langword="null"/>.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="id"/> is <see langword="null"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="id"/> is empty.</exception>
     public ModReference(string id, ModType modType, SemVersionRange? range = null)
     {
         ThrowHelper.ThrowIfNullOrEmpty(id);
@@ -30,11 +37,14 @@ public struct ModReference : IModReference
     }
 
     /// <summary>
-    /// Creates a new instance from a given <see cref="IModReference"/> instance.
+    /// Initializes a new instance of the <see cref="ModReference"/> struct of a specified <see cref="IModReference"/>.
     /// </summary>
     /// <param name="modReference">The instance that will be copied.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="modReference"/> is <see langword="null"/>.</exception>
     public ModReference(IModReference modReference)
     {
+        if (modReference == null) 
+            throw new ArgumentNullException(nameof(modReference));
         Identifier = modReference.Identifier;
         Type = modReference.Type;
         VersionRange = modReference.VersionRange;
@@ -46,27 +56,49 @@ public struct ModReference : IModReference
     /// <param name="data">The raw json data.</param>
     /// <returns>The deserialized object.</returns>
     /// <exception cref="ModinfoParseException">Throws when parsing failed, e.g. due to missing required properties.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/>.</exception>
     public static ModReference Parse(string data)
     {
+        if (data == null) 
+            throw new ArgumentNullException(nameof(data));
         return new ModReference(ParseUtility.Parse<JsonModReference>(data));
     }
 
-    bool IEquatable<IModReference>.Equals(IModReference? other)
+    /// <inheritdoc />
+    public bool Equals(IModReference? other)
     {
-        return Identifier == other?.Identifier && Type == other.Type;
+        return ModReferenceEqualityComparer.Default.Equals(this, other);
     }
 
     /// <inheritdoc/>
     public override bool Equals(object? obj)
     {
-        if (obj is IModReference reference)
-            return ((IModReference)this).Equals(reference);
-        return false;
+        return obj is ModReference other && Equals(other);
     }
 
     /// <inheritdoc/>
     public override int GetHashCode()
     {
-        return HashCode.Combine(Identifier, (int) Type);
+        return ModReferenceEqualityComparer.Default.GetHashCode(this);
+    }
+
+    /// <inheritdoc />
+    public bool Equals(ModReference other)
+    {
+        return ModReferenceEqualityComparer.Default.Equals(this, other);
+    }
+
+    /// <inheritdoc/>
+    public string ToJson()
+    {
+        return new JsonModReference(this).ToJson();
+    }
+
+    /// <inheritdoc />
+    public void ToJson(Stream stream)
+    {
+        if (stream == null)
+            throw new ArgumentNullException(nameof(stream));
+        new JsonModReference(this).ToJson(stream);
     }
 }

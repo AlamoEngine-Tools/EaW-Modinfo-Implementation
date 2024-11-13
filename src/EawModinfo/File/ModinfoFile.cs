@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
 using EawModinfo.Model;
@@ -8,7 +9,7 @@ using EawModinfo.Utilities;
 namespace EawModinfo.File;
 
 /// <summary>
-/// Implementation of an <see cref="IModinfoFile"/>. The file's content will be loaded and validated lazily.
+/// Provides the base class for both <see cref="MainModinfoFile"/> and <see cref="ModinfoVariantFile"/> objects.
 /// </summary>
 public abstract class ModinfoFile : IModinfoFile
 {
@@ -26,27 +27,20 @@ public abstract class ModinfoFile : IModinfoFile
     internal abstract IModFileNameValidator FileNameValidator { get; }
 
     /// <summary>
-    /// Creates a new <see cref="ModinfoFile"/> instance
+    /// Initializes a new instance of the <see cref="ModinfoFile"/> class with the specified file handle.
     /// </summary>
-    /// <param name="file">The file representation</param>
+    /// <param name="file">The file handle.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="file"/> is <see langword="null"/>.</exception>
     protected ModinfoFile(IFileInfo file)
     {
         File = file ?? throw new ArgumentNullException(nameof(file));
     }
 
     /// <inheritdoc/>
-    public void ValidateFile()
-    {
-        if (!File.Exists)
-            throw new ModinfoException($"Modinfo variant file does not exists at '{File.FullName}'.");
-        if (!FileNameValidator.Validate(File.Name, out var error))
-            throw new ModinfoException(error);
-    }
-
-    /// <inheritdoc/>
     public async Task<IModinfo> GetModinfoAsync()
     {
-        ValidateFile();
+        if (!IsFileValid(out var error))
+            throw new ModinfoException(error);
         if (_data != null)
             return _data;
         _data = await GetModinfoCoreAsync().ConfigureAwait(false);
@@ -54,10 +48,24 @@ public abstract class ModinfoFile : IModinfoFile
         return _data;
     }
 
+
+    /// <inheritdoc />
+    public bool IsFileValid([NotNullWhen(false)]out string? error)
+    {
+        File.Refresh();
+        if (!File.Exists)
+        {
+            error = $"The file '{File.FullName}' does not exist.";
+            return false;
+        }
+        return FileNameValidator.Validate(File.Name, out error);
+    }
+
     /// <inheritdoc/>
     public IModinfo GetModinfo()
     {
-        ValidateFile();
+        if (!IsFileValid(out var error))
+            throw new ModinfoException(error);
         if (_data != null)
             return _data;
         _data = GetModinfoCore();
@@ -66,29 +74,31 @@ public abstract class ModinfoFile : IModinfoFile
     }
 
     /// <inheritdoc/>
-    public IModinfo? TryGetModinfo()
+    public bool TryGetModinfo([NotNullWhen(true)] out IModinfo? modinfo)
     {
         try
         {
-            return GetModinfo();
+            modinfo = GetModinfo();
+            return true;
         }
         catch
         {
-            return null;
+            modinfo = null;
+            return false;
         }
     }
-        
+
     /// <summary>
-    /// Deserializes the file's content async.
+    /// Asynchronously deserializes the file's content to an <see cref="IModinfo"/>.
     /// </summary>
-    /// <returns>The deserialization task.</returns>
+    /// <returns>A task that represents the asynchronous read operation. The value of the task is the deserialized modinfo instance.</returns>
     protected virtual Task<IModinfo> GetModinfoCoreAsync()
     {
         return ParseAsync();
     }
 
     /// <summary>
-    /// Deserializes the file's content.
+    /// Deserializes the file's content to an <see cref="IModinfo"/>.
     /// </summary>
     /// <returns>The deserialized <see cref="IModinfo"/>.</returns>
     protected virtual IModinfo GetModinfoCore()
@@ -119,27 +129,5 @@ public abstract class ModinfoFile : IModinfoFile
         using var reader = fs.File.OpenText(File.FullName);
         return await reader.ReadToEndAsync();
 #endif
-    }
-
-    /// <inheritdoc/>
-    public bool Equals(IModinfoFile? other)
-    {
-        return File.Equals(other?.File);
-    }
-
-    /// <inheritdoc/>
-    public override bool Equals(object? obj)
-    {
-        if (obj is null) 
-            return false;
-        if (ReferenceEquals(this, obj)) 
-            return true;
-        return obj.GetType() == GetType() && Equals((ModinfoFile) obj);
-    }
-
-    /// <inheritdoc/>
-    public override int GetHashCode()
-    {
-        return File.GetHashCode();
     }
 }

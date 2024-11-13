@@ -1,3 +1,4 @@
+using System;
 using EawModinfo.Model;
 using EawModinfo.Spec;
 using Semver;
@@ -8,37 +9,34 @@ namespace EawModinfo.Tests;
 public class ModIdentityTest
 {
     [Fact]
-    public void Test_Equal()
+    public void Ctor_Throws()
     {
-        IModIdentity i1 = new ModinfoData("A");
-        IModIdentity i2 = new ModIdentity("A");
+        Assert.Throws<ArgumentNullException>(() => new ModIdentity(null!));
+        Assert.Throws<ArgumentException>(() => new ModIdentity(""));
+        Assert.Throws<ArgumentNullException>(() => new ModIdentity("name") { Dependencies = null! });
+    }
 
-        Assert.Equal(i1, i2);
+    [Fact]
+    public void Ctor()
+    {
+        var id = new ModIdentity("name")
+        {
+            Version = SemVersion.Parse("1.2.3"),
+            Dependencies = new DependencyList([new ModReference("other", ModType.Virtual, SemVersionRange.All)], DependencyResolveLayout.FullResolved)
+        };
 
-        IModIdentity i3 = new ModinfoData("A") { Version = new SemVersion(1, 1, 1) };
-        IModIdentity i4 = new ModIdentity("A") { Version = new SemVersion(1, 1, 1) };
+        Assert.Equal("name", id.Name);
+        Assert.Equal(SemVersion.Parse("1.2.3"), id.Version);
+        Assert.Equal(new DependencyList([new ModReference("other", ModType.Virtual, SemVersionRange.All)], 
+            DependencyResolveLayout.FullResolved), id.Dependencies);
+    }
 
-        Assert.Equal(i3, i4);
-        Assert.NotEqual(i3, i1);
-
-        IModIdentity i5 = new ModinfoData("B");
-        Assert.NotEqual(i1, i5);
-
-        var d1 = new ModReference { Type = ModType.Default, Identifier = "A" };
-        var d2 = new ModReference { Type = ModType.Default, Identifier = "A" };
-        var d3 = new ModReference { Type = ModType.Default, Identifier = "B" };
-
-        Assert.Equal(d1, d2);
-
-        IModIdentity i6 = new ModinfoData("A") { Dependencies = new DependencyList([d1, d3], DependencyResolveLayout.FullResolved) };
-        IModIdentity i7 = new ModIdentity("A") { Dependencies = new DependencyList([d2, d3], DependencyResolveLayout.FullResolved) };
-        IModIdentity i8 = new ModIdentity("A") { Dependencies = new DependencyList([d2], DependencyResolveLayout.FullResolved) };
-        IModIdentity i9 = new ModIdentity("A") { Dependencies = new DependencyList([d3, d1], DependencyResolveLayout.FullResolved) };
-        IModIdentity i10 = new ModinfoData("A") { Dependencies = new DependencyList([d1], DependencyResolveLayout.FullResolved) };
-
-        Assert.Equal(i6, i7);
-        Assert.NotEqual(i6, i8);
-        Assert.NotEqual(i6, i9);
-        Assert.Equal(i8, i10);
+    [Fact]
+    public void Ctor_NameOnly()
+    {
+        var id = new ModIdentity("name");
+        Assert.Equal("name", id.Name);
+        Assert.Null(id.Version);
+        Assert.Equal(DependencyList.EmptyDependencyList, id.Dependencies);
     }
 }

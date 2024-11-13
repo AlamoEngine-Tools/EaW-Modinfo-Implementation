@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EawModinfo.Model;
 using EawModinfo.Spec;
@@ -15,14 +16,13 @@ public static class ModinfoDataUtilities
     /// <paramref name="baseModinfo"/> and overrides existing data from <paramref name="target"/> into the new copy.
     /// If <paramref name="baseModinfo"/> is <see langword="null"/> this method will return <paramref name="target"/>.
     /// </summary>
-    /// <remarks>Subsequent data such as <see cref="IModinfo.Languages"/> will be replaced entirely and not merged by property.
-    /// Exception is <see cref="IModinfo.Custom"/>, where items will get merged individually.
-    /// <br></br>
-    /// Subsequent data get replaced by creating a new copy of that element. This means the new and the merged property are not equal by reference.
+    /// <remarks>The values of <see cref="IModinfo.Languages"/>, <see cref="IModIdentity.Dependencies"/> and <see cref="IModinfo.SteamData"/> get replaced entirely.
+    /// <see cref="IModinfo.Custom"/> will be merged by key/value pair where values of the same key
+    /// from <paramref name="target"/> are superior to <paramref name="baseModinfo"/>.
     /// </remarks>
-    /// <param name="target">the data source from which data will get merged.</param>
-    /// <param name="baseModinfo">Original data which will get updated.</param>
-    /// <returns>A new instance of an <see cref="IModinfo"/> or <paramref name="target"/> if <paramref name="baseModinfo"/> was <see langword="null"/></returns>
+    /// <param name="target">The data source into which data will get merged.</param>
+    /// <param name="baseModinfo">Base data which will get merged to <paramref name="baseModinfo"/>.</param>
+    /// <returns>A merged modinfo or <paramref name="target"/> if <paramref name="baseModinfo"/> was <see langword="null"/>.</returns>
     public static IModinfo MergeInto(this IModinfo target, IModinfo? baseModinfo)
     {
         if (target is null)
@@ -50,14 +50,14 @@ public static class ModinfoDataUtilities
         if (target.Version != null)
             version = target.Version;
 
-        var custom = current.Custom;
-        if (target.Custom.Any())
+        var custom = new Dictionary<string, object>(target.Custom);
+        if (current.Custom.Any())
         {
-            foreach (var customObject in target.Custom)
+            foreach (var customObject in current.Custom)
             {
-                if (custom.Contains(customObject))
+                if (custom.ContainsKey(customObject.Key))
                     continue;
-                custom.Add(customObject);
+                custom.Add(customObject.Key, customObject.Value);
             }
         }
 
@@ -70,14 +70,8 @@ public static class ModinfoDataUtilities
             dependencies = new DependencyList(target.Dependencies);
 
         var languages = current.Languages;
-        if (target.Languages.Any())
-        {
-#if NETSTANDARD2_1
-                    languages = target.Languages.Select(x => (ILanguageInfo) new LanguageInfo(x)).ToHashSet(null);
-#else
-            languages = target.Languages.Select(x => (ILanguageInfo)new LanguageInfo(x)).Distinct();
-#endif
-        }
+        if (!ReferenceEquals(target.Languages, ModinfoData.UnsetLanguages)) 
+            languages = target.Languages.Select(x => (ILanguageInfo)new LanguageInfo(x)).Distinct().ToList();
 
         return new ModinfoData(name)
         {

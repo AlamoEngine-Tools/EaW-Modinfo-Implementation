@@ -3,29 +3,29 @@
 namespace EawModinfo.Spec;
 
 /// <summary>
-/// Flags that identify which parts of a mod is localized.
+/// Flags that define which parts of a mod are localized.
 /// </summary>
 [Flags]
 public enum LanguageSupportLevel
 {
     /// <summary>
-    /// There exists a dedicated "MasterTextFile" for this language
+    /// Text is localized for this language.
     /// </summary>
     Text = 1,
     /// <summary>
-    /// Speech event files are in their own language folder.
+    /// Speech event files are localized for this language.
     /// </summary>
     Speech = 2,
     /// <summary>
-    /// Sound effects, such as unit actions, are localized.
+    /// Unit voice-overs are localized for this language.
     /// </summary>
     SFX = 4,
     /// <summary>
-    /// Combines <see cref="Text"/>, <see cref="Speech"/> <see cref="SFX"/>
+    /// The mod is fully localized for this language, including text, speech and SFX.
     /// </summary>
     FullLocalized = Text | Speech | SFX,
     /// <summary>
-    /// Equals to <see cref="FullLocalized"/>
+    /// Same as <see cref="FullLocalized"/>.
     /// </summary>
     Default = FullLocalized
 }
