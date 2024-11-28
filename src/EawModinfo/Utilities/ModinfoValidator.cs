@@ -24,6 +24,13 @@ public static class ModinfoValidator
     {
         if (string.IsNullOrEmpty(modinfo.Name))
             throw new ModinfoException("Name must not be null or empty.");
+        if (modinfo.Dependencies is null)
+            throw new ModinfoException("Dependency list must no tbe null.");
+        if (modinfo.Languages is null)
+            throw new ModinfoException("Languages list must no tbe null.");
+        if (modinfo.Custom is null)
+            throw new ModinfoException("Custom dictionary must no tbe null.");
+
         modinfo.SteamData?.Validate();
         foreach (var languageInfo in modinfo.Languages) 
             languageInfo.Validate();
@@ -48,8 +55,6 @@ public static class ModinfoValidator
             throw new ModinfoException("Steam data is invalid: Title is missing.");
         if (steamData.Tags == null || !steamData.Tags.Any())
             throw new ModinfoException("Steam data is invalid: No tags specified.");
-        if (!steamData.Tags.Intersect(JsonSteamData.GameTags, StringComparer.InvariantCulture).Any())
-            throw new ModinfoException("Steam data is missing game tag FOC or EAW");
 
         var tags = new HashSet<string>();
         var containsGame = false;
@@ -65,7 +70,7 @@ public static class ModinfoValidator
                 containsGame = true;
         }
         if (!containsGame)
-            throw new ModinfoException("Steam data is invalid: Title is missing.");
+            throw new ModinfoException("Steam data is missing game tag FOC or EAW.");
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using EawModinfo.Model;
 using EawModinfo.Model.Json;
@@ -76,6 +77,42 @@ public class ModinfoValidatorTests
                 Dependencies = new DependencyList([(IModReference) GetInvalidModReferences().ElementAt(0)[0]], DependencyResolveLayout.FullResolved)
             }
         ];
+        yield return
+        [
+            new CustomModinfo(null!)
+        ];
+        yield return
+        [
+            new CustomModinfo("")
+        ];
+
+        yield return
+        [
+            new CustomModinfo("name")
+            {
+                Languages = new List<ILanguageInfo>{LanguageInfo.Default},
+                Custom = new Dictionary<string, object>(),
+                Dependencies = null!
+            }
+        ];
+        yield return
+        [
+            new CustomModinfo("name")
+            {
+                Custom = new Dictionary<string, object>(),
+                Dependencies = new DependencyList([], DependencyResolveLayout.FullResolved),
+                Languages = null!
+            }
+        ];
+        yield return
+        [
+            new CustomModinfo("name")
+            {
+                Languages = new List<ILanguageInfo>{LanguageInfo.Default},
+                Dependencies = new DependencyList([], DependencyResolveLayout.FullResolved),
+                Custom = null!
+            }
+        ];
     }
 
     [Theory]
@@ -132,6 +169,7 @@ public class ModinfoValidatorTests
     public static IEnumerable<object[]> GetInvalidSteamData()
     {
         yield return [new JsonSteamData(), true];
+        yield return [new JsonSteamData { Id = null! }, true];
         yield return [new JsonSteamData {Id = "asd", Tags = ["EAW"], ContentFolder = "testFolder"}, true]; 
         yield return [new JsonSteamData {Id = "1234", Tags = ["EAW"], ContentFolder = "testFolder"}, true];
         yield return [new JsonSteamData {Id = "0", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title"}, true];
@@ -245,5 +283,34 @@ public class ModinfoValidatorTests
             Assert.Null(Record.Exception(info.Validate));
         else
             Assert.Throws<ModinfoException>(info.Validate);
+    }
+
+    private class CustomModinfo(string name) : IModinfo
+    {
+        public string Name => name;
+        public SemVersion? Version { get; }
+        public IModDependencyList Dependencies { get; set; }
+
+        public string? Summary { get; }
+        public string? Icon { get; }
+        public IDictionary<string, object> Custom { get; set; }
+        public ISteamData? SteamData { get; }
+        public IReadOnlyCollection<ILanguageInfo> Languages { get; set; }
+        public bool LanguagesExplicitlySet { get; }
+
+        public string ToJson()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ToJson(Stream stream)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IModIdentity? other)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
