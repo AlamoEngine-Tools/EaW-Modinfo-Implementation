@@ -164,21 +164,22 @@ public class ModinfoValidatorTests
             },
             false
         ];
+        yield return
+        [
+            new JsonSteamData
+            {
+                Id = long.MaxValue.ToString(), Tags = ["EAW"], ContentFolder = "testFolder",
+                Description = "Some description", Title = "MyTitle"
+            },
+            false
+        ];
     }
-
+    
     public static IEnumerable<object[]> GetInvalidSteamData()
     {
         yield return [new JsonSteamData(), true];
         yield return [new JsonSteamData { Id = null! }, true];
-        yield return [new JsonSteamData {Id = "asd", Tags = ["EAW"], ContentFolder = "testFolder"}, true]; 
         yield return [new JsonSteamData {Id = "1234", Tags = ["EAW"], ContentFolder = "testFolder"}, true];
-        yield return [new JsonSteamData {Id = "0", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title"}, true];
-        yield return [new JsonSteamData {Id = "-123", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
-        yield return
-        [
-            new JsonSteamData {Id = "129381209812430981329048", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title"},
-            true
-        ];
         yield return [new JsonSteamData {Id = "1234", Tags = Array.Empty<string>(), ContentFolder = "testFolder", Title = "Title" }, true];
         yield return [new JsonSteamData { Id = "1234", Tags = null!, ContentFolder = "testFolder", Title = "Title" }, true];
         yield return [new JsonSteamData { Id = "1234", Tags = null!, ContentFolder = "testFolder", Title = "Title" }, true];
@@ -192,9 +193,41 @@ public class ModinfoValidatorTests
         yield return [new JsonSteamData { Id = "1234312", Tags = ["FOC", new string('a', 256)], Metadata = "bla", ContentFolder = "testFolder", Title = "Title" }, true];
     }
 
+    public static IEnumerable<object[]> GetInvalidSteamIDs()
+    {
+        var random = new Random();
+        yield return [new JsonSteamData { Id = "NaN", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1abc", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "abc1", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "abc", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1d", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1f", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "0x1", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "0", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1AF", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1+", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1e2", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1E2", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = random.Next(int.MinValue, -1).ToString(), Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "+123", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "-+123", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1_23", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1-23", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1.23", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1,23", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "0123", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "00123", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "  00123", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "  123", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "123  ", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1  23", Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData { Id = "1" + ulong.MaxValue, Tags = ["EAW"], ContentFolder = "testFolder", Title = "Title" }, true];
+    }
+
     [Theory]
     [MemberData(nameof(GetSteamData))]
     [MemberData(nameof(GetInvalidSteamData))]
+    [MemberData(nameof(GetInvalidSteamIDs))]
     public void Validate_SteamData(ISteamData steamData, bool shallThrow)
     {
         if (!shallThrow)

@@ -9,8 +9,14 @@ namespace EawModinfo.Spec;
 public interface IModReference : IEquatable<IModReference>, IConvertibleToJson
 {
     /// <summary>
-    /// Gets the unique identifier as a textual representation. The <see cref="Type"/> property my indicate how the data can be interpreted. 
+    /// Gets the unique, predictable identifier of the mod.
     /// </summary>
+    /// <remarks>
+    /// The identifier can hold any data to uniquely identify a mod, however the concrete value shall be predictable,
+    /// so that it can be used to code it into modinfo JSON files to reference mod dependencies.
+    /// For Steam Workshop mods it is therefore recommended to use the Steam Workshops ID and for local 
+    /// The <see cref="Type"/> property may indicate how the data can be interpreted.
+    /// </remarks>
     string Identifier { get; }
 
     /// <summary>
@@ -25,5 +31,4 @@ public interface IModReference : IEquatable<IModReference>, IConvertibleToJson
     /// As stated in the specification this property is not used for equality matching.
     /// </remarks>
     SemVersionRange? VersionRange { get; }
-
 }
