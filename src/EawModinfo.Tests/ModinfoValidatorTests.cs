@@ -246,6 +246,9 @@ public class ModinfoValidatorTests
         yield return [new ModReference { Identifier = "123456", Type = ModType.Default }, false];
         yield return [new ModReference { Identifier = "123456", Type = ModType.Workshops }, false];
         yield return [new ModReference { Identifier = "blabla", Type = ModType.Virtual }, false];
+        yield return [new ModReference { Identifier = ulong.MaxValue.ToString(), Type = ModType.Workshops }, false];
+        yield return [new ModReference { Identifier = "1" + ulong.MaxValue, Type = ModType.Workshops }, false];
+        yield return [new ModReference { Identifier = "abcdef", Type = ModType.Workshops }, false];
     }
 
     public static IEnumerable<object[]> GetInvalidModReferences()
@@ -261,12 +264,10 @@ public class ModinfoValidatorTests
         ];
         yield return [new ModReference { Identifier = null!, Type = ModType.Workshops }, true];
         yield return [new ModReference { Identifier = null!, Type = ModType.Virtual }, true];
+        yield return [new ModReference { Identifier = null!, Type = ModType.Default }, true];
         yield return [new ModReference { Identifier = string.Empty, Type = ModType.Default }, true];
         yield return [new ModReference { Identifier = string.Empty, Type = ModType.Workshops }, true];
         yield return [new ModReference { Identifier = string.Empty, Type = ModType.Virtual }, true];
-        yield return [new ModReference { Identifier = "-1", Type = ModType.Workshops }, true];
-        yield return [new ModReference { Identifier = "0", Type = ModType.Workshops }, true];
-        yield return [new ModReference { Identifier = "12921908098098098309481234", Type = ModType.Workshops }, true];
         yield return [new ModReference { Identifier = "1234", Type = (ModType) 0xff }, true];
     }
 
