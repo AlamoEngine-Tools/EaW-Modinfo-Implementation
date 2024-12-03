@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using EawModinfo.Model.Json;
 using EawModinfo.Spec;
 using EawModinfo.Spec.Steam;
 
@@ -16,7 +15,7 @@ public static class ModinfoValidator
 {
     /// <summary>
     /// Validates an <see cref="IModinfo"/> data. Throws an <see cref="ModinfoException"/> when validation failed.
-    /// Also throws is subsequent data such as <see cref="ISteamData"/> are invalid, if present.
+    /// Also throws if subsequent data such as <see cref="ISteamData"/> are invalid, if present.
     /// </summary>
     /// <param name="modinfo">The data to validate.</param>
     /// <exception cref="ModinfoException">The validation failed.</exception>
@@ -47,7 +46,7 @@ public static class ModinfoValidator
     {
         if (string.IsNullOrEmpty(steamData.Id))
             throw new ModinfoException("Steam data is invalid: Identifier is missing.");
-        ValidateSteamId(steamData.Id, "Steam data is invalid: ");
+        ValidateSteamId(steamData.Id, $"Steam data is invalid: '{steamData.Id}'");
 
         if (string.IsNullOrEmpty(steamData.ContentFolder))
             throw new ModinfoException("Steam data is invalid: ContentFolder is missing.");
@@ -81,7 +80,6 @@ public static class ModinfoValidator
             if (c == ',' || (uint)(c - '\x0020') > '\x007F' - '\x0020') // (c >= '\x0020' && c <= '\x007F'
                 return true;
         }
-
         return false;
     }
 
@@ -152,7 +150,10 @@ public static class ModinfoValidator
 
     private static (bool Valid, string Error) ValidateSteamId(string data)
     {
-        if (!uint.TryParse(data, out var id))
+        // Leading spaces, etc. is not a problem, because this case is handled with NumberStyles.None
+        if (data[0] == '0')
+            return (false, "Workshops ID cannot have leading zeros.");
+        if (!ulong.TryParse(data, NumberStyles.None, CultureInfo.InvariantCulture, out var id))
             return (false, "Workshops ID must be an uint number.");
         if (id == 0)
             return (false, "Workshops ID cannot be 0.");
