@@ -85,30 +85,16 @@ public static class ModinfoValidator
 
     /// <summary>
     /// Validates an <see cref="IModReference"/> data. Throws an <see cref="ModinfoException"/> when validation failed.
+    /// That is when the identifier is <see langword="null"/> or an empty string.
     /// </summary>
-    /// <remarks>
-    /// When <see cref="IModReference.Type"/> is <see cref="ModType.Workshops"/>:
-    /// <see cref="IModReference.Identifier"/> must parse into an <see cref="uint"/> larger than 0.
-    /// <br></br>
-    /// The validator will not check for if the <see cref="IModReference.Identifier"/> is a valid file system path.
-    /// </remarks>
     /// <param name="modReference">The data to validate.</param>
     /// <exception cref="ModinfoException">The validation failed.</exception>
     public static void Validate(this IModReference modReference)
     {
         if (string.IsNullOrEmpty(modReference.Identifier))
             throw new ModinfoException("Mod-Reference data is invalid: Identifier is missing.");
-        switch (modReference.Type)
-        {
-            case ModType.Workshops:
-                ValidateSteamId(modReference.Identifier, $"Mod-Reference data is invalid: '{modReference}'");
-                break;
-            case ModType.Default:
-            case ModType.Virtual:
-                break;
-            default:
-                throw new ModinfoException($"ERROR: Unknown ModType! ({modReference.Type})");
-        }
+        if (!Enum.IsDefined(typeof(ModType), modReference.Type))
+            throw new ModinfoException("Mod-Reference data is invalid: ModType not valid.");
     }
 
     /// <summary>
@@ -154,7 +140,7 @@ public static class ModinfoValidator
         if (data[0] == '0')
             return (false, "Workshops ID cannot have leading zeros.");
         if (!ulong.TryParse(data, NumberStyles.None, CultureInfo.InvariantCulture, out var id))
-            return (false, "Workshops ID must be an uint number.");
+            return (false, "Workshops ID must be an ulong number.");
         if (id == 0)
             return (false, "Workshops ID cannot be 0.");
         return (true, string.Empty);
