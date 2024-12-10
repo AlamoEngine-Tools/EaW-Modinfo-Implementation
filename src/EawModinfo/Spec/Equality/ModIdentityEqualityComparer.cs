@@ -9,7 +9,7 @@ namespace EawModinfo.Spec.Equality;
 public sealed class ModIdentityEqualityComparer : IEqualityComparer<IModIdentity>
 {
     /// <summary>
-    /// The default instances of the <see cref="ModIdentityEqualityComparer"/>
+    /// Returns the default instances of the <see cref="ModIdentityEqualityComparer"/>
     /// which compares two <see cref="IModIdentity"/> based on their name, version and dependencies.
     /// Name comparison is case-insensitive.
     /// </summary>

@@ -12,7 +12,7 @@ namespace EawModinfo.Spec.Equality;
 public sealed class ModReferenceEqualityComparer : IEqualityComparer<IModReference>
 {
     /// <summary>
-    /// The default instance of the <see cref="ModReferenceEqualityComparer"/>
+    /// Returns the default instance of the <see cref="ModReferenceEqualityComparer"/>.
     /// </summary>
     public static readonly ModReferenceEqualityComparer Default = new();
 
