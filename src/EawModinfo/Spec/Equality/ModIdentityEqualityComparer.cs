@@ -11,12 +11,12 @@ public sealed class ModIdentityEqualityComparer : IEqualityComparer<IModIdentity
     /// <summary>
     /// The default instances of the <see cref="ModIdentityEqualityComparer"/>
     /// which compares two <see cref="IModIdentity"/> based on their name, version and dependencies.
-    /// Name comparison is case-sensitive.
+    /// Name comparison is case-insensitive.
     /// </summary>
     /// <remarks>
     /// Implements the modinfo specification section III.1.1
     /// </remarks>
-    public static readonly ModIdentityEqualityComparer Default = new(true, true, StringComparer.Ordinal);
+    public static readonly ModIdentityEqualityComparer Default = new(true, true, StringComparer.OrdinalIgnoreCase);
 
     private readonly bool _includeVersion;
     private readonly bool _includeDependencies;
