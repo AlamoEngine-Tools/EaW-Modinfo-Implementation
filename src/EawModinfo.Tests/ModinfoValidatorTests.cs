@@ -230,10 +230,22 @@ public class ModinfoValidatorTests
     [MemberData(nameof(GetInvalidSteamIDs))]
     public void Validate_SteamData(ISteamData steamData, bool shallThrow)
     {
-        if (!shallThrow)
-            Assert.Null(Record.Exception(steamData.Validate));
+        var e = Record.Exception(steamData.Validate);
+        if (shallThrow)
+            Assert.IsType<ModinfoException>(e);
         else
-            Assert.Throws<ModinfoException>(steamData.Validate);
+            Assert.Null(e);
+    }
+
+    [Theory]
+    [MemberData(nameof(GetInvalidSteamIDs))]
+    public void ValidateSteamWorkshopsId(ISteamData steamData, bool shallThrow)
+    {
+        var e = Record.Exception(() => ModinfoValidator.ValidateSteamWorkshopsId(steamData.Id));
+        if (shallThrow)
+            Assert.IsType<ModinfoException>(e);
+        else
+            Assert.Null(e);
     }
 
     public static IEnumerable<object[]> GetModReferences()

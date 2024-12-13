@@ -44,8 +44,6 @@ public static class ModinfoValidator
     /// <exception cref="ModinfoException">The validation failed.</exception>
     public static void Validate(this ISteamData steamData)
     {
-        if (string.IsNullOrEmpty(steamData.Id))
-            throw new ModinfoException("Steam data is invalid: Identifier is missing.");
         ValidateSteamId(steamData.Id, $"Steam data is invalid: '{steamData.Id}'");
 
         if (string.IsNullOrEmpty(steamData.ContentFolder))
@@ -127,22 +125,34 @@ public static class ModinfoValidator
         }
     }
 
+    /// <summary>
+    /// Validates a string whether it represents a valid Steam Workshops ID.
+    /// </summary>
+    /// <param name="steamWorkshopsId">The Steam Workshops ID to validate.</param>
+    /// <exception cref="ModinfoException">The validation failed.</exception>
+    public static void ValidateSteamWorkshopsId(string steamWorkshopsId)
+    {
+        ValidateSteamId(steamWorkshopsId, "Steam Workshops ID not valid");
+    }
+
     private static void ValidateSteamId(string data, string errorSourceMessage)
     {
-        var (isValid, error) = ValidateSteamId(data);
+        var (isValid, error) = InternalValidateSteamId(data);
         if (!isValid)
             throw new ModinfoException($"{errorSourceMessage}: {error}");
     }
 
-    private static (bool Valid, string Error) ValidateSteamId(string data)
+    private static (bool Valid, string Error) InternalValidateSteamId(string data)
     {
+        if (string.IsNullOrEmpty(data))
+            return (false, "Steam data is invalid: Identifier is missing.");
         // Leading spaces, etc. is not a problem, because this case is handled with NumberStyles.None
         if (data[0] == '0')
-            return (false, "Workshops ID cannot have leading zeros.");
+            return (false, "ID cannot have leading zeros.");
         if (!ulong.TryParse(data, NumberStyles.None, CultureInfo.InvariantCulture, out var id))
-            return (false, "Workshops ID must be an ulong number.");
+            return (false, "ID must be an ulong number.");
         if (id == 0)
-            return (false, "Workshops ID cannot be 0.");
+            return (false, "ID cannot be 0.");
         return (true, string.Empty);
     }
 
