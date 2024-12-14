@@ -42,7 +42,8 @@ public class ModIdentityEqualityTest : ModIdentityEqualityTestsBase<ModIdentity>
         EqualityTestHelpers.AssertDefaultEquals<IModIdentity>(false, false, data, diffVer);
         EqualityTestHelpers.AssertDefaultEquals(false, false, data, diffListVer);
         EqualityTestHelpers.AssertDefaultEquals<IModIdentity>(false, false, data, diffListVer);
-        EqualityTestHelpers.AssertDefaultEquals(false, false, data, insensitiveName);
-        EqualityTestHelpers.AssertDefaultEquals<IModIdentity>(false, false, data, insensitiveName);
+
+        EqualityTestHelpers.AssertDefaultEquals(true, true, data, insensitiveName);
+        EqualityTestHelpers.AssertDefaultEquals<IModIdentity>(true, true, data, insensitiveName);
     }
 }

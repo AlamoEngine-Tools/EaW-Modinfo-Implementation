@@ -23,6 +23,7 @@ public static class ModinfoDataUtilities
     /// <param name="target">The data source into which data will get merged.</param>
     /// <param name="baseModinfo">Base data which will get merged to <paramref name="baseModinfo"/>.</param>
     /// <returns>A merged modinfo or <paramref name="target"/> if <paramref name="baseModinfo"/> was <see langword="null"/>.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="target"/> is <see langword="null"/>.</exception>
     public static IModinfo MergeInto(this IModinfo target, IModinfo? baseModinfo)
     {
         if (target is null)

@@ -10,8 +10,11 @@ namespace EawModinfo.Spec.Equality;
 public sealed class ModDependencyListEqualityComparer : IEqualityComparer<IModDependencyList>
 {
     /// <summary>
-    /// The default instance of the <see cref="ModDependencyListEqualityComparer"/>
+    /// Returns the default instance of the <see cref="ModDependencyListEqualityComparer"/>
     /// </summary>
+    /// <remarks>
+    /// Implements the modinfo specification section III.1.1
+    /// </remarks>
     public static readonly ModDependencyListEqualityComparer Default = new();
 
     private ModDependencyListEqualityComparer()
