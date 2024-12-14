@@ -8,12 +8,12 @@ using EawModinfo.Spec;
 namespace EawModinfo.File;
 
 /// <summary>
-/// Searches a directory for modinfo files.
+/// Provides a method to searches a directory for modinfo files.
 /// </summary>
 public static class ModinfoFileFinder
 {
     /// <summary>
-    /// Searches the directory specified for all modinfo files according to the modinfo specification in section III.3.
+    /// Searches the directory specified for all modinfo files according to the modinfo specification in section II.3.
     /// </summary>
     /// <param name="directory">The directory to search for modinfo files.</param>
     /// <returns>A collection with all found modinfo files.</returns>
@@ -31,7 +31,7 @@ public static class ModinfoFileFinder
     private static ModinfoFinderCollection FindCore(IDirectoryInfo directory)
     {
         var mainModinfoFile = FindMainModinfoFileCore(directory);
-        var variantFiles = new List<ModinfoVariantFile>(FindModinfoVariantFilesCore(directory, mainModinfoFile?.GetModinfo()));
+        var variantFiles = new List<ModinfoVariantFile>(FindModinfoVariantFilesCore(directory, mainModinfoFile));
         
         return new ModinfoFinderCollection(directory, mainModinfoFile, variantFiles);
     }
@@ -46,7 +46,7 @@ public static class ModinfoFileFinder
         return !modinfo.IsFileValid(out _) ? null : modinfo;
     }
          
-    private static IEnumerable<ModinfoVariantFile> FindModinfoVariantFilesCore(IDirectoryInfo directory, IModinfo? mainModinfoData)
+    private static IEnumerable<ModinfoVariantFile> FindModinfoVariantFilesCore(IDirectoryInfo directory, MainModinfoFile? mainModinfoData)
     {
         var possibleVariants = directory.EnumerateFiles(
             $"*{ModinfoVariantFile.VariantModinfoFileEnding}",
