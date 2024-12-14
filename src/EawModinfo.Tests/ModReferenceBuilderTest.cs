@@ -164,6 +164,32 @@ public class ModReferenceBuilderTest
     }
 
     [Theory]
+    [MemberData(nameof(ModDirectoryTestData))]
+    public void CreateIdentifiers_OnlySingleVariant_ReturnsCorrectIdentifier(
+        ModReferenceBuilder.ModLocationKind locationKind,
+        string modDirectoryPath,
+        string expectedIdentifier)
+    {
+        var modDirectory = _fileSystem.DirectoryInfo.New(modDirectoryPath);
+
+        if (locationKind is ModReferenceBuilder.ModLocationKind.External)
+            expectedIdentifier = _fileSystem.Path.GetFullPath(expectedIdentifier);
+
+        var modinfoFinderCollection = new ModinfoFinderCollection(modDirectory, null, new List<ModinfoVariantFile>
+        {
+            CreateValidVariantFile(modDirectory, "VariantName")
+        });
+
+        var modReferences = ModReferenceBuilder.CreateIdentifiers(modinfoFinderCollection, locationKind)
+            .ToList();
+
+        var modRef = Assert.Single(modReferences);
+        Assert.Equal($"{expectedIdentifier}:VariantName", modRef.ModReference.Identifier);
+        Assert.Equal(locationKind is ModReferenceBuilder.ModLocationKind.SteamWorkshops ? ModType.Workshops : ModType.Default, modRef.ModReference.Type);
+        Assert.NotNull(modRef.Modinfo);
+    }
+
+    [Theory]
     [MemberData(nameof(GetCombinedModinfoFilesTestData))]
     public void CreateIdentifiers_TestScenario(
     string modPath,
