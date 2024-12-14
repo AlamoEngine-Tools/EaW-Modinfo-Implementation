@@ -149,10 +149,8 @@ public static class ModinfoValidator
         // Leading spaces, etc. is not a problem, because this case is handled with NumberStyles.None
         if (data[0] == '0')
             return (false, "ID cannot have leading zeros.");
-        if (!ulong.TryParse(data, NumberStyles.None, CultureInfo.InvariantCulture, out var id))
+        if (!ulong.TryParse(data, NumberStyles.None, CultureInfo.InvariantCulture, out _))
             return (false, "ID must be an ulong number.");
-        if (id == 0)
-            return (false, "ID cannot be 0.");
         return (true, string.Empty);
     }
 

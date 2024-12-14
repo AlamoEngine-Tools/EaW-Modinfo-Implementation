@@ -31,11 +31,99 @@ public class ModReferenceBuilderTest
         Assert.Throws<ArgumentNullException>(() => ModReferenceBuilder.CreateVirtualModIdentifier(null!));
     }
 
+    #region CreateIdentifiers
+    
+    public static IEnumerable<object?[]> GetCombinedModinfoFilesTestData()
+    {
+        var mainModinfoStates = new bool?[]
+        {
+            // no main modinfo
+            null,
+            // valid main modinfo
+            true, 
+            // invalid main modinfo
+            false
+        };
+
+        foreach (var pathData in ModDirectoryTestData())
+        {
+            var locationKind = (ModReferenceBuilder.ModLocationKind)pathData[0];
+            var modPath = (string)pathData[1];
+            var expectedIdentifier = (string)pathData[2];
+
+            foreach (var mainModinfoState in mainModinfoStates)
+            {
+                yield return
+                [
+                    modPath,
+                    locationKind,
+                    mainModinfoState,
+                    Array.Empty<string>(), // no variants
+                    Array.Empty<string>(), // no invalid variants
+                    expectedIdentifier
+                ];
+                yield return
+                [
+                    modPath,
+                    locationKind,
+                    mainModinfoState,
+                    new[] {"variant1"},// one variants
+                    Array.Empty<string>(),
+                    expectedIdentifier
+                ];
+                yield return
+                [
+                    modPath,
+                    locationKind,
+                    mainModinfoState,
+                    new[] {"variant1", "variant2"},// many variants
+                    Array.Empty<string>(),
+                    expectedIdentifier
+                ];
+                yield return
+                [
+                    modPath,
+                    locationKind,
+                    mainModinfoState,
+                    new[] {"variant1", "variant2"}, // many variants
+                    new[] {"variant3"}, // invalid variant
+                    expectedIdentifier
+                ];
+                yield return
+                [
+                    modPath,
+                    locationKind,
+                    mainModinfoState,
+                    new[] {"variant1", "variant2"}, // many variants
+                    new[] {"variant3", "variant4"}, // invalid variants
+                    expectedIdentifier
+                ];
+                yield return
+                [
+                    modPath,
+                    locationKind,
+                    mainModinfoState,
+                    Array.Empty<string>(), // no valid variants
+                    new[] {"variant3", "variant4"}, // invalid variants
+                    expectedIdentifier
+                ];
+            }
+        }
+    }
+
+    public static IEnumerable<object[]> ModDirectoryTestData()
+    {
+        yield return [ModReferenceBuilder.ModLocationKind.SteamWorkshops, "Game/Mods/1234567890", "1234567890"];
+        yield return [ModReferenceBuilder.ModLocationKind.GameModsDirectory, "Game/Mods/DefaultMod", "DefaultMod"];
+        yield return [ModReferenceBuilder.ModLocationKind.External, "path/ExternalMod", "path/ExternalMod"];
+    }
+
+
     [Theory]
-    [InlineData(ModLocationKind.GameModsDirectory)]
-    [InlineData(ModLocationKind.SteamWorkshops)]
-    [InlineData(ModLocationKind.External)]
-    public void ThrowsArgumentNullException_WhenInputIsNull(ModLocationKind modLocation)
+    [InlineData(ModReferenceBuilder.ModLocationKind.GameModsDirectory)]
+    [InlineData(ModReferenceBuilder.ModLocationKind.SteamWorkshops)]
+    [InlineData(ModReferenceBuilder.ModLocationKind.External)]
+    public void CreateIdentifiers_ThrowsArgumentNullException_WhenInputIsNull(ModReferenceBuilder.ModLocationKind modLocation)
     {
         Assert.Throws<ArgumentNullException>(() =>
             ModReferenceBuilder.CreateIdentifiers(null!, modLocation));
@@ -50,13 +138,13 @@ public class ModReferenceBuilderTest
         var modinfoFinderCollection = new ModinfoFinderCollection(modDirectory, null, []);
 
         Assert.Throws<ModinfoException>(() =>
-            ModReferenceBuilder.CreateIdentifiers(modinfoFinderCollection, ModLocationKind.SteamWorkshops));
+            ModReferenceBuilder.CreateIdentifiers(modinfoFinderCollection, ModReferenceBuilder.ModLocationKind.SteamWorkshops));
     }
 
     [Theory]
     [MemberData(nameof(ModDirectoryTestData))]
     public void CreateIdentifiers_NoModinfoFiles_ReturnsCorrectIdentifier(
-        ModLocationKind locationKind, 
+        ModReferenceBuilder.ModLocationKind locationKind, 
         string modDirectoryPath,
         string expectedIdentifier)
     {
@@ -68,29 +156,33 @@ public class ModReferenceBuilderTest
             .ToList();
 
         var modRef = Assert.Single(modReferences);
-        if (locationKind is ModLocationKind.External)
+        if (locationKind is ModReferenceBuilder.ModLocationKind.External)
             expectedIdentifier = _fileSystem.Path.GetFullPath(expectedIdentifier);
         Assert.Equal(expectedIdentifier, modRef.ModReference.Identifier);
-        Assert.Equal(locationKind is ModLocationKind.SteamWorkshops ? ModType.Workshops : ModType.Default, modRef.ModReference.Type);
+        Assert.Equal(locationKind is ModReferenceBuilder.ModLocationKind.SteamWorkshops ? ModType.Workshops : ModType.Default, modRef.ModReference.Type);
         Assert.Null(modRef.Modinfo);
     }
 
     [Theory]
     [MemberData(nameof(GetCombinedModinfoFilesTestData))]
     public void CreateIdentifiers_TestScenario(
-      string modPath,
-      ModLocationKind locationKind,
-      bool? hasValidMainModinfo,
-      ICollection<string> validVariants,
-      ICollection<string> malformedVariants,
-      string expectedBaseIdentifier)
+    string modPath,
+    ModReferenceBuilder.ModLocationKind locationKind,
+    bool? hasValidMainModinfo,
+    ICollection<string> validVariants,
+    ICollection<string> malformedVariants,
+    string expectedBaseIdentifier)
     {
+        // Adjust expected identifier if it's external
+        if (locationKind is ModReferenceBuilder.ModLocationKind.External)
+            expectedBaseIdentifier = _fileSystem.Path.GetFullPath(expectedBaseIdentifier);
+
         var modDir = _fileSystem.DirectoryInfo.New(modPath);
 
         // Simulate the creation of a main modinfo file
         var mainModinfo = hasValidMainModinfo switch
         {
-            true => CreateValidMainFile(modDir, "ValidMain.json"),
+            true => CreateValidMainFile(modDir),
             false => CreateInvalidMainModinfoFile(modDir),
             _ => null
         };
@@ -104,117 +196,70 @@ public class ModReferenceBuilderTest
 
         var result = ModReferenceBuilder.CreateIdentifiers(modinfoFinderResult, locationKind).ToList();
 
-        // Adjust expected identifier if it's external
-        if (locationKind is ModLocationKind.External) 
-            expectedBaseIdentifier = _fileSystem.Path.GetFullPath(expectedBaseIdentifier);
+        var expectedResults = new List<(string Identifier, ModType Type, string? Name)>();
 
-        var expectedCount = 1 + validVariants.Count;
-        Assert.Equal(expectedCount, result.Count);
-
-        var currentIndex = 0;
-
-        // Validate main modinfo if it exists
+        // Add the expected main modinfo entry
         if (hasValidMainModinfo == true)
         {
-            Assert.Equal(expectedBaseIdentifier, result[currentIndex].ModReference.Identifier);
-            Assert.Equal(locationKind is ModLocationKind.SteamWorkshops ? ModType.Workshops : ModType.Default, result[currentIndex].ModReference.Type);
-            Assert.NotNull(result[currentIndex].Modinfo);
-            Assert.Equal("ValidMain.json", result[currentIndex].Modinfo.Name);
-            currentIndex++;
+            expectedResults.Add((
+                Identifier: expectedBaseIdentifier,
+                Type: locationKind == ModReferenceBuilder.ModLocationKind.SteamWorkshops ? ModType.Workshops : ModType.Default,
+                Name: "testmod"
+            ));
         }
-
-        // Validate valid variants
-        var validVariantsList = validVariants.ToList(); // Ensure we can index into validVariants
-        for (int i = 0; i < validVariantsList.Count; i++)
+        // The main modinfo file exists but is invalid OR no valid variant modinfo files exist
+        else if (hasValidMainModinfo == false || (hasValidMainModinfo is null && validVariants.Count == 0))
         {
-            var expectedVariant = validVariantsList[i];
-            var modReference = result[currentIndex];
-            Assert.Equal($"{expectedBaseIdentifier}:{expectedVariant}", modReference.ModReference.Identifier);
-            Assert.Equal(locationKind is ModLocationKind.SteamWorkshops ? ModType.Workshops : ModType.Default, modReference.ModReference.Type);
-            Assert.NotNull(modReference.Modinfo);
-            Assert.Equal(expectedVariant, modReference.Modinfo.Name);
-            currentIndex++;
+            expectedResults.Add((
+                Identifier: expectedBaseIdentifier,
+                Type: locationKind == ModReferenceBuilder.ModLocationKind.SteamWorkshops ? ModType.Workshops : ModType.Default,
+                Name: null
+            ));
         }
-    }
-    
-    public static IEnumerable<object[]> GetCombinedModinfoFilesTestData()
-    {
-        foreach (var pathData in ModDirectoryTestData())
+        // Add the expected variant entries
+        expectedResults.AddRange(validVariants.Select(variant => (
+            Identifier: $"{expectedBaseIdentifier}:{variant}",
+            Type: locationKind == ModReferenceBuilder.ModLocationKind.SteamWorkshops ? ModType.Workshops : ModType.Default,
+            Name: variant
+        )));
+
+        Assert.Equal(expectedResults.Count, result.Count);
+
+        foreach (var expected in expectedResults)
         {
-            var locationKind = (ModLocationKind)pathData[0];
-            var modPath = (string)pathData[1];
-            var expectedIdentifier = (string)pathData[2];
+            var actual = result.Single(r =>
+                r.ModReference.Identifier == expected.Identifier &&
+                r.ModReference.Type == expected.Type &&
+                (expected.Name == null || r.Modinfo?.Name == expected.Name));
 
-            yield return
-            [
-                modPath,
-                locationKind,
-                null!, // No main modinfo
-                Array.Empty<string>(), // No main modinfo
-                Array.Empty<string>(),
-                expectedIdentifier
-            ];
+            if (expected.Name == null)
+                Assert.Null(actual.Modinfo);
+            else
+                Assert.Equal(expected.Name, actual.Modinfo!.Name);
 
-            yield return
-            [
-                modPath,
-                locationKind,
-                false, // Invalid main file
-                Array.Empty<string>(), // No main modinfo
-                Array.Empty<string>(),
-                expectedIdentifier
-            ];
-
-            //yield return
-            //[
-            //    modPath,
-            //    isSteamWorkshopMod,
-            //    true, // Valid main modinfo
-            //    new[] { "ValidVariant2" },
-            //    Enumerable.Empty<string>(),
-            //    expectedIdentifier,
-            //    isExternalMod
-            //];
-
-            //yield return
-            //[
-            //    modPath,
-            //    isSteamWorkshopMod,
-            //    false, // Malformed main modinfo
-            //    Enumerable.Empty<string>(),
-            //    new[] { "MalformedVariant2" },
-            //    expectedIdentifier,
-            //    isExternalMod
-            //];
+            Assert.Equal(modDir.FullName, actual.Directory.FullName);
         }
     }
-    
-    public static IEnumerable<object[]> ModDirectoryTestData()
-    {
-        yield return [ModLocationKind.SteamWorkshops, "Game/Mods/1234567890", "1234567890"];
-        yield return [ModLocationKind.GameModsDirectory, "Game/Mods/DefaultMod", "DefaultMod"];
-        yield return [ModLocationKind.External, "path/ExternalMod", "ExternalMod"];
-    }
 
-    private MainModinfoFile? CreateValidMainFile(IDirectoryInfo dir, string mainmodinfoJson)
+    #endregion
+
+    private MainModinfoFile CreateValidMainFile(IDirectoryInfo dir)
     {
-        throw new NotImplementedException();
+        var file = CreateFile(dir, "modinfo.json", TestUtilities.MainModinfoData);
+        return new MainModinfoFile(file);
     }
 
     private MainModinfoFile CreateInvalidMainModinfoFile(IDirectoryInfo dir)
     {
-        dir.Create();
-        var file = _fileSystem.FileInfo.New(_fileSystem.Path.Combine(dir.FullName, "modinfo.json"));
-        using var sw = file.CreateText();
-        sw.Write("This is not a valid modinfo file");
-        file.Refresh();
+        var file = CreateFile(dir, "modinfo.json", "This is not a valid modinfo content");
         return new MainModinfoFile(file);
     }
 
     private ModinfoVariantFile CreateInvalidVariantFile(IDirectoryInfo dir)
     {
         dir.Create();
-        var file = _fileSystem.FileInfo.New(_fileSystem.Path.Combine(dir.FullName, "modinfo.json"));
+        var random = _fileSystem.Path.GetRandomFileName();
+        var file = _fileSystem.FileInfo.New(_fileSystem.Path.Combine(dir.FullName, $"{random}-modinfo.json"));
         using var sw = file.CreateText();
         sw.Write("This is not a valid modinfo file");
         file.Refresh();
@@ -223,6 +268,17 @@ public class ModReferenceBuilderTest
 
     private ModinfoVariantFile CreateValidVariantFile(IDirectoryInfo dir, string name)
     {
-        throw new NotImplementedException();
+        var file = CreateFile(dir, $"{name}-modinfo.json", new ModinfoData(name).ToJson());
+        return new ModinfoVariantFile(file);
+    }
+
+    private IFileInfo CreateFile(IDirectoryInfo dir, string fileName, string content)
+    {
+        dir.Create();
+        var file = _fileSystem.FileInfo.New(_fileSystem.Path.Combine(dir.FullName, fileName));
+        using var sw = file.CreateText();
+        sw.Write(content);
+        file.Refresh();
+        return file;
     }
 }

@@ -14,6 +14,25 @@ namespace EawModinfo.Utilities;
 public static class ModReferenceBuilder
 {
     /// <summary>
+    /// Specifies the kind of the installation location of a mod.
+    /// </summary>
+    public enum ModLocationKind
+    {
+        /// <summary>
+        /// The mod is installed in the game's GAME/Mods/ directory.
+        /// </summary>
+        GameModsDirectory,
+        /// <summary>
+        /// The mod is installed in correct Steam Workshops directory.
+        /// </summary>
+        SteamWorkshops,
+        /// <summary>
+        /// The mod is installed on any other location than <see cref="GameModsDirectory"/> and <see cref="SteamWorkshops"/>.
+        /// </summary>
+        External
+    }
+
+    /// <summary>
     /// Creates a mod reference for a virtual mod from the specified modinfo data.
     /// </summary>
     /// <param name="modinfo">The modinfo data to create a virtual mod reference from.</param>
@@ -30,9 +49,9 @@ public static class ModReferenceBuilder
     /// Creates an enumerable collection of mod references from the specified <see cref="ModinfoFinderCollection"/>.
     /// </summary>
     /// <remarks>
-    /// The mod references and their respective identifiers are created based on section I.4 and III.2.4 from the modinfo specification.
+    /// The mod references and their respective identifiers are created based on sections I.4 and III.2.4 from the modinfo specification.
     /// <br/>
-    /// This method does not sanity check the collection's location and <paramref name="locationKind"/>
+    /// This method does not sanity check the collection's location against <paramref name="locationKind"/>,
     /// except that <see cref="ModLocationKind.SteamWorkshops"/> requires the directory name to be convertible into a Steam Workshops ID. 
     /// </remarks>
     /// <param name="modinfoFinderResult">The collection that contains the found modinfo files for a directory.</param>
@@ -102,59 +121,5 @@ public static class ModReferenceBuilder
 
         var modReference = new ModReference(sb.ToString(), modType);
         return new DetectedModReference(modReference, modDir, modinfo);
-    }
-}
-
-/// <summary>
-/// Specifies the kind of the installation location of a mod.
-/// </summary>
-public enum ModLocationKind
-{
-    /// <summary>
-    /// The mod is installed in the game's GAME/Mods/ directory.
-    /// </summary>
-    GameModsDirectory,
-    /// <summary>
-    /// The mod is installed in correct Steam Workshops directory.
-    /// </summary>
-    SteamWorkshops,
-    /// <summary>
-    /// The mod is installed on any other location than <see cref="GameModsDirectory"/> and <see cref="SteamWorkshops"/>.
-    /// </summary>
-    External
-}
-
-/// <summary>
-/// Represents an information container for a mod reference with its associated directory and modinfo data.
-/// </summary>
-public sealed class DetectedModReference
-{
-    /// <summary>
-    /// Gets the directory information of the mod reference.
-    /// </summary>
-    public IDirectoryInfo Directory { get; }
-
-    /// <summary>
-    /// Gets the optional modinfo data or <see langword="null"/> if none is present.
-    /// </summary>
-    public IModinfo? Modinfo { get; }
-
-    /// <summary>
-    /// Gets the mod reference.
-    /// </summary>
-    public IModReference ModReference { get; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DetectedModReference"/> class with the specified mod reference, directory information and optional modinfo data
-    /// </summary>
-    /// <param name="modReference">The mod reference.</param>
-    /// <param name="directory">The directory information of the mod reference.</param>
-    /// <param name="modinfo">The optional modinfo data.</param>
-    /// <exception cref="ArgumentNullException"><paramref name="modReference"/> or <paramref name="directory"/> is <see langword="null"/>.</exception>
-    public DetectedModReference(IModReference modReference, IDirectoryInfo directory, IModinfo? modinfo)
-    {
-        ModReference = modReference ?? throw new ArgumentNullException(nameof(modReference));
-        Directory = directory ?? throw new ArgumentNullException(nameof(directory));
-        Modinfo = modinfo;
     }
 }
