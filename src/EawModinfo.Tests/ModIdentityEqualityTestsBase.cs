@@ -32,7 +32,7 @@ public abstract class ModIdentityEqualityTestsBase<T> where T : IModIdentity
         EqualityTestHelpers.AssertWithComparer(false,  comparer, data, diffDep);
         EqualityTestHelpers.AssertWithComparer(false,  comparer, data, diffVer);
         EqualityTestHelpers.AssertWithComparer(false,  comparer, data, diffListVer);
-        EqualityTestHelpers.AssertWithComparer(false, comparer, data, insensitiveName);
+        EqualityTestHelpers.AssertWithComparer(true, comparer, data, insensitiveName);
     }
 
     [Fact]

@@ -44,7 +44,7 @@ public class ModInfoEqualityTest : ModIdentityEqualityTestsBase<ModinfoData>
         EqualityTestHelpers.AssertDefaultEquals(false, false, data, diffListVer);
         EqualityTestHelpers.HashSetTest(false, ModIdentityEqualityComparer.Default, data, diffListVer);
 
-        EqualityTestHelpers.AssertDefaultEquals(false, false, data, insensitiveName);
-        EqualityTestHelpers.HashSetTest(false, ModIdentityEqualityComparer.Default, data, insensitiveName);
+        EqualityTestHelpers.AssertDefaultEquals(false, true, data, insensitiveName);
+        EqualityTestHelpers.HashSetTest(true, ModIdentityEqualityComparer.Default, data, insensitiveName);
     }
 }

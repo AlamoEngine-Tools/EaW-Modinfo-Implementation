@@ -12,7 +12,7 @@ namespace EawModinfo.Spec.Equality;
 public sealed class ModReferenceEqualityComparer : IEqualityComparer<IModReference>
 {
     /// <summary>
-    /// The default instance of the <see cref="ModReferenceEqualityComparer"/>
+    /// Returns the default instance of the <see cref="ModReferenceEqualityComparer"/>.
     /// </summary>
     public static readonly ModReferenceEqualityComparer Default = new();
 
@@ -29,12 +29,12 @@ public sealed class ModReferenceEqualityComparer : IEqualityComparer<IModReferen
             return false;
         if (y is null)
             return false;
-        return x.Identifier == y.Identifier && x.Type == y.Type;
+        return x.Identifier.Equals(y.Identifier, StringComparison.OrdinalIgnoreCase) && x.Type == y.Type;
     }
 
     /// <inheritdoc />
     public int GetHashCode(IModReference obj)
     {
-        return HashCode.Combine(obj.Identifier, obj.Type);
+        return HashCode.Combine(obj.Identifier.ToUpperInvariant(), obj.Type);
     }
 }
