@@ -35,10 +35,13 @@ public static class ModReferenceBuilder
     /// <summary>
     /// Creates a mod reference for a virtual mod from the specified modinfo data.
     /// </summary>
+    /// <remarks>
+    /// The identifier of the returned mod reference is created based on section III.2.4 of the modinfo specification.
+    /// </remarks>
     /// <param name="modinfo">The modinfo data to create a virtual mod reference from.</param>
     /// <returns>A mod reference for a virtual mod.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="modinfo"/> is <see langword="null"/>.</exception>
-    public static IModReference CreateVirtualModIdentifier(ModinfoData modinfo)
+    public static IModReference CreateVirtualModIdentifier(IModinfo modinfo)
     {
         if (modinfo == null) 
             throw new ArgumentNullException(nameof(modinfo));
@@ -49,7 +52,7 @@ public static class ModReferenceBuilder
     /// Creates an enumerable collection of mod references from the specified <see cref="ModinfoFinderCollection"/>.
     /// </summary>
     /// <remarks>
-    /// The mod references and their respective identifiers are created based on sections I.4 and III.2.4 from the modinfo specification.
+    /// The mod references and their respective identifiers are created based on sections I.4 and III.2.4 of the modinfo specification.
     /// <br/>
     /// This method does not sanity check the collection's location against <paramref name="locationKind"/>,
     /// except that <see cref="ModLocationKind.SteamWorkshops"/> requires the directory name to be convertible into a Steam Workshops ID. 
