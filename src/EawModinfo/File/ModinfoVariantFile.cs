@@ -22,7 +22,7 @@ public sealed class ModinfoVariantFile : ModinfoFile
     /// <inheritdoc/>
     public override ModinfoFileKind FileKind => ModinfoFileKind.VariantFile;
 
-    internal override IModFileNameValidator FileNameValidator => new Validator();
+    internal override IModinfoFileNameValidator FileNameValidator => new Validator();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ModinfoVariantFile"/> class with the specified file handle.
@@ -49,7 +49,7 @@ public sealed class ModinfoVariantFile : ModinfoFile
     }
 
     /// <summary>
-    /// nitializes a new instance of the <see cref="ModinfoVariantFile"/> class with the specified file handle on optional modinfo data.
+    /// Initializes a new instance of the <see cref="ModinfoVariantFile"/> class with the specified file handle on optional modinfo data.
     /// </summary>
     /// <remarks>
     /// If <paramref name="mainModinfoData"/> is not <see langword="null"/>, the deserialized modinfo of this file will inherit
@@ -87,7 +87,7 @@ public sealed class ModinfoVariantFile : ModinfoFile
         return data.MergeInto(_mainModinfoData);
     }
 
-    private class Validator : IModFileNameValidator
+    private class Validator : IModinfoFileNameValidator
     {
         public bool Validate(string fileName, out string error)
         {

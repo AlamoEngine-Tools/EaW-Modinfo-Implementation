@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
@@ -97,5 +98,11 @@ internal static class TestUtilities
             AllowTrailingCommas = true,
             CommentHandling = JsonCommentHandling.Skip
         })!, type);
+    }
+
+    public static bool GetRandomBool()
+    {
+        var random = new Random();
+        return random.Next() % 2 == 0;
     }
 }

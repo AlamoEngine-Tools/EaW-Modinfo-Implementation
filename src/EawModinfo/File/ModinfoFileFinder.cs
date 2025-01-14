@@ -25,15 +25,10 @@ public static class ModinfoFileFinder
             throw new ArgumentNullException(nameof(directory));
         if (!directory.Exists)
             throw new DirectoryNotFoundException($"Directory could not be found at '{directory.FullName}'");
-        return FindCore(directory);
-    }
 
-    private static ModinfoFinderCollection FindCore(IDirectoryInfo directory)
-    {
         var mainModinfoFile = FindMainModinfoFileCore(directory);
-        var variantFiles = new List<ModinfoVariantFile>(FindModinfoVariantFilesCore(directory, mainModinfoFile));
-        
-        return new ModinfoFinderCollection(directory, mainModinfoFile, variantFiles);
+
+        return new ModinfoFinderCollection(directory, mainModinfoFile, FindModinfoVariantFilesCore(directory, mainModinfoFile));
     }
 
     private static MainModinfoFile? FindMainModinfoFileCore(IDirectoryInfo directory)

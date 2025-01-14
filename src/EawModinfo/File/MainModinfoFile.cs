@@ -17,7 +17,7 @@ public sealed class MainModinfoFile : ModinfoFile
     /// <inheritdoc/>
     public override ModinfoFileKind FileKind => ModinfoFileKind.MainFile;
 
-    internal override IModFileNameValidator FileNameValidator => new Validator();
+    internal override IModinfoFileNameValidator FileNameValidator => new Validator();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MainModinfoFile"/> class with the specified file handle.
@@ -28,7 +28,7 @@ public sealed class MainModinfoFile : ModinfoFile
     {
     }
         
-    private class Validator : IModFileNameValidator
+    private class Validator : IModinfoFileNameValidator
     {
         public bool Validate(string fileName, out string error)
         {

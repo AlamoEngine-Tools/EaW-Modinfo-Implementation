@@ -35,6 +35,8 @@ public sealed class ModReferenceEqualityComparer : IEqualityComparer<IModReferen
     /// <inheritdoc />
     public int GetHashCode(IModReference obj)
     {
+        if (obj is null)
+            throw new ArgumentNullException(nameof(obj));
         return HashCode.Combine(obj.Identifier.ToUpperInvariant(), obj.Type);
     }
 }

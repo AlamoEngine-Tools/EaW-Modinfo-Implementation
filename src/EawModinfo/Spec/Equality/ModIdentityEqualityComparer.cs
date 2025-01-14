@@ -23,16 +23,18 @@ public sealed class ModIdentityEqualityComparer : IEqualityComparer<IModIdentity
     private readonly StringComparer _stringComparison;
 
     /// <summary>
-    /// Creates a new <see cref="IModIdentity"/> equality comparer.
+    /// Initializes a new instance of the <see cref="ModIdentityEqualityComparer"/>
+    /// with the specified triggers to include version and dependency checks and the specified string comparer.
     /// </summary>
     /// <param name="includeVersion">Shall the versions get compared. When both versions are <see langword="null"/> the comparison matches</param>
     /// <param name="includeDependencies">Shall dependencies get compared.</param>
     /// <param name="stringComparison">Comparison mod for name equality.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="stringComparison"/> is <see langword="null"/>.</exception>
     public ModIdentityEqualityComparer(bool includeVersion, bool includeDependencies, StringComparer stringComparison)
     {
         _includeVersion = includeVersion;
         _includeDependencies = includeDependencies;
-        _stringComparison = stringComparison;
+        _stringComparison = stringComparison ?? throw new ArgumentNullException(nameof(stringComparison));
     }
 
     /// <inheritdoc/>
@@ -65,6 +67,8 @@ public sealed class ModIdentityEqualityComparer : IEqualityComparer<IModIdentity
     /// <inheritdoc/>
     public int GetHashCode(IModIdentity obj)
     {
+        if (obj is null)
+            throw new ArgumentNullException(nameof(obj));
         var hashCode = new HashCode();
         hashCode.Add(obj.Name, _stringComparison);
         if (_includeVersion)

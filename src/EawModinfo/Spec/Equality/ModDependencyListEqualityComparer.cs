@@ -34,6 +34,8 @@ public sealed class ModDependencyListEqualityComparer : IEqualityComparer<IModDe
     /// <inheritdoc />
     public int GetHashCode(IModDependencyList obj)
     {
+        if (obj is null)
+            throw new ArgumentNullException(nameof(obj));
         var hashCode = new HashCode();
         hashCode.Add(obj.ResolveLayout);
         foreach (var modRef in obj)

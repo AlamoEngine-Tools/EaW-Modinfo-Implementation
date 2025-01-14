@@ -101,7 +101,6 @@ public static class ModReferenceBuilder
         return result;
     }
 
-
     private static DetectedModReference CreateDetectedModReference(
         IDirectoryInfo modDir,
         ModLocationKind locationKind,
