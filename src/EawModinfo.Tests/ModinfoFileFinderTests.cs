@@ -125,24 +125,6 @@ public class ModinfoFileFinderTests
             _fileSystem.File.WriteAllText(filePath, fileData);
             return path;
         });
-    }    
-    
-    private void CreateScenario10_MultipleMainModinfoFiles_Linux()
-    {
-        CreateScenario(2, () =>
-        {
-            const string path = "scenario10";
-            const string fileData = @"{
-	""name"": ""testmod""
-}";
-            
-            _fileSystem.Directory.CreateDirectory(path);
-            _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(path, "MoDInfO.json"), fileData);
-            _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(path, "modinfo.json"), fileData);
-            _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(path, "modinfo.JSON"), fileData);
-            _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(path, "MODINFO.json"), fileData);
-            return path;
-        });
     }
 
     private void CreateScenario3_WithNoValidModinfoFiles()
@@ -300,6 +282,24 @@ public class ModinfoFileFinderTests
             _fileSystem.File.WriteAllText(mainFilePath, mainFileData);
             _fileSystem.File.WriteAllText(variantFilePath, variantFileData);
 
+            return path;
+        });
+    }
+
+    private void CreateScenario10_MultipleMainModinfoFiles_Linux()
+    {
+        CreateScenario(10, () =>
+        {
+            const string path = "scenario10";
+            const string fileData = @"{
+	""name"": ""testmod""
+}";
+
+            _fileSystem.Directory.CreateDirectory(path);
+            _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(path, "MoDInfO.json"), fileData);
+            _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(path, "modinfo.json"), fileData);
+            _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(path, "modinfo.JSON"), fileData);
+            _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(path, "MODINFO.json"), fileData);
             return path;
         });
     }
