@@ -1,5 +1,6 @@
 # EaW-Modinfo-Implementation
 
+[![Nuget](https://img.shields.io/nuget/v/AlamoEngineTools.Modinfo)](https://www.nuget.org/packages/AlamoEngineTools.Modinfo/) 
 [![CI/CD Master](https://github.com/AlamoEngine-Tools/EaW-Modinfo-Implementation/actions/workflows/release.yml/badge.svg)](https://github.com/AlamoEngine-Tools/EaW-Modinfo-Implementation/actions/workflows/release.yml)
 
 C# implementation for the [EaW Modinfo Specification](https://github.com/AlamoEngine-Tools/eaw.modinfo)

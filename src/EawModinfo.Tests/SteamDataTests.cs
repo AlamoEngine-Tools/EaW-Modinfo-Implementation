@@ -4,12 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
-using EawModinfo.Model;
-using EawModinfo.Model.Json.Schema;
-using EawModinfo.Spec.Steam;
+using AET.Modinfo.Model;
+using AET.Modinfo.Model.Json.Schema;
+using AET.Modinfo.Spec.Steam;
 using Xunit;
 
-namespace EawModinfo.Tests;
+namespace AET.Modinfo.Tests;
 
 public class SteamDataTests
 {
@@ -32,11 +32,11 @@ public class SteamDataTests
     public void Parse_Throws(string data, IList<string> expectedErrorKeys)
     {
             Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.SteamData));
-            Assert.Throws<ModinfoParseException>(() => SteamData.Parse(data));
-            Assert.Throws<ModinfoParseException>(() => SteamData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data))));
+            Assert.Throws<ModinfoParseException>((Func<object?>)(() => SteamData.Parse(data)));
+            Assert.Throws<ModinfoParseException>((Func<object?>)(() => SteamData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)))));
 
             Assert.False(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.SteamData, out var errors));
-            Assert.Equivalent(expectedErrorKeys, errors.Select(x => x.Key), true);
+            Assert.Equivalent(expectedErrorKeys, Enumerable.Select<KeyValuePair<string, string>, string>(errors, x => x.Key), true);
     }
 
     public static IEnumerable<object[]> GetJsonData()
@@ -82,10 +82,10 @@ public class SteamDataTests
         var steamData = new SteamData("123", "Test", SteamWorkshopVisibility.Private, "Title", ["FOC"]);
 
         var data = steamData.ToJson();
-        Assert.Contains(@"""contentfolder"": ""Test""", data);
-        Assert.Contains(@"""publishedfileid"": ""123""", data);
-        Assert.Contains(@"""visibility"": 2", data);
-        Assert.Contains(@"""metadata"": """"", data);
+        Assert.Contains((string)@"""contentfolder"": ""Test""", (string?)data);
+        Assert.Contains((string)@"""publishedfileid"": ""123""", (string?)data);
+        Assert.Contains((string)@"""visibility"": 2", (string?)data);
+        Assert.Contains((string)@"""metadata"": """"", (string?)data);
 
 
         var steamDat2 = new SteamData("123", "Test", SteamWorkshopVisibility.Private, "Title", ["FOC"])
@@ -93,10 +93,10 @@ public class SteamDataTests
             Metadata = "test"
         };
         var data2 = steamDat2.ToJson();
-        Assert.Contains(@"""contentfolder"": ""Test""", data2);
-        Assert.Contains(@"""publishedfileid"": ""123""", data2);
-        Assert.Contains(@"""metadata"": ""test""", data2);
-        Assert.Contains(@"""visibility"": 2", data2);
+        Assert.Contains((string)@"""contentfolder"": ""Test""", (string?)data2);
+        Assert.Contains((string)@"""publishedfileid"": ""123""", (string?)data2);
+        Assert.Contains((string)@"""metadata"": ""test""", (string?)data2);
+        Assert.Contains((string)@"""visibility"": 2", (string?)data2);
     }
 
     [Fact]
@@ -123,7 +123,7 @@ public class SteamDataTests
     ""SinglePlayer""
   ]
 }";
-        Assert.Equal(expected, steamData.ToJson());
+        Assert.Equal(expected, (string?)steamData.ToJson());
 
         var ms = new MemoryStream();
         steamData.ToJson(ms);
@@ -156,14 +156,14 @@ public class SteamDataTests
             PreviewFile = "preview.png"
         };
 
-        Assert.Equal("Test", steamData.ContentFolder);
-        Assert.Equal("123", steamData.Id);
+        Assert.Equal((string?)"Test", (string?)steamData.ContentFolder);
+        Assert.Equal((string?)"123", (string?)steamData.Id);
         Assert.Equivalent(new List<string>{"FOC", "SinglePlayer"}, steamData.Tags, true);
-        Assert.Equal("Title", steamData.Title);
+        Assert.Equal((string?)"Title", (string?)steamData.Title);
         Assert.Equal(SteamWorkshopVisibility.Private, steamData.Visibility);
-        Assert.Equal("This is some text", steamData.Description);
-        Assert.Equal("some metadata", steamData.Metadata);
-        Assert.Equal("preview.png", steamData.PreviewFile);
+        Assert.Equal((string?)"This is some text", (string?)steamData.Description);
+        Assert.Equal((string?)"some metadata", (string?)steamData.Metadata);
+        Assert.Equal((string?)"preview.png", (string?)steamData.PreviewFile);
 
 
         var json = steamData.ToJson();
@@ -177,14 +177,14 @@ public class SteamDataTests
 
     private static void AssertSteamDataEquals(ISteamData expected, ISteamData actual)
     {
-        Assert.Equal(expected.ContentFolder, actual.ContentFolder);
-        Assert.Equal(expected.Id, actual.Id);
+        Assert.Equal((string?)expected.ContentFolder, (string?)actual.ContentFolder);
+        Assert.Equal((string?)expected.Id, (string?)actual.Id);
         Assert.Equivalent(expected.Tags, actual.Tags, true);
-        Assert.Equal(expected.Title, actual.Title);
+        Assert.Equal((string?)expected.Title, (string?)actual.Title);
         Assert.Equal(expected.Visibility, actual.Visibility);
-        Assert.Equal(expected.Description, actual.Description);
-        Assert.Equal(expected.Metadata, actual.Metadata);
-        Assert.Equal(expected.PreviewFile, actual.PreviewFile);
+        Assert.Equal((string?)expected.Description, (string?)actual.Description);
+        Assert.Equal((string?)expected.Metadata, (string?)actual.Metadata);
+        Assert.Equal((string?)expected.PreviewFile, (string?)actual.PreviewFile);
     }
 
     [Fact]

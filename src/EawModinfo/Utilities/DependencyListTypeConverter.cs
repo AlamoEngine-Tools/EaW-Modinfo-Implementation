@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using EawModinfo.Spec;
+using AET.Modinfo.Spec;
 
-namespace EawModinfo.Utilities;
+namespace AET.Modinfo.Utilities;
 
 internal class DependencyListTypeConverter : JsonConverter<IModDependencyList>
 {

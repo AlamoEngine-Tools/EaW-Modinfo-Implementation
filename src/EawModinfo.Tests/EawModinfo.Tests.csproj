@@ -2,6 +2,7 @@
 
 	<PropertyGroup>
 		<AssemblyName>AET.Modinfo.Tests</AssemblyName>
+		<RootNamespace>AET.Modinfo.Tests</RootNamespace>
 		<TargetFrameworks>net8.0</TargetFrameworks>
 		<TargetFrameworks Condition="!$([MSBuild]::IsOsUnixLike())">$(TargetFrameworks);net48</TargetFrameworks>
 		<IsPackable>false</IsPackable>

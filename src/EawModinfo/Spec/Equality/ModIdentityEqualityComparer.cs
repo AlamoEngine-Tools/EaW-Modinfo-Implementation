@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EawModinfo.Spec.Equality;
+namespace AET.Modinfo.Spec.Equality;
 
 /// <summary>
 /// Compares two <see cref="IModReference"/>.

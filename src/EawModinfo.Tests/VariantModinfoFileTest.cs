@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EawModinfo.File;
-using EawModinfo.Model;
-using EawModinfo.Spec;
+using AET.Modinfo.File;
+using AET.Modinfo.Model;
+using AET.Modinfo.Spec;
 using Semver;
 using Xunit;
 
-namespace EawModinfo.Tests;
+namespace AET.Modinfo.Tests;
 
 public class VariantModinfoFileTest : ModinfoFileTestsBase
 {
@@ -150,7 +150,7 @@ public class VariantModinfoFileTest : ModinfoFileTestsBase
             Assert.True(file.IsFileValid(out _));
             Assert.False(file.TryGetModinfo(out var modinfo));
             Assert.Null(modinfo);
-            Assert.Throws<ModinfoParseException>(() => file.GetModinfo());
+            Assert.Throws<ModinfoParseException>((Func<object?>)(() => file.GetModinfo()));
         });
         await Assert.ThrowsAsync<ModinfoParseException>(() => file.GetModinfoAsync());
     }

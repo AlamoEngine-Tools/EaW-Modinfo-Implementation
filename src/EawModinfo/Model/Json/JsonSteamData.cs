@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using EawModinfo.Spec.Steam;
-using EawModinfo.Utilities;
+using AET.Modinfo.Spec.Steam;
+using AET.Modinfo.Utilities;
 
-namespace EawModinfo.Model.Json;
+namespace AET.Modinfo.Model.Json;
 
 /// <inheritdoc/>
 internal class JsonSteamData : ISteamData

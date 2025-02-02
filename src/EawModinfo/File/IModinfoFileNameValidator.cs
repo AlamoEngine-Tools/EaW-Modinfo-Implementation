@@ -1,4 +1,4 @@
-﻿namespace EawModinfo.File;
+﻿namespace AET.Modinfo.File;
 
 internal interface IModinfoFileNameValidator
 {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EawModinfo.Spec;
+namespace AET.Modinfo.Spec;
 
 /// <summary>
 /// Flags that define which parts of a mod are localized.

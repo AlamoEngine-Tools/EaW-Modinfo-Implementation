@@ -1,4 +1,4 @@
-name: Releasing eaw.modinfo
+name: Release AET.Modinfo
 
 on:
   push:

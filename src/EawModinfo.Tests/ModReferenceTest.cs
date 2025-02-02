@@ -4,15 +4,15 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
-using EawModinfo.Model;
-using EawModinfo.Model.Json;
-using EawModinfo.Model.Json.Schema;
-using EawModinfo.Spec;
-using EawModinfo.Spec.Equality;
+using AET.Modinfo.Model;
+using AET.Modinfo.Model.Json;
+using AET.Modinfo.Model.Json.Schema;
+using AET.Modinfo.Spec;
+using AET.Modinfo.Spec.Equality;
 using Semver;
 using Xunit;
 
-namespace EawModinfo.Tests;
+namespace AET.Modinfo.Tests;
 
 public class ModReferenceTests
 {
@@ -65,7 +65,7 @@ public class ModReferenceTests
     {
         TestUtilities.Evaluate(data, EvaluationType.ModReference);
         var modReference = ModReference.Parse(data);
-        Assert.Equal(range, modReference.VersionRange);
+        Assert.Equal<SemVersionRange>(range, modReference.VersionRange);
     }
 
     [Fact]
@@ -175,11 +175,11 @@ public class ModReferenceTests
     public void Parse_Throws(string data, IList<string> expectedErrorKeys)
     {
         Assert.False(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModReference, out var errors));
-        Assert.Equivalent(expectedErrorKeys, errors.Select(x => x.Key), true);
+        Assert.Equivalent(expectedErrorKeys, Enumerable.Select<KeyValuePair<string, string>, string>(errors, x => x.Key), true);
 
         Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.ModReference));
-        Assert.Throws<ModinfoParseException>(() => ModReference.Parse(data));
-        Assert.Throws<ModinfoParseException>(() => SteamData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data))));
+        Assert.Throws<ModinfoParseException>((Func<object?>)(() => ModReference.Parse(data)));
+        Assert.Throws<ModinfoParseException>((Func<object?>)(() => SteamData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)))));
     }
 
     public static IEnumerable<object[]> GetJsonData()
@@ -202,7 +202,7 @@ public class ModReferenceTests
         Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModReference, out _));
         TestUtilities.Evaluate(data, EvaluationType.ModReference);
         var modReference = ModReference.Parse(data);
-        Assert.Equal(expectedId, modReference.Identifier);
+        Assert.Equal(expectedId, (string?)modReference.Identifier);
         Assert.Equal(expectedType, modReference.Type);
     }
 
@@ -217,8 +217,8 @@ public class ModReferenceTests
     {
         Assert.Throws<ArgumentNullException>(() => new ModReference().ToJson(null!));
         ModReference modReference = default;
-        Assert.Throws<ModinfoException>(() => modReference.ToJson());
-        Assert.Throws<ModinfoException>(() => modReference.ToJson(new MemoryStream()));
+        Assert.Throws<ModinfoException>((Func<object?>)(() => modReference.ToJson()));
+        Assert.Throws<ModinfoException>((Action)(() => modReference.ToJson(new MemoryStream())));
     }
 
     [Fact]
@@ -230,7 +230,7 @@ public class ModReferenceTests
 }";
         var modReference = new ModReference("name", ModType.Default);
         var data = modReference.ToJson();
-        Assert.Equal(expected, data);
+        Assert.Equal(expected, (string?)data);
 
         var ms = new MemoryStream();
         modReference.ToJson(ms);
@@ -247,7 +247,7 @@ public class ModReferenceTests
 }";
         var modReference = new ModReference("name", ModType.Default, SemVersionRange.Parse("*"));
         var data = modReference.ToJson();
-        Assert.Equal(expected, data);
+        Assert.Equal(expected, (string?)data);
 
         var ms = new MemoryStream();
         modReference.ToJson(ms);

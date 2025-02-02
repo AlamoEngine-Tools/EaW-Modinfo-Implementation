@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace EawModinfo.Spec;
+namespace AET.Modinfo.Spec;
 
 /// <summary>
 /// Represents a supported game language.

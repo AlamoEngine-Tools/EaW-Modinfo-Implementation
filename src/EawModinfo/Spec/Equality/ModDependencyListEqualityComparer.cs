@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EawModinfo.Spec.Equality;
+namespace AET.Modinfo.Spec.Equality;
 
 /// <summary>
 /// Compares two <see cref="IModDependencyList"/> using a deeps equals strategy.

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using EawModinfo.Spec.Steam;
+using AET.Modinfo.Spec.Steam;
 
-namespace EawModinfo.Spec;
+namespace AET.Modinfo.Spec;
 
 /// <summary>
 /// Represents structured data to provide metadata of a mod as specified in <see href="https://github.com/AlamoEngine-Tools/eaw.modinfo"/>.

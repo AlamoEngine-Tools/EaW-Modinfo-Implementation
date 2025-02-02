@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
-using EawModinfo.File;
-using EawModinfo.Model;
-using EawModinfo.Spec;
-using EawModinfo.Utilities;
+using AET.Modinfo.File;
+using AET.Modinfo.Model;
+using AET.Modinfo.Spec;
+using AET.Modinfo.Utilities;
 using Testably.Abstractions.Testing;
 using Xunit;
 
-namespace EawModinfo.Tests;
+namespace AET.Modinfo.Tests;
 
 public class ModReferenceBuilderTest
 {
@@ -21,7 +21,7 @@ public class ModReferenceBuilderTest
         var modinfo = ModinfoData.Parse(TestUtilities.MainModinfoData);
         var result = ModReferenceBuilder.CreateVirtualModIdentifier(modinfo);
 
-        Assert.Equal(modinfo.ToJson(), result.Identifier);
+        Assert.Equal((string?)modinfo.ToJson(), (string?)result.Identifier);
         Assert.Equal(ModType.Virtual, result.Type);
     }
 
@@ -137,8 +137,8 @@ public class ModReferenceBuilderTest
 
         var modinfoFinderCollection = new ModinfoFinderCollection(modDirectory, null, []);
 
-        Assert.Throws<ModinfoException>(() =>
-            ModReferenceBuilder.CreateIdentifiers(modinfoFinderCollection, ModReferenceBuilder.ModLocationKind.SteamWorkshops));
+        Assert.Throws<ModinfoException>((Func<object?>)(() =>
+            ModReferenceBuilder.CreateIdentifiers(modinfoFinderCollection, ModReferenceBuilder.ModLocationKind.SteamWorkshops)));
     }
 
     [Theory]
@@ -152,13 +152,12 @@ public class ModReferenceBuilderTest
 
         var modinfoFinderCollection = new ModinfoFinderCollection(modDirectory, null, new List<ModinfoVariantFile>());
 
-        var modReferences = ModReferenceBuilder.CreateIdentifiers(modinfoFinderCollection, locationKind)
-            .ToList();
+        var modReferences = Enumerable.ToList(ModReferenceBuilder.CreateIdentifiers(modinfoFinderCollection, locationKind));
 
         var modRef = Assert.Single(modReferences);
         if (locationKind is ModReferenceBuilder.ModLocationKind.External)
             expectedIdentifier = _fileSystem.Path.GetFullPath(expectedIdentifier);
-        Assert.Equal(expectedIdentifier, modRef.ModReference.Identifier);
+        Assert.Equal(expectedIdentifier, (string?)modRef.ModReference.Identifier);
         Assert.Equal(locationKind is ModReferenceBuilder.ModLocationKind.SteamWorkshops ? ModType.Workshops : ModType.Default, modRef.ModReference.Type);
         Assert.Null(modRef.Modinfo);
     }
@@ -180,11 +179,10 @@ public class ModReferenceBuilderTest
             CreateValidVariantFile(modDirectory, "VariantName")
         });
 
-        var modReferences = ModReferenceBuilder.CreateIdentifiers(modinfoFinderCollection, locationKind)
-            .ToList();
+        var modReferences = Enumerable.ToList(ModReferenceBuilder.CreateIdentifiers(modinfoFinderCollection, locationKind));
 
         var modRef = Assert.Single(modReferences);
-        Assert.Equal($"{expectedIdentifier}:VariantName", modRef.ModReference.Identifier);
+        Assert.Equal((string?)$"{expectedIdentifier}:VariantName", (string?)modRef.ModReference.Identifier);
         Assert.Equal(locationKind is ModReferenceBuilder.ModLocationKind.SteamWorkshops ? ModType.Workshops : ModType.Default, modRef.ModReference.Type);
         Assert.NotNull(modRef.Modinfo);
     }
@@ -220,7 +218,7 @@ public class ModReferenceBuilderTest
 
         var modinfoFinderResult = new ModinfoFinderCollection(modDir, mainModinfo, variantFiles);
 
-        var result = ModReferenceBuilder.CreateIdentifiers(modinfoFinderResult, locationKind).ToList();
+        var result = Enumerable.ToList(ModReferenceBuilder.CreateIdentifiers(modinfoFinderResult, locationKind));
 
         var expectedResults = new List<(string Identifier, ModType Type, string? Name)>();
 
@@ -261,9 +259,9 @@ public class ModReferenceBuilderTest
             if (expected.Name == null)
                 Assert.Null(actual.Modinfo);
             else
-                Assert.Equal(expected.Name, actual.Modinfo!.Name);
+                Assert.Equal(expected.Name, (string?)actual.Modinfo!.Name);
 
-            Assert.Equal(modDir.FullName, actual.Directory.FullName);
+            Assert.Equal(modDir.FullName, (string?)actual.Directory.FullName);
         }
     }
 

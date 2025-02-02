@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using EawModinfo.Model;
-using EawModinfo.Spec;
+using AET.Modinfo.Model;
+using AET.Modinfo.Spec;
 using Semver;
 using Xunit;
 
-namespace EawModinfo.Tests;
+namespace AET.Modinfo.Tests;
 
 public class EqualityTestHelpers
 {

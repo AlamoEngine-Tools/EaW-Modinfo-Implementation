@@ -1,12 +1,12 @@
 ﻿using System;
 using System.IO.Abstractions;
-using EawModinfo.Model;
-using EawModinfo.Spec;
-using EawModinfo.Utilities;
+using AET.Modinfo.Model;
+using AET.Modinfo.Spec;
+using AET.Modinfo.Utilities;
 using Testably.Abstractions.Testing;
 using Xunit;
 
-namespace EawModinfo.Tests;
+namespace AET.Modinfo.Tests;
 
 public class DetectedModReferenceTest
 {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO.Abstractions;
-using EawModinfo.Spec;
+using AET.Modinfo.Spec;
 
-namespace EawModinfo.Utilities;
+namespace AET.Modinfo.Utilities;
 
 /// <summary>
 /// Represents an information container for a mod reference with its associated directory and modinfo data.

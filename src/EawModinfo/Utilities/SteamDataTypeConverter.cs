@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using EawModinfo.Model;
-using EawModinfo.Model.Json;
-using EawModinfo.Spec.Steam;
+using AET.Modinfo.Model;
+using AET.Modinfo.Model.Json;
+using AET.Modinfo.Spec.Steam;
 
-namespace EawModinfo.Utilities;
+namespace AET.Modinfo.Utilities;
 
 internal class SteamDataTypeConverter : JsonConverter<ISteamData>
 {

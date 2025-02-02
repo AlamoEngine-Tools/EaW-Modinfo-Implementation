@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text.Json.Nodes;
 using Json.Schema;
 
-namespace EawModinfo.Model.Json.Schema;
+namespace AET.Modinfo.Model.Json.Schema;
 
 /// <summary>
 /// Provides operations to validate JSON data against the modinfo JSON schema specification.
@@ -39,7 +39,7 @@ public static class ModInfoJsonSchema
     private static JsonSchema GetSchemaFromResource(string schema)
     {
         using var resourceStream = typeof(ModInfoJsonSchema)
-            .Assembly.GetManifestResourceStream($"EawModinfo.Resources.Schemas._3._0._0.{schema}");
+            .Assembly.GetManifestResourceStream($"AET.Modinfo.Resources.Schemas._3._0._0.{schema}");
 
         Debug.Assert(resourceStream is not null);
         return JsonSchema.FromStream(resourceStream!).GetAwaiter().GetResult();

@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
-using EawModinfo.Spec;
+using AET.Modinfo.Spec;
 using Testably.Abstractions.Testing;
 using Xunit;
 
-namespace EawModinfo.Tests;
+namespace AET.Modinfo.Tests;
 
 public abstract class ModinfoFileTestsBase
 {

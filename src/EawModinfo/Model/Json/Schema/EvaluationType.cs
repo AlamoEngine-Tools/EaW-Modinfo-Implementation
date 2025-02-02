@@ -1,4 +1,4 @@
-﻿namespace EawModinfo.Model.Json.Schema;
+﻿namespace AET.Modinfo.Model.Json.Schema;
 
 /// <summary>
 /// Specifies which schema to use for modinfo JSON validation.

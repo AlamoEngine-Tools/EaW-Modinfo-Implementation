@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using System.Linq;
-using EawModinfo.File;
+using AET.Modinfo.File;
 
-namespace EawModinfo.Spec;
+namespace AET.Modinfo.Spec;
 
 /// <summary>
 /// Represents the result when a modinfo file query was performed.

@@ -1,7 +1,7 @@
 ﻿using System;
 using Semver;
 
-namespace EawModinfo.Spec;
+namespace AET.Modinfo.Spec;
 
 /// <summary>
 /// Represents a reference to a mod which can be used to describe a dependency. 

@@ -1,4 +1,4 @@
-﻿namespace EawModinfo.Spec;
+﻿namespace AET.Modinfo.Spec;
 
 /// <summary>
 /// Defines how a dependency list shall get interpreted and processed.

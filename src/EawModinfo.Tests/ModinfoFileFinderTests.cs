@@ -1,13 +1,14 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using EawModinfo.File;
+using AET.Modinfo.File;
 using Testably.Abstractions.Testing;
 using Xunit;
 
-namespace EawModinfo.Tests;
+namespace AET.Modinfo.Tests;
 
 public class ModinfoFileFinderTests
 {
@@ -68,7 +69,7 @@ public class ModinfoFileFinderTests
         var result = ModinfoFileFinder.FindModinfoFiles(scenarioPath);
 
         Assert.True(result.HasMainModinfoFile);
-        Assert.Equal("modinfo.json", result.MainModinfo.File.Name);
+        Assert.Equal((string?)"modinfo.json", (string?)result.MainModinfo.File.Name);
         Assert.Empty(result.Variants);
     }
 

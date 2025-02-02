@@ -8,6 +8,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
 		<AssemblyName>AET.Modinfo</AssemblyName>
+		<RootNamespace>AET.Modinfo</RootNamespace>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 	</PropertyGroup>
 
