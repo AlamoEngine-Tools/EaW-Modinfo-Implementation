@@ -2,12 +2,12 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-using EawModinfo.Model.Json;
-using EawModinfo.Spec;
-using EawModinfo.Spec.Equality;
-using EawModinfo.Utilities;
+using AET.Modinfo.Model.Json;
+using AET.Modinfo.Spec;
+using AET.Modinfo.Spec.Equality;
+using AET.Modinfo.Utilities;
 
-namespace EawModinfo.Model;
+namespace AET.Modinfo.Model;
 
 /// <inheritdoc cref="ILanguageInfo"/>
 public sealed class LanguageInfo : ILanguageInfo, IEquatable<LanguageInfo>

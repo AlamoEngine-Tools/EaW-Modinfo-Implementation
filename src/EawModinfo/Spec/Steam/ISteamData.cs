@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace EawModinfo.Spec.Steam;
+namespace AET.Modinfo.Spec.Steam;
 
 /// <summary>
 /// Represents the data structure used by the Steam workshops uploader for submitting mods and updates.

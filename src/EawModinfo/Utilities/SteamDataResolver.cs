@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace EawModinfo.Utilities;
+namespace AET.Modinfo.Utilities;
 
 internal class NullToEmptyStringSerializerConverter : JsonConverter<string?>
 {

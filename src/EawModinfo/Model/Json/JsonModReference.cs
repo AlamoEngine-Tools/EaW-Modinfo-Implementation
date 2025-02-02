@@ -2,12 +2,12 @@
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using EawModinfo.Spec;
-using EawModinfo.Spec.Equality;
-using EawModinfo.Utilities;
+using AET.Modinfo.Spec;
+using AET.Modinfo.Spec.Equality;
+using AET.Modinfo.Utilities;
 using Semver;
 
-namespace EawModinfo.Model.Json;
+namespace AET.Modinfo.Model.Json;
 
 internal class JsonModReference : IModReference
 {

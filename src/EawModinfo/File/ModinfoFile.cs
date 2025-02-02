@@ -2,11 +2,11 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using System.Threading.Tasks;
-using EawModinfo.Model;
-using EawModinfo.Spec;
-using EawModinfo.Utilities;
+using AET.Modinfo.Model;
+using AET.Modinfo.Spec;
+using AET.Modinfo.Utilities;
 
-namespace EawModinfo.File;
+namespace AET.Modinfo.File;
 
 /// <summary>
 /// Provides the base class for both <see cref="MainModinfoFile"/> and <see cref="ModinfoVariantFile"/> objects.

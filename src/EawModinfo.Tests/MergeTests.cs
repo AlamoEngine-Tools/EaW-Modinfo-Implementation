@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using EawModinfo.Model;
-using EawModinfo.Model.Json;
-using EawModinfo.Spec;
-using EawModinfo.Spec.Steam;
-using EawModinfo.Utilities;
+using AET.Modinfo.Model;
+using AET.Modinfo.Model.Json;
+using AET.Modinfo.Spec;
+using AET.Modinfo.Spec.Steam;
+using AET.Modinfo.Utilities;
 using Semver;
 using Xunit;
 
-namespace EawModinfo.Tests;
+namespace AET.Modinfo.Tests;
 
 public class MergeTests
 {
@@ -35,25 +35,25 @@ public class MergeTests
 
         var newData = variantData.MergeInto(mainData);
 
-        Assert.Equal(variantData.Name, newData.Name);
-        Assert.Equal(mainData.Icon, newData.Icon);
-        Assert.Equal(mainData.Summary, newData.Summary);
+        Assert.Equal((string?)variantData.Name, (string?)newData.Name);
+        Assert.Equal((string?)mainData.Icon, (string?)newData.Icon);
+        Assert.Equal((string?)mainData.Summary, (string?)newData.Summary);
         Assert.Equal(2, newData.Languages.Count); // As stated by the specification in III.3.2, languages was not explicitly set.
         Assert.True(newData.LanguagesExplicitlySet);
-        Assert.Equal(LanguageInfo.Default, newData.Languages.First());
+        Assert.Equal(LanguageInfo.Default, Enumerable.First(newData.Languages));
         Assert.Equal(2, newData.Dependencies.Count);
-        Assert.Equal("bla", newData.Dependencies[0].Identifier);
+        Assert.Equal((string?)"bla", (string?)newData.Dependencies[0].Identifier);
         Assert.NotNull(newData.SteamData);
-        Assert.Equal(mainData.SteamData!.Id, newData.SteamData?.Id);
-        Assert.Equal(mainData.SteamData!.Title, newData.SteamData?.Title);
+        Assert.Equal((string?)mainData.SteamData!.Id, (string?)newData.SteamData?.Id);
+        Assert.Equal((string?)mainData.SteamData!.Title, (string?)newData.SteamData?.Title);
         Assert.Single(newData.Custom);
         Assert.Equal(new SemVersion(1, 2, 2), newData.Version);
         Assert.Equal(mainData.Version, newData.Version);
 
 
         var invalid = new InvalidModinfo();
-        Assert.Throws<ModinfoException>(() => invalid.MergeInto(newData));
-        Assert.Throws<ModinfoException>(() => newData.MergeInto(invalid));
+        Assert.Throws<ModinfoException>((Func<object?>)(() => invalid.MergeInto(newData)));
+        Assert.Throws<ModinfoException>((Func<object?>)(() => newData.MergeInto(invalid)));
     }
 
     [Fact]
@@ -87,23 +87,23 @@ public class MergeTests
 
         var newData = variantData.MergeInto(mainData);
 
-        Assert.Equal(variantData.Name, newData.Name);
-        Assert.Equal(variantData.Icon, newData.Icon);
-        Assert.Equal(variantData.Summary, newData.Summary);
+        Assert.Equal((string?)variantData.Name, (string?)newData.Name);
+        Assert.Equal((string?)variantData.Icon, (string?)newData.Icon);
+        Assert.Equal((string?)variantData.Summary, (string?)newData.Summary);
         Assert.Equal(2, newData.Languages.Count);
         Assert.True(newData.LanguagesExplicitlySet);
         Assert.Equal(2, newData.Dependencies.Count);
-        Assert.Equal("bar", newData.Dependencies[0].Identifier);
+        Assert.Equal((string?)"bar", (string?)newData.Dependencies[0].Identifier);
         Assert.NotNull(newData.SteamData);
-        Assert.Equal(variantData.SteamData!.Id, newData.SteamData?.Id);
-        Assert.Equal(variantData.SteamData!.Title, newData.SteamData?.Title);
+        Assert.Equal((string?)variantData.SteamData!.Id, (string?)newData.SteamData?.Id);
+        Assert.Equal((string?)variantData.SteamData!.Title, (string?)newData.SteamData?.Title);
         Assert.Equal(new SemVersion(9, 9, 9), newData.Version);
         Assert.Equal(variantData.Version, newData.Version);
 
 
         var invalid = new InvalidModinfo();
-        Assert.Throws<ModinfoException>(() => invalid.MergeInto(newData));
-        Assert.Throws<ModinfoException>(() => newData.MergeInto(invalid));
+        Assert.Throws<ModinfoException>((Func<object?>)(() => invalid.MergeInto(newData)));
+        Assert.Throws<ModinfoException>((Func<object?>)(() => newData.MergeInto(invalid)));
     }
 
     [Fact]
@@ -131,9 +131,9 @@ public class MergeTests
 
         Assert.Equal(3, newData.Custom.Count);
 
-        Assert.Equal("value1", newData.Custom["key1"]);
-        Assert.Equal(2, newData.Custom["key2"]); // Value should be 2 as specified in III.3.2
-        Assert.Equal("value3", newData.Custom["key3"]);
+        Assert.Equal<object>("value1", newData.Custom["key1"]);
+        Assert.Equal<object>(2, newData.Custom["key2"]); // Value should be 2 as specified in III.3.2
+        Assert.Equal<object>("value3", newData.Custom["key3"]);
     }
 
     [Fact]

@@ -4,13 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using EawModinfo.Spec;
-using EawModinfo.Spec.Equality;
-using EawModinfo.Spec.Steam;
-using EawModinfo.Utilities;
+using AET.Modinfo.Spec;
+using AET.Modinfo.Spec.Equality;
+using AET.Modinfo.Spec.Steam;
+using AET.Modinfo.Utilities;
 using Semver;
 
-namespace EawModinfo.Model.Json;
+namespace AET.Modinfo.Model.Json;
 
 /// <inheritdoc/>
 internal class JsonModinfoData : IModinfo

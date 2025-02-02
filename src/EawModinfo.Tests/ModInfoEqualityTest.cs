@@ -1,10 +1,10 @@
-using EawModinfo.Model;
-using EawModinfo.Spec;
-using EawModinfo.Spec.Equality;
+using AET.Modinfo.Model;
+using AET.Modinfo.Spec;
+using AET.Modinfo.Spec.Equality;
 using Semver;
 using Xunit;
 
-namespace EawModinfo.Tests;
+namespace AET.Modinfo.Tests;
 
 public class ModInfoEqualityTest : ModIdentityEqualityTestsBase<ModinfoData>
 {

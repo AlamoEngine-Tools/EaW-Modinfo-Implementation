@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EawModinfo;
+namespace AET.Modinfo;
 
 /// <summary>
 /// The exception that is thrown when an operation involving modinfo data fails.

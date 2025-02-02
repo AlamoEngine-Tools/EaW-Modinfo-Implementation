@@ -1,4 +1,4 @@
-﻿namespace EawModinfo.Spec.Steam;
+﻿namespace AET.Modinfo.Spec.Steam;
 
 /// <summary>
 /// Possible visibility states that a Workshop item can be in.

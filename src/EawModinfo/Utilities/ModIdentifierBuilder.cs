@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Abstractions;
 using System.Text;
-using EawModinfo.Model;
-using EawModinfo.Spec;
+using AET.Modinfo.Model;
+using AET.Modinfo.Spec;
 
-namespace EawModinfo.Utilities;
+namespace AET.Modinfo.Utilities;
 
 /// <summary>
 /// Provides the methods to generate mod identifiers. 

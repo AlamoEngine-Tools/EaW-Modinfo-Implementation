@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
-using EawModinfo.Spec;
+using AET.Modinfo.Spec;
 #if NETSTANDARD2_1
 using System.Runtime.InteropServices;
 #endif
 
-namespace EawModinfo.File;
+namespace AET.Modinfo.File;
 
 /// <summary>
 /// Provides a method to searches a directory for modinfo files.

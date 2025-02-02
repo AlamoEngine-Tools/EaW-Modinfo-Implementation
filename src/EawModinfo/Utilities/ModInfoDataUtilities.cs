@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EawModinfo.Model;
-using EawModinfo.Spec;
+using AET.Modinfo.Model;
+using AET.Modinfo.Spec;
 
-namespace EawModinfo.Utilities;
+namespace AET.Modinfo.Utilities;
 
 /// <summary>
 /// Provides various utilities for an <see cref="IModinfo"/>.

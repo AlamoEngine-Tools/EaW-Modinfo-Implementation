@@ -2,15 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using EawModinfo.Model;
-using EawModinfo.Model.Json;
-using EawModinfo.Spec;
-using EawModinfo.Spec.Steam;
-using EawModinfo.Utilities;
+using AET.Modinfo.Model;
+using AET.Modinfo.Model.Json;
+using AET.Modinfo.Spec;
+using AET.Modinfo.Spec.Steam;
+using AET.Modinfo.Utilities;
 using Semver;
 using Xunit;
 
-namespace EawModinfo.Tests;
+namespace AET.Modinfo.Tests;
 
 public class ModinfoValidatorTests
 {
@@ -119,14 +119,14 @@ public class ModinfoValidatorTests
     [MemberData(nameof(GetModinfo))]
     public void Validate(IModinfo modinfo)
     {
-        Assert.Null(Record.Exception(modinfo.Validate));
+        Assert.Null(Record.Exception((Action)modinfo.Validate));
     }
 
     [Theory]
     [MemberData(nameof(GetInvalidModinfo))]
     public void Validate_ThrowsModinfoException(IModinfo modinfo)
     {
-        Assert.Throws<ModinfoException>(modinfo.Validate);
+        Assert.Throws<ModinfoException>((Action)modinfo.Validate);
     }
 
 
@@ -230,7 +230,7 @@ public class ModinfoValidatorTests
     [MemberData(nameof(GetInvalidSteamIDs))]
     public void Validate_SteamData(ISteamData steamData, bool shallThrow)
     {
-        var e = Record.Exception(steamData.Validate);
+        var e = Record.Exception((Action)steamData.Validate);
         if (shallThrow)
             Assert.IsType<ModinfoException>(e);
         else
@@ -241,7 +241,7 @@ public class ModinfoValidatorTests
     [MemberData(nameof(GetInvalidSteamIDs))]
     public void ValidateSteamWorkshopsId(ISteamData steamData, bool shallThrow)
     {
-        var e = Record.Exception(() => ModinfoValidator.ValidateSteamWorkshopsId(steamData.Id));
+        var e = Record.Exception((Action)(() => ModinfoValidator.ValidateSteamWorkshopsId(steamData.Id)));
         if (shallThrow)
             Assert.IsType<ModinfoException>(e);
         else
@@ -291,9 +291,9 @@ public class ModinfoValidatorTests
     public void Validate_ModReference(IModReference modReference, bool shallThrow)
     {
         if (!shallThrow)
-            Assert.Null(Record.Exception(modReference.Validate));
+            Assert.Null(Record.Exception((Action)modReference.Validate));
         else
-            Assert.Throws<ModinfoException>(modReference.Validate);
+            Assert.Throws<ModinfoException>((Action)modReference.Validate);
     }
 
 
@@ -326,9 +326,9 @@ public class ModinfoValidatorTests
     public void Validate_Language(ILanguageInfo info, bool shallThrow)
     {
         if (!shallThrow)
-            Assert.Null(Record.Exception(info.Validate));
+            Assert.Null(Record.Exception((Action)info.Validate));
         else
-            Assert.Throws<ModinfoException>(info.Validate);
+            Assert.Throws<ModinfoException>((Action)info.Validate);
     }
 
     private class CustomModinfo(string name) : IModinfo

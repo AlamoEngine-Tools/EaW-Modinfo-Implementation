@@ -1,7 +1,7 @@
 using System;
 using Xunit;
 
-namespace EawModinfo.Tests;
+namespace AET.Modinfo.Tests;
 
 public static class ModinfoParseExceptionTests
 {

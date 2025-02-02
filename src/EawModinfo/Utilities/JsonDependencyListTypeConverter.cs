@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using EawModinfo.Model.Json;
-using EawModinfo.Spec;
+using AET.Modinfo.Model.Json;
+using AET.Modinfo.Spec;
 
-namespace EawModinfo.Utilities;
+namespace AET.Modinfo.Utilities;
 
 internal class JsonDependencyListTypeConverter : JsonConverter<JsonDependencyList>
 {

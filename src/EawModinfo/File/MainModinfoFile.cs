@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO.Abstractions;
-using EawModinfo.Spec;
+using AET.Modinfo.Spec;
 
-namespace EawModinfo.File;
+namespace AET.Modinfo.File;
 
 /// <summary>
 /// Represents a main "modinfo.json" file.

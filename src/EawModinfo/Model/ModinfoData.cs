@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using EawModinfo.Model.Json;
-using EawModinfo.Spec;
-using EawModinfo.Spec.Equality;
-using EawModinfo.Spec.Steam;
-using EawModinfo.Utilities;
+using AET.Modinfo.Model.Json;
+using AET.Modinfo.Spec;
+using AET.Modinfo.Spec.Equality;
+using AET.Modinfo.Spec.Steam;
+using AET.Modinfo.Utilities;
 using Semver;
 
-namespace EawModinfo.Model;
+namespace AET.Modinfo.Model;
 
 /// <inheritdoc cref="IModinfo"/>
 public sealed class ModinfoData : IModinfo

@@ -1,10 +1,10 @@
 using System;
-using EawModinfo.File;
-using EawModinfo.Spec;
+using AET.Modinfo.File;
+using AET.Modinfo.Spec;
 using Testably.Abstractions.Testing;
 using Xunit;
 
-namespace EawModinfo.Tests;
+namespace AET.Modinfo.Tests;
 
 public class ModinfoFinderCollectionTests
 {
@@ -19,7 +19,7 @@ public class ModinfoFinderCollectionTests
         Assert.NotNull(collection.MainModinfo);
         Assert.Empty(collection.Variants);
         Assert.False(collection.HasVariantModinfoFiles);
-        Assert.Equal(_fileSystem.DirectoryInfo.New("mods/A").FullName, collection.Directory.FullName);
+        Assert.Equal(_fileSystem.DirectoryInfo.New("mods/A").FullName, (string?)collection.Directory.FullName);
     }
 
     [Fact]

@@ -1,4 +1,4 @@
-﻿namespace EawModinfo.Spec;
+﻿namespace AET.Modinfo.Spec;
 
 /// <summary>
 /// Represents the possible locations of mod instance. 

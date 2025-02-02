@@ -1,9 +1,9 @@
 using System;
-using EawModinfo.File;
-using EawModinfo.Spec;
+using AET.Modinfo.File;
+using AET.Modinfo.Spec;
 using Xunit;
 
-namespace EawModinfo.Tests;
+namespace AET.Modinfo.Tests;
 
 public class MainModinfoFileTest : ModinfoFileTestsBase
 {

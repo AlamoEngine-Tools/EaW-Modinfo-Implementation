@@ -1,10 +1,10 @@
 using System;
-using EawModinfo.Spec;
-using EawModinfo.Spec.Equality;
+using AET.Modinfo.Spec;
+using AET.Modinfo.Spec.Equality;
 using Semver;
 using Xunit;
 
-namespace EawModinfo.Tests;
+namespace AET.Modinfo.Tests;
 
 public abstract class ModIdentityEqualityTestsBase<T> where T : IModIdentity
 {

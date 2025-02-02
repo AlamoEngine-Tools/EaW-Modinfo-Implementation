@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EawModinfo;
+namespace AET.Modinfo;
 
 /// <summary>
 /// Exceptions which gets thrown when parsing modinfo data fails, based on the available specification.

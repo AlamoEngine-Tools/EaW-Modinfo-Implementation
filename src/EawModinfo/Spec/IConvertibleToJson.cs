@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace EawModinfo.Spec;
+namespace AET.Modinfo.Spec;
 
 /// <summary>
 /// Indicates that an instance of the interface can be converted to JSON data

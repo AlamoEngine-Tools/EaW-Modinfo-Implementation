@@ -1,4 +1,4 @@
-﻿namespace EawModinfo.Spec;
+﻿namespace AET.Modinfo.Spec;
 
 /// <summary>
 /// Defines the type for a <see cref="IModinfoFile"/>.

@@ -1,7 +1,7 @@
-﻿using Semver;
-using System;
+﻿using System;
+using Semver;
 
-namespace EawModinfo.Utilities;
+namespace AET.Modinfo.Utilities;
 
 internal static class SemVerHelper
 {

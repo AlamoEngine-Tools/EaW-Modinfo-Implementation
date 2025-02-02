@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using EawModinfo.Spec;
-using EawModinfo.Spec.Equality;
+using AET.Modinfo.Spec;
+using AET.Modinfo.Spec.Equality;
 using Semver;
 
-namespace EawModinfo.Model;
+namespace AET.Modinfo.Model;
 
 /// <inheritdoc cref="IModIdentity"/> 
 public sealed class ModIdentity : IModIdentity, IEquatable<ModIdentity>

@@ -1,7 +1,7 @@
 ﻿using System;
 using Semver;
 
-namespace EawModinfo.Spec;
+namespace AET.Modinfo.Spec;
 
 /// <summary>
 /// Represents the minimal data that is required to uniquely identify a mod.

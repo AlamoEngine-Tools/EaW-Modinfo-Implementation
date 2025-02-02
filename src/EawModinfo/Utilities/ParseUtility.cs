@@ -1,15 +1,15 @@
-﻿using System.Linq;
-using System.Text.Json.Nodes;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
-using EawModinfo.Model.Json;
-using EawModinfo.Model.Json.Schema;
-using EawModinfo.Spec;
+using AET.Modinfo.Model.Json;
+using AET.Modinfo.Model.Json.Schema;
+using AET.Modinfo.Spec;
 
-namespace EawModinfo.Utilities;
+namespace AET.Modinfo.Utilities;
 
 internal static class ParseUtility
 {

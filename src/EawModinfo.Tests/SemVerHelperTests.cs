@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using EawModinfo.Utilities;
+using AET.Modinfo.Utilities;
 using Semver;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EawModinfo.Tests;
+namespace AET.Modinfo.Tests;
 
 public class SemVerHelperTests(ITestOutputHelper output)
 {

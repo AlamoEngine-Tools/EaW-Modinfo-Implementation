@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
-using System.Text.Json.Nodes;
 using System.Text.Json;
-using EawModinfo.Model.Json.Schema;
+using System.Text.Json.Nodes;
+using AET.Modinfo.Model.Json.Schema;
 using Testably.Abstractions.Testing;
 
-namespace EawModinfo.Tests;
+namespace AET.Modinfo.Tests;
 
 internal static class TestUtilities
 {

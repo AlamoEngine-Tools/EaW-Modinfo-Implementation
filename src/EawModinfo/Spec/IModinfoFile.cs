@@ -2,7 +2,7 @@
 using System.IO.Abstractions;
 using System.Threading.Tasks;
 
-namespace EawModinfo.Spec;
+namespace AET.Modinfo.Spec;
 
 /// <summary>
 /// Represents a file handle represents a modinfo file on the filesystem.

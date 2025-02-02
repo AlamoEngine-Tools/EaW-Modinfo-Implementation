@@ -1,8 +1,8 @@
 using System;
-using EawModinfo.Spec.Equality;
+using AET.Modinfo.Spec.Equality;
 using Xunit;
 
-namespace EawModinfo.Tests;
+namespace AET.Modinfo.Tests;
 
 public class EqualityComparerTest
 {

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using EawModinfo.Spec;
-using EawModinfo.Spec.Steam;
+using AET.Modinfo.Spec;
+using AET.Modinfo.Spec.Steam;
 
-namespace EawModinfo.Utilities;
+namespace AET.Modinfo.Utilities;
 
 /// <summary>
 /// Provides validation methods for data types defined by the modinfo specification.
