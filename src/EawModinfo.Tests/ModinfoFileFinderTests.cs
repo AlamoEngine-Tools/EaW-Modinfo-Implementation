@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using EawModinfo.File;
 using Testably.Abstractions.Testing;
 using Xunit;
@@ -32,6 +33,10 @@ public class ModinfoFileFinderTests
         CreateScenario7_WithInvalidMainModinfo();
         CreateScenario8_WithMainModinfoAndInvalidVariant();
         CreateScenario9_WithInvalidMainModinfoAndValidVariant();
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            CreateScenario10_MultipleMainModinfoFiles_Linux();
+        }
     }
 
     [Theory]
@@ -51,6 +56,20 @@ public class ModinfoFileFinderTests
 
         Assert.Equal(hasMain, result.HasMainModinfoFile);
         Assert.Equal(numberVariants, result.Variants.Count);
+    }
+
+    [Fact]
+    public void FindModinfoFiles_CreateScenario10_MultipleMainModinfoFiles_Linux()
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            return;
+
+        var scenarioPath = _fileSystem.DirectoryInfo.New(_scenarioPaths[10]);
+        var result = ModinfoFileFinder.FindModinfoFiles(scenarioPath);
+
+        Assert.True(result.HasMainModinfoFile);
+        Assert.Equal("modinfo.json", result.MainModinfo.File.Name);
+        Assert.Empty(result.Variants);
     }
 
     [Theory]
@@ -104,6 +123,24 @@ public class ModinfoFileFinderTests
             var filePath = _fileSystem.Path.Combine(path, fileName);
             _fileSystem.Directory.CreateDirectory(path);
             _fileSystem.File.WriteAllText(filePath, fileData);
+            return path;
+        });
+    }    
+    
+    private void CreateScenario10_MultipleMainModinfoFiles_Linux()
+    {
+        CreateScenario(2, () =>
+        {
+            const string path = "scenario10";
+            const string fileData = @"{
+	""name"": ""testmod""
+}";
+            
+            _fileSystem.Directory.CreateDirectory(path);
+            _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(path, "MoDInfO.json"), fileData);
+            _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(path, "modinfo.json"), fileData);
+            _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(path, "modinfo.JSON"), fileData);
+            _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(path, "MODINFO.json"), fileData);
             return path;
         });
     }
