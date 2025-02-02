@@ -1,6 +1,6 @@
-using System.IO.Abstractions.TestingHelpers;
 using System.Threading.Tasks;
 using EawModinfo.Spec;
+using Testably.Abstractions.Testing;
 using Xunit;
 
 namespace EawModinfo.Tests;

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO.Abstractions;
-using System.IO.Abstractions.TestingHelpers;
 using EawModinfo.Model;
 using EawModinfo.Spec;
 using EawModinfo.Utilities;
+using Testably.Abstractions.Testing;
 using Xunit;
 
 namespace EawModinfo.Tests;

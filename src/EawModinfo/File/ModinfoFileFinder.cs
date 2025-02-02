@@ -4,6 +4,9 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using EawModinfo.Spec;
+#if NETSTANDARD2_1
+using System.Runtime.InteropServices;
+#endif
 
 namespace EawModinfo.File;
 
@@ -25,27 +28,37 @@ public static class ModinfoFileFinder
             throw new ArgumentNullException(nameof(directory));
         if (!directory.Exists)
             throw new DirectoryNotFoundException($"Directory could not be found at '{directory.FullName}'");
-        return FindCore(directory);
-    }
 
-    private static ModinfoFinderCollection FindCore(IDirectoryInfo directory)
-    {
         var mainModinfoFile = FindMainModinfoFileCore(directory);
-        var variantFiles = new List<ModinfoVariantFile>(FindModinfoVariantFilesCore(directory, mainModinfoFile));
-        
-        return new ModinfoFinderCollection(directory, mainModinfoFile, variantFiles);
+
+        return new ModinfoFinderCollection(directory, mainModinfoFile, FindModinfoVariantFilesCore(directory, mainModinfoFile));
     }
 
     private static MainModinfoFile? FindMainModinfoFileCore(IDirectoryInfo directory)
     {
-        var file = directory.EnumerateFiles(MainModinfoFile.ModinfoFileName, SearchOption.TopDirectoryOnly).FirstOrDefault();
+        IFileInfo? file;
+#if NETSTANDARD2_1
+        file = directory.EnumerateFiles(MainModinfoFile.ModinfoFileName).FirstOrDefault();
+
+        // On linux, if 'modinfo.json' was not found, try to find the file with any casing, as a fallback. 
+        if (file is null && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            file = directory.EnumerateFiles(MainModinfoFile.ModinfoFileName, new EnumerationOptions
+            {
+                MatchCasing = MatchCasing.CaseInsensitive
+            }).FirstOrDefault();
+        }
+
+#else
+        file = directory.EnumerateFiles(MainModinfoFile.ModinfoFileName, SearchOption.TopDirectoryOnly).FirstOrDefault();
+#endif
         if (file is null)
             return null;
-        
+
         var modinfo = new MainModinfoFile(file);
         return !modinfo.IsFileValid(out _) ? null : modinfo;
     }
-         
+
     private static IEnumerable<ModinfoVariantFile> FindModinfoVariantFilesCore(IDirectoryInfo directory, MainModinfoFile? mainModinfoData)
     {
         var possibleVariants = directory.EnumerateFiles(

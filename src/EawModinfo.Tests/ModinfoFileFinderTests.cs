@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
+using System.Runtime.InteropServices;
 using EawModinfo.File;
+using Testably.Abstractions.Testing;
 using Xunit;
 
 namespace EawModinfo.Tests;
@@ -32,6 +33,10 @@ public class ModinfoFileFinderTests
         CreateScenario7_WithInvalidMainModinfo();
         CreateScenario8_WithMainModinfoAndInvalidVariant();
         CreateScenario9_WithInvalidMainModinfoAndValidVariant();
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            CreateScenario10_MultipleMainModinfoFiles_Linux();
+        }
     }
 
     [Theory]
@@ -51,6 +56,20 @@ public class ModinfoFileFinderTests
 
         Assert.Equal(hasMain, result.HasMainModinfoFile);
         Assert.Equal(numberVariants, result.Variants.Count);
+    }
+
+    [Fact]
+    public void FindModinfoFiles_CreateScenario10_MultipleMainModinfoFiles_Linux()
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            return;
+
+        var scenarioPath = _fileSystem.DirectoryInfo.New(_scenarioPaths[10]);
+        var result = ModinfoFileFinder.FindModinfoFiles(scenarioPath);
+
+        Assert.True(result.HasMainModinfoFile);
+        Assert.Equal("modinfo.json", result.MainModinfo.File.Name);
+        Assert.Empty(result.Variants);
     }
 
     [Theory]
@@ -86,8 +105,8 @@ public class ModinfoFileFinderTests
 }";
             const string fileName = "modinfo.json";
             var filePath = _fileSystem.Path.Combine(path, fileName);
-
-            _fileSystem.AddFile(filePath, new MockFileData(fileData));
+            _fileSystem.Directory.CreateDirectory(path);
+            _fileSystem.File.WriteAllText(filePath, fileData);
             return path;
         });
     }
@@ -102,8 +121,8 @@ public class ModinfoFileFinderTests
 }";
             const string fileName = "MoDInfO.json";
             var filePath = _fileSystem.Path.Combine(path, fileName);
-
-            _fileSystem.AddFile(filePath, new MockFileData(fileData));
+            _fileSystem.Directory.CreateDirectory(path);
+            _fileSystem.File.WriteAllText(filePath, fileData);
             return path;
         });
     }
@@ -114,8 +133,10 @@ public class ModinfoFileFinderTests
         {
             const string path = "scenario3";
 
+            _fileSystem.Directory.CreateDirectory(path);
+
             foreach (var name in TestUtilities.GetInvalidModinfoFileNames()) 
-                _fileSystem.AddFile(_fileSystem.Path.Combine(path, name), new MockFileData(string.Empty));
+                _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(path, name), string.Empty);
             return path;
         });
     }
@@ -138,9 +159,9 @@ public class ModinfoFileFinderTests
             const string variantFileData = @"{
 	""name"": ""Addon""
 }";
-
-            _fileSystem.AddFile(mainFilePath, new MockFileData(mainFileData));
-            _fileSystem.AddFile(variantFilePath, new MockFileData(variantFileData));
+            _fileSystem.Directory.CreateDirectory(path);
+            _fileSystem.File.WriteAllText(mainFilePath, mainFileData);
+            _fileSystem.File.WriteAllText(variantFilePath, variantFileData);
 
             return path;
         });
@@ -163,9 +184,9 @@ public class ModinfoFileFinderTests
             const string data2 = @"{
 	""name"": ""Addon-2""
 }";
-
-            _fileSystem.AddFile(filePath1, new MockFileData(data1));
-            _fileSystem.AddFile(filePath2, new MockFileData(data2));
+            _fileSystem.Directory.CreateDirectory(path);
+            _fileSystem.File.WriteAllText(filePath1, data1);
+            _fileSystem.File.WriteAllText(filePath2, data2);
             return path;
         });
     }
@@ -188,12 +209,12 @@ public class ModinfoFileFinderTests
             const string variantFileData = @"{
 	""name"": ""Addon""
 }";
-
-            _fileSystem.AddFile(mainFilePath, new MockFileData(mainFileData));
-            _fileSystem.AddFile(variantFilePath, new MockFileData(variantFileData));
+            _fileSystem.Directory.CreateDirectory(path);
+            _fileSystem.File.WriteAllText(mainFilePath, mainFileData);
+            _fileSystem.File.WriteAllText(variantFilePath, variantFileData);
 
             foreach (var name in TestUtilities.GetInvalidModinfoFileNames())
-                _fileSystem.AddFile(_fileSystem.Path.Combine(path, name), new MockFileData(string.Empty));
+                _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(path, name), string.Empty);
 
             return path;
         });
@@ -209,7 +230,8 @@ public class ModinfoFileFinderTests
 
             const string mainFileData = "\0";
 
-            _fileSystem.AddFile(mainFilePath, new MockFileData(mainFileData));
+            _fileSystem.Directory.CreateDirectory(path);
+            _fileSystem.File.WriteAllText(mainFilePath, mainFileData);
             
             return path;
         });
@@ -232,8 +254,9 @@ public class ModinfoFileFinderTests
 
             const string variantFileData = "\0";
 
-            _fileSystem.AddFile(mainFilePath, new MockFileData(mainFileData));
-            _fileSystem.AddFile(variantFilePath, new MockFileData(variantFileData));
+            _fileSystem.Directory.CreateDirectory(path);
+            _fileSystem.File.WriteAllText(mainFilePath, mainFileData);
+            _fileSystem.File.WriteAllText(variantFilePath, variantFileData);
             
             return path;
         });
@@ -255,9 +278,28 @@ public class ModinfoFileFinderTests
 	""name"": ""Addon""
 }";
 
-            _fileSystem.AddFile(mainFilePath, new MockFileData(mainFileData));
-            _fileSystem.AddFile(variantFilePath, new MockFileData(variantFileData));
+            _fileSystem.Directory.CreateDirectory(path);
+            _fileSystem.File.WriteAllText(mainFilePath, mainFileData);
+            _fileSystem.File.WriteAllText(variantFilePath, variantFileData);
 
+            return path;
+        });
+    }
+
+    private void CreateScenario10_MultipleMainModinfoFiles_Linux()
+    {
+        CreateScenario(10, () =>
+        {
+            const string path = "scenario10";
+            const string fileData = @"{
+	""name"": ""testmod""
+}";
+
+            _fileSystem.Directory.CreateDirectory(path);
+            _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(path, "MoDInfO.json"), fileData);
+            _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(path, "modinfo.json"), fileData);
+            _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(path, "modinfo.JSON"), fileData);
+            _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(path, "MODINFO.json"), fileData);
             return path;
         });
     }

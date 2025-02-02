@@ -43,6 +43,8 @@ public sealed class LanguageInfoEqualityComparer : IEqualityComparer<ILanguageIn
     /// <inheritdoc />
     public int GetHashCode(ILanguageInfo obj)
     {
+        if (obj is null)
+            throw new ArgumentNullException(nameof(obj));
         var hash = new HashCode();
         hash.Add(obj.Code, StringComparer.OrdinalIgnoreCase);
         if (_includeSupport)

@@ -9,7 +9,7 @@ using Json.Schema;
 namespace EawModinfo.Model.Json.Schema;
 
 /// <summary>
-/// Performs operations to validate JSON data against the modinfo JSON schema specification.
+/// Provides operations to validate JSON data against the modinfo JSON schema specification.
 /// </summary>
 public static class ModInfoJsonSchema
 {

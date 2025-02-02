@@ -1,3 +1,3 @@
 ﻿using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("EawModinfo.Tests")]
+[assembly: InternalsVisibleTo("AET.Modinfo.Tests")]

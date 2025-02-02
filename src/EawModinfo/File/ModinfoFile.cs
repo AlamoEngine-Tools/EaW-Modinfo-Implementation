@@ -20,11 +20,8 @@ public abstract class ModinfoFile : IModinfoFile
 
     /// <inheritdoc/>
     public IFileInfo File { get; }
-
-    /// <summary>
-    /// Validator for file names.
-    /// </summary>
-    internal abstract IModFileNameValidator FileNameValidator { get; }
+    
+    internal abstract IModinfoFileNameValidator FileNameValidator { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ModinfoFile"/> class with the specified file handle.

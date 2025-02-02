@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
-using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using EawModinfo.File;
 using EawModinfo.Model;
 using EawModinfo.Spec;
 using EawModinfo.Utilities;
+using Testably.Abstractions.Testing;
 using Xunit;
 
 namespace EawModinfo.Tests;

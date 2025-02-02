@@ -28,7 +28,7 @@ public interface ISteamData : IConvertibleToJson
     public string? Metadata { get; }
 
     /// <summary>
-    /// Steam Tags as specified by the Steam Workshop documentation.
+    /// Gets an enumerable collection of the Steam Tags as specified by the Steam Workshop documentation.
     /// </summary>
     /// <remarks>
     /// Tags must be unique, are case-sensitive, are limited to 255 characters and must not contain the comma ',' character.
