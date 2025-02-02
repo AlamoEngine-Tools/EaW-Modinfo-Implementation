@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<PackageId>eaw.modinfo</PackageId>
+		<PackageId>AlamoEngineTools.Modinfo</PackageId>
 		<Description>.NET implementation of the eaw.modinfo specification (https://github.com/AlamoEngine-Tools/eaw.modinfo) to locate and validate EaW modinfo JSON files.</Description>
 	</PropertyGroup>
 
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
-		<AssemblyName>Eaw.Modinfo</AssemblyName>
+		<AssemblyName>AET.Modinfo</AssemblyName>
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 	</PropertyGroup>
 
@@ -49,7 +49,7 @@
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Semver" Version="3.0.0" />
-		<PackageReference Include="System.IO.Abstractions" Version="21.2.1" />
+		<PackageReference Include="Testably.Abstractions" Version="9.0.0" />
 		<PackageReference Include="System.Text.Json" Version="9.0.1" />
 	</ItemGroup>
 

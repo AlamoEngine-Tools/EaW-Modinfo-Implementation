@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using EawModinfo.File;
+using Testably.Abstractions.Testing;
 using Xunit;
 
 namespace EawModinfo.Tests;
@@ -86,8 +86,8 @@ public class ModinfoFileFinderTests
 }";
             const string fileName = "modinfo.json";
             var filePath = _fileSystem.Path.Combine(path, fileName);
-
-            _fileSystem.AddFile(filePath, new MockFileData(fileData));
+            _fileSystem.Directory.CreateDirectory(path);
+            _fileSystem.File.WriteAllText(filePath, fileData);
             return path;
         });
     }
@@ -102,8 +102,8 @@ public class ModinfoFileFinderTests
 }";
             const string fileName = "MoDInfO.json";
             var filePath = _fileSystem.Path.Combine(path, fileName);
-
-            _fileSystem.AddFile(filePath, new MockFileData(fileData));
+            _fileSystem.Directory.CreateDirectory(path);
+            _fileSystem.File.WriteAllText(filePath, fileData);
             return path;
         });
     }
@@ -114,8 +114,10 @@ public class ModinfoFileFinderTests
         {
             const string path = "scenario3";
 
+            _fileSystem.Directory.CreateDirectory(path);
+
             foreach (var name in TestUtilities.GetInvalidModinfoFileNames()) 
-                _fileSystem.AddFile(_fileSystem.Path.Combine(path, name), new MockFileData(string.Empty));
+                _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(path, name), string.Empty);
             return path;
         });
     }
@@ -138,9 +140,9 @@ public class ModinfoFileFinderTests
             const string variantFileData = @"{
 	""name"": ""Addon""
 }";
-
-            _fileSystem.AddFile(mainFilePath, new MockFileData(mainFileData));
-            _fileSystem.AddFile(variantFilePath, new MockFileData(variantFileData));
+            _fileSystem.Directory.CreateDirectory(path);
+            _fileSystem.File.WriteAllText(mainFilePath, mainFileData);
+            _fileSystem.File.WriteAllText(variantFilePath, variantFileData);
 
             return path;
         });
@@ -163,9 +165,9 @@ public class ModinfoFileFinderTests
             const string data2 = @"{
 	""name"": ""Addon-2""
 }";
-
-            _fileSystem.AddFile(filePath1, new MockFileData(data1));
-            _fileSystem.AddFile(filePath2, new MockFileData(data2));
+            _fileSystem.Directory.CreateDirectory(path);
+            _fileSystem.File.WriteAllText(filePath1, data1);
+            _fileSystem.File.WriteAllText(filePath2, data2);
             return path;
         });
     }
@@ -188,12 +190,12 @@ public class ModinfoFileFinderTests
             const string variantFileData = @"{
 	""name"": ""Addon""
 }";
-
-            _fileSystem.AddFile(mainFilePath, new MockFileData(mainFileData));
-            _fileSystem.AddFile(variantFilePath, new MockFileData(variantFileData));
+            _fileSystem.Directory.CreateDirectory(path);
+            _fileSystem.File.WriteAllText(mainFilePath, mainFileData);
+            _fileSystem.File.WriteAllText(variantFilePath, variantFileData);
 
             foreach (var name in TestUtilities.GetInvalidModinfoFileNames())
-                _fileSystem.AddFile(_fileSystem.Path.Combine(path, name), new MockFileData(string.Empty));
+                _fileSystem.File.WriteAllText(_fileSystem.Path.Combine(path, name), string.Empty);
 
             return path;
         });
@@ -209,7 +211,8 @@ public class ModinfoFileFinderTests
 
             const string mainFileData = "\0";
 
-            _fileSystem.AddFile(mainFilePath, new MockFileData(mainFileData));
+            _fileSystem.Directory.CreateDirectory(path);
+            _fileSystem.File.WriteAllText(mainFilePath, mainFileData);
             
             return path;
         });
@@ -232,8 +235,9 @@ public class ModinfoFileFinderTests
 
             const string variantFileData = "\0";
 
-            _fileSystem.AddFile(mainFilePath, new MockFileData(mainFileData));
-            _fileSystem.AddFile(variantFilePath, new MockFileData(variantFileData));
+            _fileSystem.Directory.CreateDirectory(path);
+            _fileSystem.File.WriteAllText(mainFilePath, mainFileData);
+            _fileSystem.File.WriteAllText(variantFilePath, variantFileData);
             
             return path;
         });
@@ -255,8 +259,9 @@ public class ModinfoFileFinderTests
 	""name"": ""Addon""
 }";
 
-            _fileSystem.AddFile(mainFilePath, new MockFileData(mainFileData));
-            _fileSystem.AddFile(variantFilePath, new MockFileData(variantFileData));
+            _fileSystem.Directory.CreateDirectory(path);
+            _fileSystem.File.WriteAllText(mainFilePath, mainFileData);
+            _fileSystem.File.WriteAllText(variantFilePath, variantFileData);
 
             return path;
         });

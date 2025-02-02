@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
-using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using System.Text.Json.Nodes;
 using System.Text.Json;
 using EawModinfo.Model.Json.Schema;
+using Testably.Abstractions.Testing;
 
 namespace EawModinfo.Tests;
 
@@ -73,7 +73,9 @@ internal static class TestUtilities
     internal static IFileInfo CreateFile(MockFileSystem fs, string path, string name, string data)
     {
         var fullPath = fs.Path.Combine(path, name);
-        fs.AddFile(fullPath, new MockFileData(data));
+        var dir = fs.Path.GetDirectoryName(fullPath);
+        fs.Directory.CreateDirectory(dir);
+        fs.File.WriteAllText(fullPath, data);
         return fs.FileInfo.New(fullPath);
     }
 
