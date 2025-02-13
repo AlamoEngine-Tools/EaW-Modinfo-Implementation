@@ -51,7 +51,7 @@
 		</PackageReference>
 		<PackageReference Include="Semver" Version="3.0.0" />
 		<PackageReference Include="Testably.Abstractions" Version="9.0.0" />
-		<PackageReference Include="System.Text.Json" Version="9.0.1" />
+		<PackageReference Include="System.Text.Json" Version="9.0.2" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
