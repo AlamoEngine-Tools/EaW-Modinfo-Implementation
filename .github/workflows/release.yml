@@ -22,7 +22,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
       - name: Create packages
         run: dotnet pack --configuration Release --output ./packages
       - name: Upload a Build Artifact
@@ -43,7 +43,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
       - uses: actions/download-artifact@v5
         with:
           name: NuGet packages
