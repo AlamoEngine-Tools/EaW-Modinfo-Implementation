@@ -50,8 +50,8 @@
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Semver" Version="3.0.0" />
-		<PackageReference Include="Testably.Abstractions" Version="9.0.0" />
-		<PackageReference Include="System.Text.Json" Version="9.0.9" />
+		<PackageReference Include="Testably.Abstractions" Version="10.0.0" />
+		<PackageReference Include="System.Text.Json" Version="10.0.0" />
 	</ItemGroup>
 
 	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
