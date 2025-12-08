@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/EawModinfo/EawModinfo.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="src/EawModinfo.Tests/EawModinfo.Tests.csproj" />
+  </Folder>
+</Solution>
