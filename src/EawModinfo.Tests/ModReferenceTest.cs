@@ -1,15 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Nodes;
 using AET.Modinfo.Model;
 using AET.Modinfo.Model.Json;
 using AET.Modinfo.Model.Json.Schema;
 using AET.Modinfo.Spec;
 using AET.Modinfo.Spec.Equality;
 using Semver;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
 using Xunit;
 
 namespace AET.Modinfo.Tests;
@@ -174,7 +174,7 @@ public class ModReferenceTests
     [MemberData(nameof(GetInvalidJsonData))]
     public void Parse_Throws(string data, IList<string> expectedErrorKeys)
     {
-        Assert.False(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModReference, out var errors));
+        Assert.False(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModReference, out var errors));
         Assert.Equivalent(expectedErrorKeys, Enumerable.Select<KeyValuePair<string, string>, string>(errors, x => x.Key), true);
 
         Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.ModReference));
@@ -199,7 +199,7 @@ public class ModReferenceTests
     [MemberData(nameof(GetJsonData))]
     public void Parse(string data, string? expectedId, ModType? expectedType)
     {
-        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModReference, out _));
+        Assert.True(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModReference, out _));
         TestUtilities.Evaluate(data, EvaluationType.ModReference);
         var modReference = ModReference.Parse(data);
         Assert.Equal(expectedId, (string?)modReference.Identifier);

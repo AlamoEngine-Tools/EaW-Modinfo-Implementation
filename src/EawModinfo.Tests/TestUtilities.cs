@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using AET.Modinfo.Model.Json.Schema;
 using Testably.Abstractions.Testing;
 
@@ -95,11 +94,11 @@ internal static class TestUtilities
 
     public static void Evaluate(string json, EvaluationType type)
     {
-        ModInfoJsonSchema.Evaluate(JsonNode.Parse(json, null, new JsonDocumentOptions
+        ModInfoJsonSchema.Evaluate(JsonElement.Parse(json, new JsonDocumentOptions
         {
             AllowTrailingCommas = true,
             CommentHandling = JsonCommentHandling.Skip
-        })!, type);
+        }), type);
     }
 
     public static bool GetRandomBool()

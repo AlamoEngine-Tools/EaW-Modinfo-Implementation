@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Text.Json.Nodes;
+using System.Text.Json;
 using AET.Modinfo.Model;
 using AET.Modinfo.Model.Json;
 using AET.Modinfo.Model.Json.Schema;
@@ -128,7 +128,7 @@ public class LanguageInfoTests
     public void Parse(string data, string expectedCode, LanguageSupportLevel expectedLevel)
     {
         TestUtilities.Evaluate(data, EvaluationType.ModLanguageInfo);
-        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModLanguageInfo, out _));
+        Assert.True(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModLanguageInfo, out _));
         var languageInfo = LanguageInfo.Parse(data);
         Assert.Equal(expectedCode, (string?)languageInfo.Code);
         Assert.Equal(expectedLevel, languageInfo.Support);
@@ -199,7 +199,7 @@ public class LanguageInfoTests
     public void Parse_InvalidDataThrows(string data, IList<string> expectedErrorKeys)
     {
         Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.ModLanguageInfo));
-        Assert.False(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModLanguageInfo, out var errors));
+        Assert.False(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModLanguageInfo, out var errors));
         Assert.Equivalent(expectedErrorKeys, Enumerable.Select<KeyValuePair<string, string>, string>(errors, x => x.Key), true); 
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => LanguageInfo.Parse(data)));
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => LanguageInfo.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)))));

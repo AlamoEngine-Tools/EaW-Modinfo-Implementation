@@ -1,12 +1,12 @@
-﻿using System;
+﻿using AET.Modinfo.Model;
+using AET.Modinfo.Model.Json.Schema;
+using AET.Modinfo.Spec.Steam;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Nodes;
-using AET.Modinfo.Model;
-using AET.Modinfo.Model.Json.Schema;
-using AET.Modinfo.Spec.Steam;
+using System.Text.Json;
 using Xunit;
 
 namespace AET.Modinfo.Tests;
@@ -17,14 +17,14 @@ public class SteamDataTests
     {
         yield return [@"{}", new[] { "required" }];
         yield return [@"{""contentfolder"":""path"", ""publishedfileid"":""123"", ""visibility"":0, ""tags"":[""EAW""]}", new[] { "required" }];
-        yield return [@"{""title"":""123"", ""publishedfileid"":""123"", ""visibility"":0, ""tags"":[""EAW""]}", new[] { "required" }];
-        yield return [@"{""title"":""123"", ""contentfolder"":""path"", ""visibility"":0, ""tags"":[""EAW""]}", new[] { "required" }];
-        yield return [@"{""title"":""123"", ""contentfolder"":""path"", ""publishedfileid"":""123"", ""tags"":[""EAW""]}", new[] { "required" }];
-        yield return [@"{""title"":""123"", ""contentfolder"":""path"", ""publishedfileid"":""123"", ""visibility"":0}", new[] { "required" }];
-        yield return [@"{""title"":""123"", ""contentfolder"":""path"", ""publishedfileid"":""123"", ""visibility"":0, ""tags"":[]}", new[] { "minItems", "contains" }];
-        yield return [@"{""title"":""123"", ""contentfolder"":""path"", ""publishedfileid"":""123"", ""visibility"":0, ""tags"":[""other""]}", new[] { "contains", "oneOf", "const", "const" }];
-        yield return [@"{""title"":""123"", ""contentfolder"":""path"", ""publishedfileid"":""123"", ""visibility"":0, ""tags"":[""eaw""]}", new[] { "contains", "oneOf", "const", "const" }];
-        yield return [@"{""title"":""123"", ""contentfolder"":""path"", ""publishedfileid"":""123"", ""visibility"":0, ""tags"":[""FOC"", ""a,b""]}", new[] { "pattern", "oneOf", "const", "const" }];
+        yield return [@"{""title"":""1"", ""publishedfileid"":""123"", ""visibility"":0, ""tags"":[""EAW""]}", new[] { "required" }];
+        yield return [@"{""title"":""2"", ""contentfolder"":""path"", ""visibility"":0, ""tags"":[""EAW""]}", new[] { "required" }];
+        yield return [@"{""title"":""3"", ""contentfolder"":""path"", ""publishedfileid"":""123"", ""tags"":[""EAW""]}", new[] { "required" }];
+        yield return [@"{""title"":""4"", ""contentfolder"":""path"", ""publishedfileid"":""123"", ""visibility"":0}", new[] { "required" }];
+        yield return [@"{""title"":""5"", ""contentfolder"":""path"", ""publishedfileid"":""123"", ""visibility"":0, ""tags"":[]}", new[] { "minItems", "contains" }];
+        yield return [@"{""title"":""6"", ""contentfolder"":""path"", ""publishedfileid"":""123"", ""visibility"":0, ""tags"":[""other""]}", new[] { "contains", "const", "const" }];
+        yield return [@"{""title"":""7"", ""contentfolder"":""path"", ""publishedfileid"":""123"", ""visibility"":0, ""tags"":[""eaw""]}", new[] { "contains", "const", "const" }];
+        yield return [@"{""title"":""8"", ""contentfolder"":""path"", ""publishedfileid"":""123"", ""visibility"":0, ""tags"":[""FOC"", ""a,b""]}", new[] { "pattern", "const", "const" }];
     }
 
     [Theory]
@@ -35,7 +35,7 @@ public class SteamDataTests
             Assert.Throws<ModinfoParseException>((Func<object?>)(() => SteamData.Parse(data)));
             Assert.Throws<ModinfoParseException>((Func<object?>)(() => SteamData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)))));
 
-            Assert.False(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.SteamData, out var errors));
+            Assert.False(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.SteamData, out var errors));
             Assert.Equivalent(expectedErrorKeys, Enumerable.Select<KeyValuePair<string, string>, string>(errors, x => x.Key), true);
     }
 
@@ -58,7 +58,7 @@ public class SteamDataTests
     {
         Assert.NotNull(expected);
 
-        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.SteamData, out _));
+        Assert.True(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.SteamData, out _));
         TestUtilities.Evaluate(data, EvaluationType.SteamData);
 
         var steamData = SteamData.Parse(data);

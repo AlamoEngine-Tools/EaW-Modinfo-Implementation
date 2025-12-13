@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using AET.Modinfo.Model.Json;
@@ -66,9 +65,9 @@ internal static class ParseUtility
     public static T Parse<T>(Stream dataStream)
     {
         try
-        { 
-            var jsonNode = JsonNode.Parse(dataStream, null, DocumentOptions);
-            var result = ParseCore<T>(jsonNode);
+        {
+            var element = JsonDocument.Parse(dataStream, DocumentOptions).RootElement;
+            var result = ParseCore<T>(element);
 
             if (result is null)
                 throw new ModinfoParseException($"Unable to parse input from stream to {typeof(T).Name}. Unknown Error!");
@@ -84,8 +83,8 @@ internal static class ParseUtility
     {
         try
         {
-            var jsonNode = JsonNode.Parse(data, null, DocumentOptions);
-            var parseResult = ParseCore<T>(jsonNode);
+            var element = JsonDocument.Parse(data, DocumentOptions).RootElement;
+            var parseResult = ParseCore<T>(element);
             if (parseResult is null)
                 throw new ModinfoParseException($"Unable to parse input '{data}' to {typeof(T).Name}. Unknown Error!");
             return parseResult;
@@ -96,11 +95,8 @@ internal static class ParseUtility
         }
     }
 
-    public static T? ParseCore<T>(JsonNode? jsonData)
+    public static T? ParseCore<T>(JsonElement jsonData)
     {
-        if (jsonData == null)
-            throw new ModinfoParseException("Unable to parse input to JSON Node");
-
         ModInfoJsonSchema.Evaluate<T>(jsonData);
         return jsonData.Deserialize<T>(SerializerOptions);
     }
