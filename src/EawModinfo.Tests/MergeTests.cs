@@ -40,7 +40,7 @@ public class MergeTests
         Assert.Equal((string?)mainData.Summary, (string?)newData.Summary);
         Assert.Equal(2, newData.Languages.Count); // As stated by the specification in III.3.2, languages was not explicitly set.
         Assert.True(newData.LanguagesExplicitlySet);
-        Assert.Equal(LanguageInfo.Default, Enumerable.First(newData.Languages));
+        Assert.Equal(LanguageInfo.Default, newData.Languages.First());
         Assert.Equal(2, newData.Dependencies.Count);
         Assert.Equal((string?)"bla", (string?)newData.Dependencies[0].Identifier);
         Assert.NotNull(newData.SteamData);

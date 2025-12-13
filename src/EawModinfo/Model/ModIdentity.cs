@@ -10,8 +10,6 @@ namespace AET.Modinfo.Model;
 /// <inheritdoc cref="IModIdentity"/> 
 public sealed class ModIdentity : IModIdentity, IEquatable<ModIdentity>
 {
-    private readonly IModDependencyList _dependencies = DependencyList.EmptyDependencyList;
-
     /// <inheritdoc />
     public string Name { get; }
 
@@ -21,14 +19,14 @@ public sealed class ModIdentity : IModIdentity, IEquatable<ModIdentity>
     /// <inheritdoc />
     public IModDependencyList Dependencies
     {
-        get => _dependencies;
+        get;
         init
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
-            _dependencies = new DependencyList(value);
+            field = new DependencyList(value);
         }
-    }
+    } = DependencyList.EmptyDependencyList;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ModIdentity"/> class with a specified name.

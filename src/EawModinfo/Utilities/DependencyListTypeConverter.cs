@@ -7,7 +7,7 @@ namespace AET.Modinfo.Utilities;
 
 internal class DependencyListTypeConverter : JsonConverter<IModDependencyList>
 {
-    public override IModDependencyList? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override IModDependencyList Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         return JsonDependencyListTypeConverter.ReadInternal(ref reader, typeToConvert, options);
     }

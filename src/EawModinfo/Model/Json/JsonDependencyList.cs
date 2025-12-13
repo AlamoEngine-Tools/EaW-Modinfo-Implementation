@@ -13,7 +13,7 @@ namespace AET.Modinfo.Model.Json;
 [JsonConverter(typeof(JsonDependencyListTypeConverter))]
 internal class JsonDependencyList : IModDependencyList
 {
-    private readonly List<IModReference> _internalList = new();
+    private readonly List<IModReference> _internalList = [];
 
     public DependencyResolveLayout ResolveLayout { get; internal set; }
     

@@ -14,7 +14,7 @@ internal class SteamDataTypeConverter : JsonConverter<ISteamData>
         return true;
     }
 
-    public override ISteamData? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override ISteamData Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         return new SteamData(JsonSerializer.Deserialize<JsonSteamData>(ref reader, options)!);
     }
