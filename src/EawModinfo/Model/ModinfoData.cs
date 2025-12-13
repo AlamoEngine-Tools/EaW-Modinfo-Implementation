@@ -15,9 +15,6 @@ namespace AET.Modinfo.Model;
 public sealed class ModinfoData : IModinfo
 {
     internal static readonly IReadOnlyCollection<ILanguageInfo> UnsetLanguages = [LanguageInfo.Default];
-    private readonly IReadOnlyCollection<ILanguageInfo> _languages = UnsetLanguages;
-    private readonly IModDependencyList _dependencies = DependencyList.EmptyDependencyList;
-    private readonly IDictionary<string, object> _custom = new Dictionary<string, object>();
 
     /// <inheritdoc/>
     public string Name { get; }
@@ -29,14 +26,14 @@ public sealed class ModinfoData : IModinfo
     /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
     public IModDependencyList Dependencies
     {
-        get => _dependencies;
+        get;
         init
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
-            _dependencies = value.Count == 0 ? DependencyList.EmptyDependencyList : value;
+            field = value.Count == 0 ? DependencyList.EmptyDependencyList : value;
         }
-    }
+    } = DependencyList.EmptyDependencyList;
 
     /// <inheritdoc/>
     public string? Summary { get; init; }
@@ -48,9 +45,9 @@ public sealed class ModinfoData : IModinfo
     /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
     public IDictionary<string, object> Custom
     {
-        get => _custom;
-        init => _custom = value ?? throw new ArgumentNullException(nameof(value));
-    }
+        get;
+        init => field = value ?? throw new ArgumentNullException(nameof(value));
+    } = new Dictionary<string, object>();
 
     /// <inheritdoc/>
     public ISteamData? SteamData { get; init; }
@@ -59,14 +56,14 @@ public sealed class ModinfoData : IModinfo
     /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/>.</exception>
     public IReadOnlyCollection<ILanguageInfo> Languages
     {
-        get => _languages;
+        get;
         init
         {
             if (value == null)
                 throw new ArgumentNullException(nameof(value));
-            _languages = value.Count == 0 ? UnsetLanguages : value;
+            field = value.Count == 0 ? UnsetLanguages : value;
         }
-    }
+    } = UnsetLanguages;
 
     /// <inheritdoc />
     public bool LanguagesExplicitlySet => !ReferenceEquals(Languages, UnsetLanguages);

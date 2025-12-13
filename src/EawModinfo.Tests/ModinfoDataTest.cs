@@ -1,11 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using AET.Modinfo.Model;
 using AET.Modinfo.Model.Json.Schema;
 using AET.Modinfo.Spec;
@@ -34,7 +32,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
         // Parsing supports it, but in this test, we ensure evaluation also supports it.
         TestUtilities.Evaluate(data, EvaluationType.ModInfo);
         Assert.True(ModInfoJsonSchema.IsValid(
-            JsonNode.Parse(data, null, new() { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip }),
+            JsonElement.Parse(data, new() { AllowTrailingCommas = true, CommentHandling = JsonCommentHandling.Skip }),
             EvaluationType.ModInfo, out _));
         
         var modinfo = ModinfoData.Parse(data);
@@ -53,7 +51,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
 }";
 
         TestUtilities.Evaluate(data, EvaluationType.ModInfo);
-        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+        Assert.True(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out _));
 
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal((string?)"My Mod Name", (string?)modinfo.Name);
@@ -76,7 +74,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
 }";
 
         TestUtilities.Evaluate(data, EvaluationType.ModInfo);
-        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+        Assert.True(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out _));
 
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal((string?)"My Mod Name", (string?)modinfo.Name);
@@ -98,7 +96,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
 }";
 
         TestUtilities.Evaluate(data, EvaluationType.ModInfo);
-        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+        Assert.True(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out _));
 
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal((string?)"My Mod Name", (string?)modinfo.Name);
@@ -124,7 +122,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     ]
 }";
         TestUtilities.Evaluate(data, EvaluationType.ModInfo);
-        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+        Assert.True(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out _));
 
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal((string?)"My Mod Name", (string?)modinfo.Name);
@@ -154,7 +152,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     ]
 }";
         TestUtilities.Evaluate(data, EvaluationType.ModInfo);
-        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+        Assert.True(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out _));
 
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal((string?)"My Mod Name", (string?)modinfo.Name);
@@ -184,7 +182,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     ]
 }";
         TestUtilities.Evaluate(data, EvaluationType.ModInfo);
-        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+        Assert.True(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out _));
 
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal((string?)"My Mod Name", (string?)modinfo.Name);
@@ -214,7 +212,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     ]
 }";
         TestUtilities.Evaluate(data, EvaluationType.ModInfo);
-        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+        Assert.True(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out _));
 
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal((string?)"My Mod Name", (string?)modinfo.Name);
@@ -235,7 +233,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     ""name"":""My Mod Name""
 }";
         TestUtilities.Evaluate(data, EvaluationType.ModInfo);
-        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+        Assert.True(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out _));
 
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal((string?)"My Mod Name", (string?)modinfo.Name);
@@ -261,7 +259,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     ""languages"":[]
 }";
         TestUtilities.Evaluate(data, EvaluationType.ModInfo);
-        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+        Assert.True(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out _));
 
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal((string?)"My Mod Name", (string?)modinfo.Name);
@@ -291,8 +289,8 @@ public class ModinfoDataTest(ITestOutputHelper output)
     ]
 }";
         Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.ModInfo));
-        Assert.False(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out var errors));
-        Assert.Equivalent(new List<string>{"required", ""}, Enumerable.Select<KeyValuePair<string, string>, string>(errors, x => x.Key), true);
+        Assert.False(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out var errors));
+        Assert.Equivalent(new List<string>{"required", ""}, errors.Select<KeyValuePair<string, string>, string>(x => x.Key), true);
 
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => ModinfoData.Parse(data)));
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)))));
@@ -311,8 +309,8 @@ public class ModinfoDataTest(ITestOutputHelper output)
     ]
 }";
         Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.ModInfo));
-        Assert.False(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out var errors));
-        Assert.Equivalent(new List<string> { "required", "" }, Enumerable.Select<KeyValuePair<string, string>, string>(errors, x => x.Key), true);
+        Assert.False(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out var errors));
+        Assert.Equivalent(new List<string> { "required", "" }, errors.Select<KeyValuePair<string, string>, string>(x => x.Key), true);
 
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => ModinfoData.Parse(data)));
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)))));
@@ -326,7 +324,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     ""name"":""My Mod Name""
 }";
         TestUtilities.Evaluate(data, EvaluationType.ModInfo);
-        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+        Assert.True(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out _));
 
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal((string?)"My Mod Name", (string?)modinfo.Name);
@@ -356,7 +354,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     ]
 }";
         TestUtilities.Evaluate(data, EvaluationType.ModInfo);
-        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+        Assert.True(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out _));
 
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal((string?)"My Mod Name", (string?)modinfo.Name);
@@ -392,7 +390,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     ]
 }";
         TestUtilities.Evaluate(data, EvaluationType.ModInfo);
-        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+        Assert.True(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out _));
 
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal((string?)"My Mod Name", (string?)modinfo.Name);
@@ -432,8 +430,8 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => ModinfoData.Parse(data)));
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)))));
 
-        Assert.False(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out var errors));
-        Assert.Equivalent(new List<string>{ "oneOf", "enum", "type"}, Enumerable.Select<KeyValuePair<string, string>, string>(errors, x => x.Key).Distinct(), true);
+        Assert.False(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out var errors));
+        Assert.Equivalent(new List<string>{ "enum", "type"}, errors.Select<KeyValuePair<string, string>, string>(x => x.Key).Distinct(), true);
     }
 
     [Fact]
@@ -458,8 +456,8 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => ModinfoData.Parse(data)));
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)))));
 
-        Assert.False(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out var errors));
-        Assert.Equivalent(new List<string> { "oneOf", "enum", "type" }, Enumerable.Select<KeyValuePair<string, string>, string>(errors, x => x.Key).Distinct(), true);
+        Assert.False(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out var errors));
+        Assert.Equivalent(new List<string> { "enum", "type" }, errors.Select<KeyValuePair<string, string>, string>(x => x.Key).Distinct(), true);
     }
 
     [Fact]
@@ -474,8 +472,8 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => ModinfoData.Parse(data)));
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)))));
 
-        Assert.False(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out var errors));
-        Assert.Equivalent(new List<string> { "oneOf", "contains" }, Enumerable.Select<KeyValuePair<string, string>, string>(errors, x => x.Key).Distinct(), true);
+        Assert.False(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out var errors));
+        Assert.Equivalent(new List<string> { "contains" }, errors.Select<KeyValuePair<string, string>, string>(x => x.Key).Distinct(), true);
     }
 
     [Fact]
@@ -490,8 +488,8 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => ModinfoData.Parse(data)));
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)))));
 
-        Assert.False(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out var errors));
-        Assert.Equivalent(new List<string> { "contains", "type" }, Enumerable.Select<KeyValuePair<string, string>, string>(errors, x => x.Key).Distinct(), true);
+        Assert.False(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out var errors));
+        Assert.Equivalent(new List<string> { "contains", "type" }, errors.Select<KeyValuePair<string, string>, string>(x => x.Key).Distinct(), true);
     }
 
     [Fact]
@@ -506,8 +504,8 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => ModinfoData.Parse(data)));
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)))));
 
-        Assert.False(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out var errors));
-        Assert.Equivalent(new List<string> { "oneOf", "contains", "required", "type" }, Enumerable.Select<KeyValuePair<string, string>, string>(errors, x => x.Key).Distinct(), true);
+        Assert.False(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out var errors));
+        Assert.Equivalent(new List<string> { "contains", "required", "type" }, errors.Select<KeyValuePair<string, string>, string>(x => x.Key).Distinct(), true);
     }
 
     [Fact]
@@ -522,8 +520,8 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => ModinfoData.Parse(data)));
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)))));
 
-        Assert.False(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out var errors));
-        Assert.Equivalent(new List<string> { "type" }, Enumerable.Select<KeyValuePair<string, string>, string>(errors, x => x.Key).Distinct(), true);
+        Assert.False(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out var errors));
+        Assert.Equivalent(new List<string> { "type" }, errors.Select<KeyValuePair<string, string>, string>(x => x.Key).Distinct(), true);
     }
 
 
@@ -563,7 +561,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     }
 }";
         TestUtilities.Evaluate(data, EvaluationType.ModInfo);
-        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+        Assert.True(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out _));
 
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal((string?)"My Mod Name", (string?)modinfo.Name);
@@ -574,7 +572,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Equal(SteamWorkshopVisibility.Public, modinfo.SteamData.Visibility);
         Assert.Equal((string?)"test", (string?)modinfo.SteamData.Metadata);
         Assert.Null(modinfo.SteamData.Description);
-        Assert.Equal(2, Enumerable.Count<string>(modinfo.SteamData.Tags));
+        Assert.Equal(2, modinfo.SteamData.Tags.Count());
 
         modinfo = ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)));
         Assert.Equal((string?)"My Mod Name", (string?)modinfo.Name);
@@ -585,7 +583,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Equal(SteamWorkshopVisibility.Public, modinfo.SteamData.Visibility);
         Assert.Equal((string?)"test", (string?)modinfo.SteamData.Metadata);
         Assert.Null(modinfo.SteamData.Description);
-        Assert.Equal(2, Enumerable.Count<string>(modinfo.SteamData.Tags));
+        Assert.Equal(2, modinfo.SteamData.Tags.Count());
     }
 
     public static IEnumerable<object[]> GetInvalidData()
@@ -607,22 +605,21 @@ public class ModinfoDataTest(ITestOutputHelper output)
     {
         if (data is null)
         {
-            Assert.Throws<ArgumentNullException>(() => ModInfoJsonSchema.Evaluate(data!, EvaluationType.ModInfo));
+            Assert.Throws<ArgumentOutOfRangeException>(() => ModInfoJsonSchema.Evaluate(default, EvaluationType.ModInfo));
             Assert.Throws<ArgumentNullException>(() => ModinfoData.Parse(data!));
             Assert.Throws<ArgumentNullException>(() => ModinfoData.Parse((Stream)null!));
-            Assert.False(ModInfoJsonSchema.IsValid(null, EvaluationType.ModInfo, out var errors));
-            Assert.Equivalent(expectedErrorKeys, Enumerable.Select<KeyValuePair<string, string>, string>(errors, x => x.Key), true);
+            Assert.Throws<ArgumentOutOfRangeException>(() => ModInfoJsonSchema.IsValid(default, EvaluationType.ModInfo, out _));
         }
         else
         {
             if (data != string.Empty)
             {
-                Assert.Throws<ModinfoParseException>((Action)(() => ModInfoJsonSchema.Evaluate(JsonNode.Parse(data)!, EvaluationType.ModInfo)));
-                Assert.False(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out var errors));
-                Assert.Equivalent(expectedErrorKeys, Enumerable.Select<KeyValuePair<string, string>, string>(errors, x => x.Key), true);
+                Assert.Throws<ModinfoParseException>((Action)(() => ModInfoJsonSchema.Evaluate(JsonElement.Parse(data), EvaluationType.ModInfo)));
+                Assert.False(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out var errors));
+                Assert.Equivalent(expectedErrorKeys, errors.Select<KeyValuePair<string, string>, string>(x => x.Key), true);
             }
-            Assert.Throws<ModinfoParseException>((Func<object?>)(() => ModinfoData.Parse(data)));
-            Assert.Throws<ModinfoParseException>((Func<object?>)(() => ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)))));
+            Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(data));
+            Assert.Throws<ModinfoParseException>(() => ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data))));
         }
     }
 
@@ -671,7 +668,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
 }";
 
         TestUtilities.Evaluate(data, EvaluationType.ModInfo);
-        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+        Assert.True(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out _));
 
         var modinfo = ModinfoData.Parse(data);
         Assert.Equivalent(new Dictionary<string, object?> { { "key1", null } }, modinfo.Custom, true);
@@ -915,7 +912,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
     ""version"": ""1.0""
 }";
         TestUtilities.Evaluate(data, EvaluationType.ModInfo);
-        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModInfo, out _));
+        Assert.True(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out _));
 
         var modinfo = ModinfoData.Parse(data);
         Assert.Equal((string?)"My Mod Name", (string?)modinfo.Name);
@@ -1093,7 +1090,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Equal((string?)"Name", (string?)modinfo.Name);
         Assert.Equal(SemVersion.Parse("1.2.3-beta1"), modinfo.Version);
         Assert.Equal(DependencyResolveLayout.FullResolved, modinfo.Dependencies.ResolveLayout);
-        Assert.Equal([new ModReference("1", ModType.Default), new ModReference("2", ModType.Workshops, SemVersionRange.Parse("*"))], Enumerable.ToList(modinfo.Dependencies));
+        Assert.Equal([new ModReference("1", ModType.Default), new ModReference("2", ModType.Workshops, SemVersionRange.Parse("*"))], modinfo.Dependencies.ToList());
         Assert.Equivalent(new Dictionary<string, string>(), modinfo.Custom, true);
         Assert.Equal([LanguageInfo.Default], modinfo.Languages);
         Assert.False(modinfo.LanguagesExplicitlySet);

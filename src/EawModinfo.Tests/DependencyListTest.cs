@@ -1,14 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Nodes;
 using AET.Modinfo.Model;
 using AET.Modinfo.Model.Json;
 using AET.Modinfo.Model.Json.Schema;
 using AET.Modinfo.Spec;
 using AET.Modinfo.Spec.Equality;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
 using Xunit;
 
 namespace AET.Modinfo.Tests;
@@ -61,35 +61,35 @@ public class DependencyListTest
 
     public static IEnumerable<object[]> GetInvalidJsonData()
     {
-        yield return ["{}", new[] { "oneOf", "type" }];
-        yield return ["[]", new[] {"oneOf", "contains" }];
+        yield return ["{}", new[] { "type" }];
+        yield return ["[]", new[] { "contains" }];
         yield return [@"[""FullResolved""]", new[] { "contains", "type" }];
         yield return
         [
-            @"[""NoValidResolve"", {""identifier"":""123"", ""modtype"":1}]",new[]{ "oneOf", "enum", "type" }
+            @"[""NoValidResolve"", {""identifier"":""1"", ""modtype"":1}]",new[]{ "enum", "type" }
         ];
         yield return
         [
-            @"[{""identifier"":""123"" }]", new[] { "oneOf", "enum", "contains", "required" }
+            @"[{""identifier"":""2"" }]", new[] { "enum", "contains", "required" }
         ];
         yield return
         [
-            @"[""FullResolved"", {""identifier"":""123"" }]", new[]{ "oneOf", "type", "contains", "required" }
+            @"[""FullResolved"", {""identifier"":""3"" }]", new[]{ "type", "contains", "required" }
         ];
         yield return
         [
-            @"[null, {""identifier"":""123"", ""modtype"":1 }]", new[]{ "oneOf", "enum", "type" }
+            @"[null, {""identifier"":""4"", ""modtype"":1 }]", new[]{ "enum", "type" }
         ];
-        yield return [@"[""FullResolved"", {""identifier"":""123"", ""modtype"":1}, {""other"": ""value""}]", new[] { "oneOf", "required", "", "type" }];
-        yield return [@"[{""identifier"":""123"", ""modtype"":1}, {""other"": ""value""}]", new[] { "oneOf", "required", "", "enum" }];
+        yield return [@"[""FullResolved"", {""identifier"":""5"", ""modtype"":1}, {""other"": ""value""}]", new[] { "required", "", "type" }];
+        yield return [@"[{""identifier"":""6"", ""modtype"":1}, {""other"": ""value""}]", new[] { "required", "", "enum" }];
     }
 
     [Theory]
     [MemberData(nameof(GetInvalidJsonData))]
     public void Parse_Invalid(string data, IList<string> expectedErrorKeys)
     {
-        Assert.False(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModDependencyList, out var errors));
-        Assert.Equivalent(expectedErrorKeys, Enumerable.Select<KeyValuePair<string, string>, string>(errors, x => x.Key).Distinct(), true);
+        Assert.False(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModDependencyList, out var errors));
+        Assert.Equivalent(expectedErrorKeys, errors.Select<KeyValuePair<string, string>, string>(x => x.Key).Distinct(), true);
         Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.ModDependencyList));
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => DependencyList.Parse(data)));
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => DependencyList.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)))));
@@ -134,7 +134,7 @@ public class DependencyListTest
     [MemberData(nameof(GetJsonData))]
     public void Parse(string data, IList<IModReference>? refs, DependencyResolveLayout? resolveLayout)
     {
-        Assert.True(ModInfoJsonSchema.IsValid(JsonNode.Parse(data), EvaluationType.ModDependencyList, out _));
+        Assert.True(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModDependencyList, out _));
         TestUtilities.Evaluate(data, EvaluationType.ModDependencyList);
         var depList = DependencyList.Parse(data);
         Assert.Equal(refs, depList);

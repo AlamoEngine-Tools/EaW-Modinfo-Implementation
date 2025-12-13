@@ -11,7 +11,7 @@ namespace AET.Modinfo.Model.Json;
 /// <inheritdoc/>
 internal class JsonSteamData : ISteamData
 {
-    internal static readonly string[] GameTags = {"FOC", "EAW"};
+    internal static readonly string[] GameTags = ["FOC", "EAW"];
 
     /// <inheritdoc/>
     [JsonPropertyName("publishedfileid")]
