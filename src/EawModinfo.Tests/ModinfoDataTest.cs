@@ -572,7 +572,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Equal(SteamWorkshopVisibility.Public, modinfo.SteamData.Visibility);
         Assert.Equal((string?)"test", (string?)modinfo.SteamData.Metadata);
         Assert.Null(modinfo.SteamData.Description);
-        Assert.Equal(2, modinfo.SteamData.Tags.Count<string>());
+        Assert.Equal(2, modinfo.SteamData.Tags.Count());
 
         modinfo = ModinfoData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)));
         Assert.Equal((string?)"My Mod Name", (string?)modinfo.Name);
@@ -583,7 +583,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
         Assert.Equal(SteamWorkshopVisibility.Public, modinfo.SteamData.Visibility);
         Assert.Equal((string?)"test", (string?)modinfo.SteamData.Metadata);
         Assert.Null(modinfo.SteamData.Description);
-        Assert.Equal(2, modinfo.SteamData.Tags.Count<string>());
+        Assert.Equal(2, modinfo.SteamData.Tags.Count());
     }
 
     public static IEnumerable<object[]> GetInvalidData()
@@ -614,7 +614,7 @@ public class ModinfoDataTest(ITestOutputHelper output)
         {
             if (data != string.Empty)
             {
-                Assert.Throws<ModinfoParseException>((Action)(() => ModInfoJsonSchema.Evaluate(JsonElement.Parse(data)!, EvaluationType.ModInfo)));
+                Assert.Throws<ModinfoParseException>((Action)(() => ModInfoJsonSchema.Evaluate(JsonElement.Parse(data), EvaluationType.ModInfo)));
                 Assert.False(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModInfo, out var errors));
                 Assert.Equivalent(expectedErrorKeys, errors.Select<KeyValuePair<string, string>, string>(x => x.Key), true);
             }

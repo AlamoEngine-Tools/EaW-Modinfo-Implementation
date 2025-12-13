@@ -72,7 +72,7 @@ internal static class TestUtilities
     internal static IFileInfo CreateFile(MockFileSystem fs, string path, string name, string data)
     {
         var fullPath = fs.Path.Combine(path, name);
-        var dir = fs.Path.GetDirectoryName(fullPath);
+        var dir = fs.Path.GetDirectoryName(fullPath)!;
         fs.Directory.CreateDirectory(dir);
         fs.File.WriteAllText(fullPath, data);
         return fs.FileInfo.New(fullPath);

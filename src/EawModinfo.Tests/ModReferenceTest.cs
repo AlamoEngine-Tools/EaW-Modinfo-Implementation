@@ -175,7 +175,7 @@ public class ModReferenceTests
     public void Parse_Throws(string data, IList<string> expectedErrorKeys)
     {
         Assert.False(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModReference, out var errors));
-        Assert.Equivalent(expectedErrorKeys, Enumerable.Select<KeyValuePair<string, string>, string>(errors, x => x.Key), true);
+        Assert.Equivalent(expectedErrorKeys, errors.Select<KeyValuePair<string, string>, string>(x => x.Key), true);
 
         Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.ModReference));
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => ModReference.Parse(data)));

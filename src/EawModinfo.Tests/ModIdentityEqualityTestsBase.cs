@@ -22,9 +22,9 @@ public abstract class ModIdentityEqualityTestsBase<T> where T : IModIdentity
         var diffListVer = CreateT("A", EqualityTestHelpers.AllDifferent, EqualityTestHelpers.OtherVersion);
         var insensitiveName = CreateT("a", EqualityTestHelpers.List, EqualityTestHelpers.Version);
 
-        EqualityTestHelpers.AssertWithComparer(true, comparer, default, default);
-        EqualityTestHelpers.AssertWithComparer(false, comparer, data, default);
-        EqualityTestHelpers.AssertWithComparer(false, comparer, default, data);
+        EqualityTestHelpers.AssertWithComparer(true, comparer, null, null);
+        EqualityTestHelpers.AssertWithComparer(false, comparer, data, null);
+        EqualityTestHelpers.AssertWithComparer(false, comparer, null, data);
 
         EqualityTestHelpers.AssertWithComparer(true, comparer, data, data);
         EqualityTestHelpers.AssertWithComparer(true,  comparer, data, sameish);
@@ -47,9 +47,9 @@ public abstract class ModIdentityEqualityTestsBase<T> where T : IModIdentity
         var diffListVer = CreateT("A", EqualityTestHelpers.AllDifferent, EqualityTestHelpers.OtherVersion);
         var insensitiveName = CreateT("a", EqualityTestHelpers.List, EqualityTestHelpers.Version);
 
-        EqualityTestHelpers.AssertWithComparer(true, comparer, default, default);
-        EqualityTestHelpers.AssertWithComparer(false, comparer, data, default);
-        EqualityTestHelpers.AssertWithComparer(false, comparer, default, data);
+        EqualityTestHelpers.AssertWithComparer(true, comparer, null, null);
+        EqualityTestHelpers.AssertWithComparer(false, comparer, data, null);
+        EqualityTestHelpers.AssertWithComparer(false, comparer, null, data);
 
         EqualityTestHelpers.AssertWithComparer(true, comparer, data, data);
         EqualityTestHelpers.AssertWithComparer(true, comparer, data, sameish);
@@ -72,9 +72,9 @@ public abstract class ModIdentityEqualityTestsBase<T> where T : IModIdentity
         var diffListVer = CreateT("A", EqualityTestHelpers.AllDifferent, EqualityTestHelpers.OtherVersion);
         var insensitiveName = CreateT("a", EqualityTestHelpers.List, EqualityTestHelpers.Version);
 
-        EqualityTestHelpers.AssertWithComparer(true, comparer, default, default);
-        EqualityTestHelpers.AssertWithComparer(false, comparer, data, default);
-        EqualityTestHelpers.AssertWithComparer(false, comparer, default, data);
+        EqualityTestHelpers.AssertWithComparer(true, comparer, null, null);
+        EqualityTestHelpers.AssertWithComparer(false, comparer, data, null);
+        EqualityTestHelpers.AssertWithComparer(false, comparer, null, data);
 
         EqualityTestHelpers.AssertWithComparer(true, comparer, data, data);
         EqualityTestHelpers.AssertWithComparer(true, comparer, data, sameish);
@@ -97,9 +97,9 @@ public abstract class ModIdentityEqualityTestsBase<T> where T : IModIdentity
         var diffListVer = CreateT("A", EqualityTestHelpers.AllDifferent, EqualityTestHelpers.OtherVersion);
         var insensitiveName = CreateT("a", EqualityTestHelpers.List, EqualityTestHelpers.Version);
 
-        EqualityTestHelpers.AssertWithComparer(true, comparer, default, default);
-        EqualityTestHelpers.AssertWithComparer(false, comparer, data, default);
-        EqualityTestHelpers.AssertWithComparer(false, comparer, default, data);
+        EqualityTestHelpers.AssertWithComparer(true, comparer, null, null);
+        EqualityTestHelpers.AssertWithComparer(false, comparer, data, null);
+        EqualityTestHelpers.AssertWithComparer(false, comparer, null, data);
 
         EqualityTestHelpers.AssertWithComparer(true, comparer, data, data);
         EqualityTestHelpers.AssertWithComparer(true, comparer, data, sameish);
@@ -122,9 +122,9 @@ public abstract class ModIdentityEqualityTestsBase<T> where T : IModIdentity
         var diffListVer = CreateT("A", EqualityTestHelpers.AllDifferent, EqualityTestHelpers.OtherVersion);
         var insensitiveName = CreateT("a", EqualityTestHelpers.List, EqualityTestHelpers.Version);
 
-        EqualityTestHelpers.AssertWithComparer(true, comparer, default, default);
-        EqualityTestHelpers.AssertWithComparer(false, comparer, data, default);
-        EqualityTestHelpers.AssertWithComparer(false, comparer, default, data);
+        EqualityTestHelpers.AssertWithComparer(true, comparer, null, null);
+        EqualityTestHelpers.AssertWithComparer(false, comparer, data, null);
+        EqualityTestHelpers.AssertWithComparer(false, comparer, null, data);
 
         EqualityTestHelpers.AssertWithComparer(true, comparer, data, data);
         EqualityTestHelpers.AssertWithComparer(true, comparer, data, sameish);

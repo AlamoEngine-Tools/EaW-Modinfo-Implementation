@@ -67,7 +67,7 @@ public class ModReferenceBuilderTest
                     modPath,
                     locationKind,
                     mainModinfoState,
-                    new[] {"variant1"},// one variants
+                    new[] {"variant1"},// one variant
                     Array.Empty<string>(),
                     expectedIdentifier
                 ];
@@ -152,7 +152,7 @@ public class ModReferenceBuilderTest
 
         var modinfoFinderCollection = new ModinfoFinderCollection(modDirectory, null, new List<ModinfoVariantFile>());
 
-        var modReferences = Enumerable.ToList(ModReferenceBuilder.CreateIdentifiers(modinfoFinderCollection, locationKind));
+        var modReferences = ModReferenceBuilder.CreateIdentifiers(modinfoFinderCollection, locationKind).ToList();
 
         var modRef = Assert.Single(modReferences);
         if (locationKind is ModReferenceBuilder.ModLocationKind.External)
@@ -179,7 +179,7 @@ public class ModReferenceBuilderTest
             CreateValidVariantFile(modDirectory, "VariantName")
         });
 
-        var modReferences = Enumerable.ToList(ModReferenceBuilder.CreateIdentifiers(modinfoFinderCollection, locationKind));
+        var modReferences = ModReferenceBuilder.CreateIdentifiers(modinfoFinderCollection, locationKind).ToList();
 
         var modRef = Assert.Single(modReferences);
         Assert.Equal((string?)$"{expectedIdentifier}:VariantName", (string?)modRef.ModReference.Identifier);
@@ -213,12 +213,12 @@ public class ModReferenceBuilderTest
 
         // Simulate the creation of variant files
         var variantFiles = validVariants.Select(x => CreateValidVariantFile(modDir, x))
-            .Concat(malformedVariants.Select(x => CreateInvalidVariantFile(modDir)))
+            .Concat(malformedVariants.Select(_ => CreateInvalidVariantFile(modDir)))
             .ToList();
 
         var modinfoFinderResult = new ModinfoFinderCollection(modDir, mainModinfo, variantFiles);
 
-        var result = Enumerable.ToList(ModReferenceBuilder.CreateIdentifiers(modinfoFinderResult, locationKind));
+        var result = ModReferenceBuilder.CreateIdentifiers(modinfoFinderResult, locationKind).ToList();
 
         var expectedResults = new List<(string Identifier, ModType Type, string? Name)>();
 

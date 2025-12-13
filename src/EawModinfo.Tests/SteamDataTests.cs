@@ -15,7 +15,7 @@ public class SteamDataTests
 {
     public static IEnumerable<object[]> GetInvalidJsonData()
     {
-        yield return [@"{}", new[] { "required" }];
+        yield return ["{}", new[] { "required" }];
         yield return [@"{""contentfolder"":""path"", ""publishedfileid"":""123"", ""visibility"":0, ""tags"":[""EAW""]}", new[] { "required" }];
         yield return [@"{""title"":""1"", ""publishedfileid"":""123"", ""visibility"":0, ""tags"":[""EAW""]}", new[] { "required" }];
         yield return [@"{""title"":""2"", ""contentfolder"":""path"", ""visibility"":0, ""tags"":[""EAW""]}", new[] { "required" }];
@@ -36,7 +36,7 @@ public class SteamDataTests
             Assert.Throws<ModinfoParseException>((Func<object?>)(() => SteamData.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)))));
 
             Assert.False(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.SteamData, out var errors));
-            Assert.Equivalent(expectedErrorKeys, Enumerable.Select<KeyValuePair<string, string>, string>(errors, x => x.Key), true);
+            Assert.Equivalent(expectedErrorKeys, errors.Select<KeyValuePair<string, string>, string>(x => x.Key), true);
     }
 
     public static IEnumerable<object[]> GetJsonData()

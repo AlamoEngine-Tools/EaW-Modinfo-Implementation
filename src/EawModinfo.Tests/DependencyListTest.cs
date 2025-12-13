@@ -3,7 +3,6 @@ using AET.Modinfo.Model.Json;
 using AET.Modinfo.Model.Json.Schema;
 using AET.Modinfo.Spec;
 using AET.Modinfo.Spec.Equality;
-using Json.Schema;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -90,7 +89,7 @@ public class DependencyListTest
     public void Parse_Invalid(string data, IList<string> expectedErrorKeys)
     {
         Assert.False(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModDependencyList, out var errors));
-        Assert.Equivalent(expectedErrorKeys, Enumerable.Select<KeyValuePair<string, string>, string>(errors, x => x.Key).Distinct(), true);
+        Assert.Equivalent(expectedErrorKeys, errors.Select<KeyValuePair<string, string>, string>(x => x.Key).Distinct(), true);
         Assert.Throws<ModinfoParseException>(() => TestUtilities.Evaluate(data, EvaluationType.ModDependencyList));
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => DependencyList.Parse(data)));
         Assert.Throws<ModinfoParseException>((Func<object?>)(() => DependencyList.Parse(new MemoryStream(Encoding.UTF8.GetBytes(data)))));
@@ -135,7 +134,6 @@ public class DependencyListTest
     [MemberData(nameof(GetJsonData))]
     public void Parse(string data, IList<IModReference>? refs, DependencyResolveLayout? resolveLayout)
     {
-        var e = JsonElement.Parse(data);
         Assert.True(ModInfoJsonSchema.IsValid(JsonElement.Parse(data), EvaluationType.ModDependencyList, out _));
         TestUtilities.Evaluate(data, EvaluationType.ModDependencyList);
         var depList = DependencyList.Parse(data);

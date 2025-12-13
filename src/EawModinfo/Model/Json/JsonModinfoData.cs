@@ -15,8 +15,6 @@ namespace AET.Modinfo.Model.Json;
 /// <inheritdoc/>
 internal class JsonModinfoData : IModinfo
 {
-    [JsonIgnore] private IReadOnlyCollection<ILanguageInfo>? _languages;
-    [JsonIgnore] private SemVersion? _modVersion;
     [JsonIgnore] private bool _versionDetermined;
     [JsonIgnore] private bool _languagesDetermined;
 
@@ -37,21 +35,22 @@ internal class JsonModinfoData : IModinfo
 
     /// <inheritdoc/>
     [JsonIgnore]
+    [field: JsonIgnore]
     public SemVersion? Version
     {
         get
         {
-            if (_modVersion is null && !_versionDetermined)
+            if (field is null && !_versionDetermined)
             {
-                _modVersion = SemVerHelper.CreateSanitizedVersion(StringVersion);
+                field = SemVerHelper.CreateSanitizedVersion(StringVersion);
                 _versionDetermined = true;
             }
 
-            return _modVersion;
+            return field;
         }
         internal set
         {
-            _modVersion = value;
+            field = value;
             StringVersion = value?.ToString();
         }
     }
@@ -71,21 +70,23 @@ internal class JsonModinfoData : IModinfo
 
     /// <inheritdoc/>
     [JsonIgnore]
+    [field: JsonIgnore]
     public IReadOnlyCollection<ILanguageInfo> Languages
     {
         get
         {
-            if (_languages is null && !_languagesDetermined)
+            if (field is null && !_languagesDetermined)
             {
                 if (InternalLanguages == null || InternalLanguages.Count == 0)
-                    _languages = ModinfoData.UnsetLanguages;
+                    field = ModinfoData.UnsetLanguages;
                 else
-                    _languages = new HashSet<ILanguageInfo>(InternalLanguages.Select(x => new LanguageInfo(x)));
+                    field = new HashSet<ILanguageInfo>(InternalLanguages.Select(x => new LanguageInfo(x)));
                
                 _languagesDetermined = true;
             }
-            return _languages!;
+            return field!;
         }
+#pragma warning disable CS9266 // The '{0}' accessor of property '{1}' should use 'field' because the other accessor is using it.
         set
         {
             var languages = new HashSet<JsonLanguageInfo>(value.Select(x => new JsonLanguageInfo(x)));
@@ -93,6 +94,7 @@ internal class JsonModinfoData : IModinfo
                 languages.Clear();
             InternalLanguages = languages;
         }
+#pragma warning restore CS9266
     }
 
     [JsonIgnore]

@@ -180,7 +180,7 @@ public class ModinfoValidatorTests
         yield return [new JsonSteamData(), true];
         yield return [new JsonSteamData { Id = null! }, true];
         yield return [new JsonSteamData {Id = "1234", Tags = ["EAW"], ContentFolder = "testFolder"}, true];
-        yield return [new JsonSteamData {Id = "1234", Tags = Array.Empty<string>(), ContentFolder = "testFolder", Title = "Title" }, true];
+        yield return [new JsonSteamData {Id = "1234", Tags = [], ContentFolder = "testFolder", Title = "Title" }, true];
         yield return [new JsonSteamData { Id = "1234", Tags = null!, ContentFolder = "testFolder", Title = "Title" }, true];
         yield return [new JsonSteamData { Id = "1234", Tags = null!, ContentFolder = "testFolder", Title = "Title" }, true];
         yield return [new JsonSteamData { Id = "1234", Tags = ["EAW"], ContentFolder = "", Title = "Title" }, true];
@@ -335,13 +335,13 @@ public class ModinfoValidatorTests
     {
         public string Name => name;
         public SemVersion? Version { get; }
-        public IModDependencyList Dependencies { get; set; }
+        public IModDependencyList Dependencies { get; init; }
 
         public string? Summary { get; }
         public string? Icon { get; }
-        public IDictionary<string, object> Custom { get; set; }
+        public IDictionary<string, object> Custom { get; init; }
         public ISteamData? SteamData { get; }
-        public IReadOnlyCollection<ILanguageInfo> Languages { get; set; }
+        public IReadOnlyCollection<ILanguageInfo> Languages { get; init; }
         public bool LanguagesExplicitlySet { get; }
 
         public string ToJson()
