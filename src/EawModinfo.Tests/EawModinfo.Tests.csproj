@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<AssemblyName>AET.Modinfo.Tests</AssemblyName>
 		<RootNamespace>AET.Modinfo.Tests</RootNamespace>
 		<TargetFrameworks>net10.0</TargetFrameworks>
-		<TargetFrameworks Condition="!$([MSBuild]::IsOsUnixLike())">$(TargetFrameworks);net48</TargetFrameworks>
+		<TargetFrameworks Condition="!$([MSBuild]::IsOsUnixLike())">$(TargetFrameworks);net481</TargetFrameworks>
 		<IsPackable>false</IsPackable>
 		<IsTestable>true</IsTestable>
 	</PropertyGroup>
