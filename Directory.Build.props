@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<Product>EaW Modinfo</Product>
-		<Copyright>Copyright © 2025 Alamo Engine Tools and contributors. All rights reserved.</Copyright>
+		<Copyright>Copyright © 2026 Alamo Engine Tools and contributors. All rights reserved.</Copyright>
 		<Authors>Alamo Engine Tools and Contributors</Authors>
 		<Company>Alamo Engine Tools</Company>
 		<PackageTags>petroglyph, alamo, glyphx, foc, eaw</PackageTags>
@@ -24,8 +24,7 @@
 			<Version>3.9.50</Version>
 		</PackageReference>
 		<PackageReference Include="SauceControl.InheritDoc" Version="2.0.2" PrivateAssets="all" />
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.102">
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="" />
