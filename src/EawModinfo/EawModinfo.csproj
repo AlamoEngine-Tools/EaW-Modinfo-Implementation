@@ -50,7 +50,7 @@
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Semver" Version="3.0.0" />
-		<PackageReference Include="Testably.Abstractions" Version="10.1.0" />
+		<PackageReference Include="Testably.Abstractions" Version="10.2.0" />
 		<PackageReference Include="System.Text.Json" Version="10.0.5" />
 	</ItemGroup>
 
